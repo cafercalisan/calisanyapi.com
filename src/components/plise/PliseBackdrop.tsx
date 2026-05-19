@@ -23,14 +23,14 @@ export default function PliseBackdrop({
   return (
     <div className="absolute inset-0 overflow-hidden">
       {variant === "solid" && (
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1a1f2e] via-[#10141e] to-[#0a0e16]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#2a3144] via-[#1a2030] to-[#0e1322]" />
       )}
-      {/* Pleat lines */}
+      {/* Pleat lines — vertical accordion folds */}
       <div
-        className="absolute inset-0 opacity-90"
+        className="absolute inset-0"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 9px), repeating-linear-gradient(90deg, rgba(0,0,0,0.55) 0px, rgba(0,0,0,0.55) 2px, transparent 2px, transparent 10px)",
+            "repeating-linear-gradient(90deg, rgba(255,255,255,0.22) 0px, rgba(255,255,255,0.22) 1px, transparent 1px, transparent 6px), repeating-linear-gradient(90deg, rgba(0,0,0,0.7) 3px, rgba(0,0,0,0.7) 4px, transparent 4px, transparent 6px)",
         }}
       />
       {/* Subtle shine */}
