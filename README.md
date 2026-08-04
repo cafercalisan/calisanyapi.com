@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Çalışan Yapı Teklif Platformu
 
-## Getting Started
+Ölçüye özel, çok kalemli sineklik teklifi oluşturan Next.js uygulaması. İlk ziyaret açılış sahnesi, canlı sunucu fiyatlandırması, özel fotoğraf yükleme ve tek hesaplı yönetim paneli içerir.
 
-First, run the development server:
+## Yerel geliştirme
 
 ```bash
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Supabase olmadan arayüz varsayılan katalog ve geçici referanslarla çalışır. Kalıcı kayıt için:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Supabase projesinde `supabase/migrations/001_initial.sql` dosyasını çalıştırın.
+2. Authentication bölümünde `ADMIN_EMAIL` için tek bir e-posta/şifre kullanıcısı oluşturun.
+3. `.env.local` değerlerini Supabase, Resend ve WhatsApp bilgileriyle doldurun.
+4. Vercel projesine aynı environment variable değerlerini ekleyin.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Yönetim paneli: `/yonetim`.
 
-## Learn More
+## Kontroller
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm test
+npm run typecheck
+npm run lint
+npm run build
+```

@@ -1,28 +1,45 @@
 {
-  "name": "calisyanyapi",
-  "version": "0.1.0",
+  "name": "calisan-yapi-teklif",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "publish": "node scripts/publish.mjs",
+    "remotion:studio": "remotion studio remotion/index.ts",
+    "remotion:render:hooks": "npm run remotion:render:problem && npm run remotion:render:curiosity && npm run remotion:render:outcome",
+    "remotion:render:problem": "remotion render remotion/index.ts MetaReel-Problem output/meta-reels/problem-hook.mp4 --concurrency=1",
+    "remotion:render:curiosity": "remotion render remotion/index.ts MetaReel-Curiosity output/meta-reels/curiosity-hook.mp4 --concurrency=1",
+    "remotion:render:outcome": "remotion render remotion/index.ts MetaReel-Outcome output/meta-reels/outcome-hook.mp4 --concurrency=1",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
-    "@paper-design/shaders-react": "^0.0.71",
-    "framer-motion": "^12.34.3",
-    "next": "16.1.6",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "@remotion/cli": "^4.0.505",
+    "@remotion/media": "^4.0.505",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^0.468.0",
+    "next": "16.2.12",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "remotion": "^4.0.505",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.1.6",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/node": "^20.19.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "eslint": "^9.39.0",
+    "eslint-config-next": "16.2.12",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.4"
+  },
+  "overrides": {
+    "postcss": "8.5.25",
+    "sharp": "0.35.0"
   }
 }
