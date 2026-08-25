@@ -2,6 +2,7 @@ import type { Catalog } from "./types";
 
 export const DEFAULT_CATALOG: Catalog = {
   products: [
+    ["sabit-citcitli", "Sabit Sineklik", "Açılmasına gerek olmayan pencere ve küçük açıklıklar için yalın çözüm.", 650, 950, 30, 160, 30, 220],
     ["pliseli-pencere", "Pliseli Pencere", "Pencerede zarif, kompakt ve gündelik kullanıma uygun.", 850, 1200, 30, 160, 30, 220],
     ["pliseli-kapi", "Pliseli Kapı", "Balkon ve teras geçişleri için rahat kullanım.", 1450, 1400, 60, 200, 140, 260],
     ["akordiyon", "Akordiyon", "Geniş açıklıklarda yatay katlanan klasik sistem.", 1200, 1300, 30, 180, 30, 220],

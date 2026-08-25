@@ -12,6 +12,10 @@
     "remotion:render:problem": "remotion render remotion/index.ts MetaReel-Problem output/meta-reels/problem-hook.mp4 --concurrency=1",
     "remotion:render:curiosity": "remotion render remotion/index.ts MetaReel-Curiosity output/meta-reels/curiosity-hook.mp4 --concurrency=1",
     "remotion:render:outcome": "remotion render remotion/index.ts MetaReel-Outcome output/meta-reels/outcome-hook.mp4 --concurrency=1",
+    "remotion:render:day1": "remotion render remotion/index.ts CY-01-pencere-huzuru output/social/day-01.mp4 --concurrency=1",
+    "remotion:render:ad-hooks": "remotion render remotion/index.ts CY-06-reklam-hava-girsin-A output/social/ad-06-a.mp4 --concurrency=1 && remotion render remotion/index.ts CY-06-reklam-hava-girsin-B output/social/ad-06-b.mp4 --concurrency=1 && remotion render remotion/index.ts CY-06-reklam-hava-girsin-C output/social/ad-06-c.mp4 --concurrency=1",
+    "remotion:render:surme": "remotion render remotion/index.ts CY-Surme-Sineklik output/social/surme-sineklik.mp4 --concurrency=1",
+    "remotion:render:30-days": "node scripts/render-30-days.mjs",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
@@ -21,10 +25,11 @@
     "@remotion/media": "^4.0.505",
     "framer-motion": "^12.38.0",
     "lucide-react": "^0.468.0",
-    "next": "16.2.12",
+    "next": "^16.3.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "remotion": "^4.0.505",
+    "sharp": "^0.35.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -40,6 +45,6 @@
   },
   "overrides": {
     "postcss": "8.5.25",
-    "sharp": "0.35.0"
+    "nanoid": "3.3.17"
   }
 }

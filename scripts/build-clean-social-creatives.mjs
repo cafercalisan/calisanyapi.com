@@ -83,7 +83,7 @@ function typography(item) {
       ${headlineLine(item.accentSecond, secondCyanY, "cyan")}
       <rect x="70" y="760" width="230" height="58" rx="4" fill="#10acb7"/>
       <text x="185" y="797" text-anchor="middle" class="cta">${esc(item.cta)}</text>
-      <text x="70" y="858" class="url">calisanyapi.com</text>
+      <text x="70" y="858" class="url">umayapi.com</text>
       <line x1="70" y1="882" x2="270" y2="882" stroke="#10acb7" stroke-width="3"/>
       <text x="70" y="1284" class="services">SİNEKLİK</text>
       <rect x="176" y="1265" width="3" height="24" fill="#10acb7"/>

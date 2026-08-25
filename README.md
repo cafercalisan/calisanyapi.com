@@ -1,4 +1,4 @@
-# Çalışan Yapı Teklif Platformu
+# Uma Yapı Teklif Platformu
 
 Ölçüye özel, çok kalemli sineklik teklifi oluşturan Next.js uygulaması. İlk ziyaret açılış sahnesi, canlı sunucu fiyatlandırması, özel fotoğraf yükleme ve tek hesaplı yönetim paneli içerir.
 

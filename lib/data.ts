@@ -14,9 +14,7 @@ export async function getCatalog(): Promise<Catalog> {
       dbRequest<OptionRow[]>("product_features?select=*&order=sort_order"), dbRequest<SettingsRow[]>("pricing_settings?select=*&limit=1"),
     ]);
     return {
-      products: products
-        .filter((p) => p.slug !== "sabit-citcitli")
-        .map((p) => ({ id: p.id, slug: p.slug, name: p.name, shortName: p.short_name, description: p.description, basePrice: p.base_price, pricePerM2: p.price_per_m2, minWidth: p.min_width, maxWidth: p.max_width, minHeight: p.min_height, maxHeight: p.max_height, active: p.active })),
+      products: products.map((p) => ({ id: p.id, slug: p.slug, name: p.name, shortName: p.short_name, description: p.description, basePrice: p.base_price, pricePerM2: p.price_per_m2, minWidth: p.min_width, maxWidth: p.max_width, minHeight: p.min_height, maxHeight: p.max_height, active: p.active })),
       colors: colors.map((c) => ({ id: c.id, slug: c.slug, name: c.name, hex: c.hex ?? "#888888", price: c.price, active: c.active })),
       features: features.map((f) => ({ id: f.id, slug: f.slug, name: f.name, price: f.price, active: f.active })),
       settings: settings[0] ? { vatRate: Number(settings[0].vat_rate), shippingFee: settings[0].shipping_fee, freeShippingThreshold: settings[0].free_shipping_threshold, installationFee: settings[0].installation_fee } : DEFAULT_CATALOG.settings,
@@ -39,6 +37,11 @@ export async function listQuotes() {
   if (!supabaseConfigured && process.env.DEMO_ADMIN_ENABLED === "true") return DEMO_QUOTES;
   if (!supabaseConfigured) return [];
   return dbRequest<Array<Record<string, unknown>>>("quotes?select=*,quote_items(*)&order=created_at.desc&limit=250");
+}
+
+export async function listServiceRequests() {
+  if (!supabaseConfigured) return [];
+  return dbRequest<Array<Record<string, unknown>>>("service_requests?select=*&order=created_at.desc&limit=250");
 }
 
 const DEMO_QUOTES: Array<Record<string, unknown>> = [

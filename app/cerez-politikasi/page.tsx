@@ -1,0 +1,6 @@
+import type { Metadata } from "next";
+import { CookiePreferencesButton } from "@/components/CookiePreferencesButton";
+import { SiteFooter } from "@/components/SiteFooter";
+import { SiteHeader } from "@/components/SiteHeader";
+export const metadata: Metadata = { title: "Çerez Politikası", robots: { index: false, follow: true } };
+export default function Page(){return <><SiteHeader/><main className="legal-page"><p className="kicker">Tercihler</p><h1 className="font-display">Çerez Politikası</h1><p>Zorunlu depolama; güvenlik, oturum ve form işlevlerinin çalışması için kullanılır. Analiz ve pazarlama teknolojileri yalnız açık tercihiniz sonrasında yüklenir.</p><h2>Zorunlu teknolojiler</h2><p>Çerez tercihiniz tarayıcınızda <code>cy_consent_v1</code> anahtarıyla saklanır. Bu kayıt analiz veya reklam amacı taşımaz ve sitenin tercihinizi hatırlamasını sağlar.</p><h2>Analiz</h2><p>İzin verilirse sayfa performansı ve toplulaştırılmış kullanım davranışı Google Analytics 4 ve Microsoft Clarity ile ölçülebilir.</p><h2>Pazarlama</h2><p>İzin verilirse reklam kampanyalarının dönüşümü Meta Pixel ile ölçülebilir. İzninizi aşağıdaki düğmeyle istediğiniz zaman geri çekebilir veya yeniden düzenleyebilirsiniz.</p><CookiePreferencesButton/></main><SiteFooter/></>}

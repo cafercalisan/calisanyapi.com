@@ -115,7 +115,7 @@ const CtaScene = () => {
         <div style={{...reveal(frame, 7, fps), fontFamily: DISPLAY, fontWeight: 900, fontSize: 164, lineHeight: .84, letterSpacing: -10, color: TEAL}}>TEKLİFİNİ<br/>AL.</div>
       </div>
       <div style={{position: "absolute", left: 64, right: 64, bottom: 255, background: INK, color: "white", padding: "34px 42px", transform: `scale(${interpolate(button, [0, 1], [.82, 1])})`, opacity: button}}>
-        <div style={{fontFamily: DISPLAY, fontWeight: 800, fontSize: 43, letterSpacing: -1}}>calisanyapi.com</div>
+        <div style={{fontFamily: DISPLAY, fontWeight: 800, fontSize: 43, letterSpacing: -1}}>umayapi.com</div>
       </div>
       <div style={{position: "absolute", left: 64, bottom: 105, fontFamily: DISPLAY, fontSize: 27, color: INK, fontWeight: 700, letterSpacing: 2}}>EVİNİZE ÖZEL ÜRETİM · HIZLI TEKLİF</div>
     </AbsoluteFill>
