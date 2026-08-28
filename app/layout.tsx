@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: { default: "Çalışan Yapı | İstanbul Yapı Sistemleri", template: "%s | Çalışan Yapı" },
   description: "İstanbul genelinde PVC kapı-pencere, cam balkon, sineklik, korkuluk, küpeşte, asma tavan ve dış mekân sistemleri için keşif ve uygulama.",
-  openGraph: { type: "website", locale: "tr_TR", siteName: "Çalışan Yapı", images: [{ url: "/brand/calisan-yapi-hero.png", width: 1672, height: 941, alt: "Çalışan Yapı mimari uygulamalar" }] },
+  openGraph: { type: "website", locale: "tr_TR", siteName: "Çalışan Yapı", images: [{ url: "/brand/calisan-yapi-hero.webp", width: 1672, height: 941, alt: "Çalışan Yapı mimari uygulamalar" }] },
   twitter: { card: "summary_large_image" },
 };
 

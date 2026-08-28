@@ -19,7 +19,7 @@ export function SiteHeader() {
   return <>
     <header className="site-header">
       <Link href="/" className="brand" aria-label="Çalışan Yapı ana sayfa">
-        <Image src="/brand/calisan-yapi-logo-header.webp" alt="Çalışan Yapı" width={900} height={160} priority/>
+        <Image src="/brand/calisan-yapi-logo-header.webp" alt="Çalışan Yapı" width={900} height={160}/>
       </Link>
       <nav aria-label="Ana menü">
         <div className="nav-services"><Link href="/hizmetler">Hizmetler</Link><div className="nav-popover">{services.map((service) => <Link key={service.slug} href={`/hizmetler/${service.slug}`}>{service.name}<ArrowUpRight size={14}/></Link>)}</div></div>
