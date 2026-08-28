@@ -205,8 +205,12 @@ export const site = {
 
 function getSiteUrl() {
   const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  if (configured) return configured.replace(/\/$/, "");
-  return process.env.NODE_ENV === "production" ? "https://calisanyapi.com" : "http://localhost:3000";
+  if (configured) {
+    const normalized = configured.replace(/\/$/, "");
+    if (normalized === "https://calisanyapi.com") return "https://www.calisanyapi.com";
+    return normalized;
+  }
+  return process.env.NODE_ENV === "production" ? "https://www.calisanyapi.com" : "http://localhost:3000";
 }
 
 export function getService(slug: string) { return services.find((item) => item.slug === slug); }
