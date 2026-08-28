@@ -53,4 +53,4 @@ Görseller 10 Ağustos 2026 tarihinde aşağıdaki resmi üretici ve sistem sağ
 - `public/services/asma-tavan-v2.png`
 - `public/services/sineklik-v2.png`
 
-Bu görseller temsili görseldir; tamamlanmış Uma Yapı müşteri projesi olarak sunulmaz.
+Bu görseller temsili görseldir; tamamlanmış Çalışan Yapı müşteri projesi olarak sunulmaz.

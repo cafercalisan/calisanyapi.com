@@ -12,7 +12,7 @@ const SourceVideo = ({startFrom = 0}: {startFrom?: number}) => <AbsoluteFill sty
   <OffthreadVideo src={staticFile("remotion/source/kedi-sinekligi-kaynak.mp4")} startFrom={startFrom} muted style={{width: "100%", height: "100%", objectFit: "cover"}}/>
 </AbsoluteFill>;
 
-const Logo = ({width = 540}: {width?: number}) => <Img src={staticFile("brand/umayapi-logo-corporate-transparent.png")} style={{width, height: width, objectFit: "contain"}}/>;
+const Logo = ({width = 540}: {width?: number}) => <Img src={staticFile("brand/calisan-yapi-logo.png")} style={{width, height: width * .42, objectFit: "contain"}}/>;
 
 const Opening = () => {
   const frame = useCurrentFrame();

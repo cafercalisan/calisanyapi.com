@@ -1,4 +1,4 @@
-# Uma Yapı sosyal medya görselleri
+# Çalışan Yapı sosyal medya görselleri
 
 Bu klasördeki görseller, Masaüstü'ndeki `plise renkler` ürün görselleri referans alınarak üretildi. Görsellerde yazı ve logo özellikle kullanılmadı; böylece kampanya metni, fiyat ve iletişim bilgileri daha sonra güvenli alanlara eklenebilir.
 
@@ -28,4 +28,4 @@ Bu klasördeki görseller, Masaüstü'ndeki `plise renkler` ürün görselleri r
 4. `04-genis-aciklik-zarif-cozum.png` — geniş kapı ve cam balkon çözümü.
 5. `05-evine-ozel-tam-uyum.png` — ölçüye özel üretim mesajı.
 
-Set, sağlanan kurumsal referanstaki beyaz katalog zemini, koyu gri/turkuaz tipografi, gerçek Uma Yapı logosu ve ürün-sağ/metin-sol kompozisyonunu izler. Tüm kreatiflerde `umayapi.com` adresi yer alır. “Hemen ara” kullanılan gönderi, Instagram/Facebook reklamlarında arama eylem düğmesiyle yayınlanmaya uygundur.
+Set, sağlanan kurumsal referanstaki beyaz katalog zemini, koyu gri/turkuaz tipografi, gerçek Çalışan Yapı logosu ve ürün-sağ/metin-sol kompozisyonunu izler. Tüm kreatiflerde `calisanyapi.com` adresi yer alır. “Hemen ara” kullanılan gönderi, Instagram/Facebook reklamlarında arama eylem düğmesiyle yayınlanmaya uygundur.

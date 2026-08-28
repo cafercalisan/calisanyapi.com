@@ -1,4 +1,4 @@
-# Uma Yapı — 30 Günlük SEO, GEO ve Sosyal Medya İçerik Planı
+# Çalışan Yapı — 30 Günlük SEO, GEO ve Sosyal Medya İçerik Planı
 
 Amaç: İstanbul’da PVC kapı-pencere ve tamamlayıcı yapı sistemlerine ihtiyaç duyan kullanıcıyı gerçek uygulama kanıtıyla yakalamak, hizmet sayfasına taşımak ve fotoğraflı ön değerlendirme formuna yönlendirmek.
 

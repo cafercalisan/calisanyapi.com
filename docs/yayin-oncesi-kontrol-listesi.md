@@ -1,4 +1,4 @@
-# Uma Yapı — Yayın Öncesi Kontrol Listesi
+# Çalışan Yapı — Yayın Öncesi Kontrol Listesi
 
 ## 1. Supabase
 

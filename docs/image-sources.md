@@ -15,4 +15,4 @@ Lisans: https://www.pexels.com/legal-pages/license/
 | `kupeste-02.jpg` | https://www.pexels.com/photo/stairs-with-handrails-16242082/ | Kyle Miller |
 | `asma-tavan-01.jpg` | https://www.pexels.com/photo/modern-office-space-with-unique-ceiling-design-32263478/ | Emre Ozyemisci |
 
-İndirilen sürümler Pexels görsel servisi üzerinden 1600 piksel genişlikte, otomatik sıkıştırılmış JPEG olarak alınmıştır. Bunlar müşteriye ait tamamlanmış Uma Yapı projeleri olarak sunulmamalıdır; kullanım ve renk fikri veren stok/lifestyle görsellerdir.
+İndirilen sürümler Pexels görsel servisi üzerinden 1600 piksel genişlikte, otomatik sıkıştırılmış JPEG olarak alınmıştır. Bunlar müşteriye ait tamamlanmış Çalışan Yapı projeleri olarak sunulmamalıdır; kullanım ve renk fikri veren stok/lifestyle görsellerdir.

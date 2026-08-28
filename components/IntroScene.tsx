@@ -44,7 +44,7 @@ export function IntroScene() {
   if (seen) return (
     <section className="relative overflow-hidden bg-[#172326] px-5 py-3 text-white">
       <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-4">
-        <p className="text-[10px] font-bold uppercase tracking-[.22em] text-white/60">Uma Yapı · Ölçüye özel sineklik</p>
+        <p className="text-[10px] font-bold uppercase tracking-[.22em] text-white/60">Çalışan Yapı · Ölçüye özel sineklik</p>
         <button onClick={() => { localStorage.removeItem("cy_intro_seen"); setSeen(false); }} className="text-[10px] uppercase tracking-[.16em] text-[#78d5cf]">Açılışı tekrar izle</button>
       </div>
     </section>
@@ -58,7 +58,7 @@ export function IntroScene() {
         {reduced && <div className="absolute inset-0 bg-[url('/intro/intro-end.jpg')] bg-cover bg-center" />}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(9,18,20,.54),rgba(9,18,20,.16)_45%,rgba(9,18,20,.72))]" />
         <header className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-6 py-6 md:px-12">
-          <span className="font-display text-2xl tracking-wide">Uma Yapı</span>
+          <span className="font-display text-2xl tracking-wide">Çalışan Yapı</span>
           <button onClick={skip} className="flex items-center gap-2 border border-white/25 px-4 py-2 text-[10px] font-bold uppercase tracking-[.15em] backdrop-blur"><FastForward size={13}/> Teklife geç</button>
         </header>
         <div className="absolute inset-0 z-10 grid place-items-center px-6 text-center">

@@ -1,4 +1,4 @@
--- Uma Yapı production hardening
+-- Çalışan Yapı production hardening
 -- Uygulama tüm yazmaları yalnız server-side service role üzerinden yapar.
 
 revoke create on schema public from public;

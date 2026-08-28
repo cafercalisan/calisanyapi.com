@@ -194,10 +194,10 @@ export const districts = [
 ].map(([slug, name]) => ({ slug, name }));
 
 export const site = {
-  name: "Uma Yapı",
-  legalName: process.env.NEXT_PUBLIC_LEGAL_NAME?.trim() || "Uma Yapı",
+  name: "Çalışan Yapı",
+  legalName: process.env.NEXT_PUBLIC_LEGAL_NAME?.trim() || "Çalışan Yapı",
   legalAddress: process.env.NEXT_PUBLIC_LEGAL_ADDRESS?.trim() || "İstanbul, Türkiye",
-  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "info@umayapi.com",
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "info@calisanyapi.com",
   phone: "+905393165217",
   phoneLabel: "0539 316 52 17",
   url: getSiteUrl(),
@@ -206,7 +206,7 @@ export const site = {
 function getSiteUrl() {
   const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (configured) return configured.replace(/\/$/, "");
-  return process.env.NODE_ENV === "production" ? "https://umayapi.com" : "http://localhost:3000";
+  return process.env.NODE_ENV === "production" ? "https://calisanyapi.com" : "http://localhost:3000";
 }
 
 export function getService(slug: string) { return services.find((item) => item.slug === slug); }

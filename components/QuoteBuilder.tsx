@@ -61,7 +61,7 @@ export function QuoteBuilder({ catalog }: { catalog: Catalog }) {
     <section id="teklif" className="technical-paper min-h-screen overflow-x-clip scroll-mt-0 px-4 pb-28 pt-14 md:px-8 md:py-24">
       <div className="mx-auto max-w-[1480px]">
         <div className="mb-12 grid gap-8 border-b border-[var(--line)] pb-10 md:grid-cols-[1fr_auto] md:items-end">
-          <div><p className="mb-3 text-[10px] font-bold uppercase tracking-[.25em] text-[var(--teal-dark)]">Uma Yapı · Teklif oluşturucu</p><h2 className="font-display max-w-5xl text-[clamp(3.2rem,7vw,7rem)] leading-[.8] tracking-[-.04em]">Sinekliğinizi<br/><i className="font-normal text-[var(--teal-dark)]">ölçünüze göre oluşturun.</i></h2></div>
+          <div><p className="mb-3 text-[10px] font-bold uppercase tracking-[.25em] text-[var(--teal-dark)]">Çalışan Yapı · Teklif oluşturucu</p><h2 className="font-display max-w-5xl text-[clamp(3.2rem,7vw,7rem)] leading-[.8] tracking-[-.04em]">Sinekliğinizi<br/><i className="font-normal text-[var(--teal-dark)]">ölçünüze göre oluşturun.</i></h2></div>
           <div className="max-w-xs border-l border-[var(--line)] pl-5 text-sm leading-6 text-[var(--ink-soft)]"><Ruler className="mb-4 text-[var(--teal-dark)]" size={22}/><p>Uygulama yerini seçin, iki ölçüyü girin ve fiyatı anında görün.</p></div>
         </div>
 

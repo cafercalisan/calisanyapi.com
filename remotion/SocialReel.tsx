@@ -12,7 +12,7 @@ const clamp = {extrapolateLeft: "clamp" as const, extrapolateRight: "clamp" as c
 const fitHook = (text: string) => text.length > 58 ? 74 : text.length > 43 ? 84 : text.length > 30 ? 96 : 112;
 
 const Brand = () => <div style={{display: "inline-flex", alignItems: "center", background: PAPER, padding: "17px 22px"}}>
-  <Img src={staticFile("brand/umayapi-logo-header.webp")} style={{width: 270, height: "auto"}}/>
+  <Img src={staticFile("brand/calisan-yapi-logo-header.webp")} style={{width: 270, height: "auto"}}/>
 </div>;
 
 const AnimatedImage = ({src, dark = .12}: {src: string; dark?: number}) => {
@@ -53,7 +53,7 @@ const CtaScene = ({item}: {item: SocialContent}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const enter = spring({frame, fps, config: {damping: 16, stiffness: 115}});
-  return <AbsoluteFill style={{background: PAPER, overflow: "hidden"}}><div style={{position: "absolute", left: 0, top: 0, bottom: 0, width: 28, background: TEAL}}/><div style={{position: "absolute", top: 245, left: 64}}><Brand/></div><div style={{position: "absolute", top: 490, left: 64, right: 64}}><div style={{fontFamily: DISPLAY, fontSize: 32, fontWeight: 900, color: TEAL}}>ŞİMDİ</div><div style={{marginTop: 28, maxWidth: 940, color: INK, fontFamily: DISPLAY, fontSize: fitHook(item.cta)+14, fontWeight: 950, lineHeight: .86, letterSpacing: -5, transform: `translateY(${interpolate(enter,[0,1],[80,0])}px)`, opacity: enter}}>{item.cta}</div></div><div style={{position: "absolute", top: 1040, left: 64, background: INK, color: PAPER, padding: "28px 34px", fontFamily: DISPLAY, fontSize: 38, fontWeight: 900}}>umayapi.com</div></AbsoluteFill>;
+  return <AbsoluteFill style={{background: PAPER, overflow: "hidden"}}><div style={{position: "absolute", left: 0, top: 0, bottom: 0, width: 28, background: TEAL}}/><div style={{position: "absolute", top: 245, left: 64}}><Brand/></div><div style={{position: "absolute", top: 490, left: 64, right: 64}}><div style={{fontFamily: DISPLAY, fontSize: 32, fontWeight: 900, color: TEAL}}>ŞİMDİ</div><div style={{marginTop: 28, maxWidth: 940, color: INK, fontFamily: DISPLAY, fontSize: fitHook(item.cta)+14, fontWeight: 950, lineHeight: .86, letterSpacing: -5, transform: `translateY(${interpolate(enter,[0,1],[80,0])}px)`, opacity: enter}}>{item.cta}</div></div><div style={{position: "absolute", top: 1040, left: 64, background: INK, color: PAPER, padding: "28px 34px", fontFamily: DISPLAY, fontSize: 38, fontWeight: 900}}>calisanyapi.com</div></AbsoluteFill>;
 };
 
 export const SocialReel = ({item, variantIndex = 0}: {item: SocialContent; variantIndex?: number}) => {

@@ -1,4 +1,4 @@
-# Uma Yapı — 30 Günlük İçerik Stratejisi
+# Çalışan Yapı — 30 Günlük İçerik Stratejisi
 
 ## Yönetici özeti
 

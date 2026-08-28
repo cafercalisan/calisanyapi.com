@@ -1,4 +1,4 @@
-# Uma Yapı — görsel ve içerik üretim planı
+# Çalışan Yapı — görsel ve içerik üretim planı
 
 ## Kullanım ilkesi
 

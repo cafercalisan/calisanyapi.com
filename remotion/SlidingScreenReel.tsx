@@ -59,7 +59,7 @@ const CallToAction = () => {
     <AbsoluteFill style={{background: "linear-gradient(135deg,rgba(243,240,232,.90) 0%,rgba(243,240,232,.78) 58%,rgba(24,167,159,.14) 100%)"}}/>
     <div style={{position: "absolute", top: 120, left: 64, right: 64}}>
       <div style={{width: 760, height: 285, margin: "0 auto", overflow: "hidden"}}>
-        <Img src={staticFile("brand/umayapi-logo-corporate-transparent.png")} style={{width: 760, height: 760, transform: "translateY(-215px)"}}/>
+        <Img src={staticFile("brand/calisan-yapi-logo.png")} style={{width: 760, height: 318, objectFit: "contain", transform: "translateY(-20px)"}}/>
       </div>
       <div style={{marginTop: 130, fontFamily: DISPLAY, fontSize: 116, fontWeight: 950, lineHeight: .82, letterSpacing: -5, textAlign: "center", color: INK, transform: `translateY(${interpolate(enter,[0,1],[75,0])}px)`, opacity: enter}}>ÖLÇÜNÜ<br/><span style={{color: TEAL}}>GÖNDER.</span><br/>HAZIRLAYALIM.</div>
     </div>
@@ -68,7 +68,7 @@ const CallToAction = () => {
         <PhoneIcon/><span>0539 316 52 17</span>
       </div>
       <div style={{padding: "27px 34px", background: "rgba(243,240,232,.94)", border: `4px solid ${INK}`, color: INK, fontFamily: CONTACT_DISPLAY, fontSize: 48, fontWeight: 800, letterSpacing: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 24}}>
-        <WebIcon/><span>umayapi.com</span>
+        <WebIcon/><span>calisanyapi.com</span>
       </div>
     </div>
   </AbsoluteFill>;

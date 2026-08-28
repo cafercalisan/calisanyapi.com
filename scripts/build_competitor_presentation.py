@@ -58,7 +58,7 @@ def title(slide, kicker, heading, note=None):
 
 
 def footer(slide, number, source=None):
-    textbox(slide, "UMA YAPI · RAKİP ARAŞTIRMASI", .7, 7.12, 5, .2, 7, MUTED, True)
+    textbox(slide, "ÇALIŞAN YAPI · RAKİP ARAŞTIRMASI", .7, 7.12, 5, .2, 7, MUTED, True)
     textbox(slide, f"{number:02d}", 12.05, 7.05, .55, .24, 9, TEAL, True, align=PP_ALIGN.RIGHT)
     if source:
         textbox(slide, source, 6.2, 7.05, 5.5, .27, 6.5, MUTED, align=PP_ALIGN.RIGHT)
@@ -109,7 +109,7 @@ def image_cover(slide, path, x, y, w, h):
 # 01 Cover
 s = prs.slides.add_slide(prs.slide_layouts[6]); bg(s, INK)
 textbox(s, "PAZAR · WEB · SOSYAL MEDYA", .75, .62, 5.5, .4, 10, TEAL, True)
-textbox(s, "Rakip görünürlüğünden\nUma Yapı’nın fırsat alanına.", .75, 1.25, 8.5, 2.1, 34, WHITE, True, "Aptos Display")
+textbox(s, "Rakip görünürlüğünden\nÇalışan Yapı’nın fırsat alanına.", .75, 1.25, 8.5, 2.1, 34, WHITE, True, "Aptos Display")
 textbox(s, "İstanbul yapı, cam sistemleri ve sineklik pazarı\nKaynaklı masa başı araştırması · 10 Ağustos 2026", .78, 3.65, 6.8, .8, 14, RGBColor(190,200,199))
 image_cover(s, ROOT/"public/brand/calisan-yapi-hero.png", 8.35, 0, 4.98, 7.5)
 footer(s, 1)
@@ -215,7 +215,7 @@ textbox(s,"Çıkarım: erişim için “tek fayda + tek hareket + yakın plan”
 footer(s,9,"Kaynak: yt-dlp ile 10.08.2026 tarihli arama görünümü")
 
 # 10 opportunity
-s = prs.slides.add_slide(prs.slide_layouts[6]); bg(s); title(s,"Uma Yapı fırsatı","Rakipleri kopyalamadan daha iyi bir sistem")
+s = prs.slides.add_slide(prs.slide_layouts[6]); bg(s); title(s,"Çalışan Yapı fırsatı","Rakipleri kopyalamadan daha iyi bir sistem")
 bullet_list(s,[
  "Her hizmette 8–12 özgün gerçek proje; geniş açı, detay, kullanım ve montaj kareleri.",
  "Teknik ürün adı + halkın anlayacağı kullanım adı birlikte: “Plise · yana katlanır sineklik”.",

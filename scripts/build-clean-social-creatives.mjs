@@ -4,7 +4,7 @@ import sharp from "sharp";
 
 const root = process.cwd();
 const outDir = path.join(root, "public/social-media/campaign-ready");
-const logoSource = "/Users/cafer/Desktop/ChatGPT Image 3 Ağu 2026 01_55_53.png";
+const logoSource = path.join(root, "public/brand/calisan-yapi-logo.png");
 
 const items = [
   {
@@ -83,7 +83,7 @@ function typography(item) {
       ${headlineLine(item.accentSecond, secondCyanY, "cyan")}
       <rect x="70" y="760" width="230" height="58" rx="4" fill="#10acb7"/>
       <text x="185" y="797" text-anchor="middle" class="cta">${esc(item.cta)}</text>
-      <text x="70" y="858" class="url">umayapi.com</text>
+      <text x="70" y="858" class="url">calisanyapi.com</text>
       <line x1="70" y1="882" x2="270" y2="882" stroke="#10acb7" stroke-width="3"/>
       <text x="70" y="1284" class="services">SİNEKLİK</text>
       <rect x="176" y="1265" width="3" height="24" fill="#10acb7"/>
@@ -99,8 +99,7 @@ function typography(item) {
 await fs.mkdir(outDir, { recursive: true });
 
 const logo = await sharp(logoSource)
-  .extract({ left: 78, top: 816, width: 470, height: 142 })
-  .resize({ width: 330 })
+  .resize({ width: 330, fit: "inside" })
   .png()
   .toBuffer();
 

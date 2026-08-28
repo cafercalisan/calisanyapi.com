@@ -130,7 +130,7 @@ export async function POST(request: Request) {
           method: "POST",
           headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
           body: JSON.stringify({
-            from: process.env.FROM_EMAIL || "Uma Yapı <noreply@umayapi.com>",
+            from: process.env.FROM_EMAIL || "Çalışan Yapı <noreply@calisanyapi.com>",
             to: [to],
             subject: `${reference} · Yeni ${serviceName} talebi`,
             html: `<div style="font-family:sans-serif;max-width:640px"><h1>Yeni keşif talebi</h1><p><b>Referans:</b> ${reference}</p><p><b>Hizmet:</b> ${escapeHtml(serviceName)}<br><b>İlçe:</b> ${escapeHtml(input.district)}<br><b>Ölçü:</b> ${escapeHtml(String(input.width ?? "—"))} × ${escapeHtml(String(input.height ?? "—"))} × ${escapeHtml(String(input.depth ?? "—"))} cm</p><p><b>Müşteri:</b> ${escapeHtml(input.customer.name)} · ${escapeHtml(input.customer.phone)}</p><p>${escapeHtml(input.description)}</p><p>${input.photoPaths.length} fotoğraf yüklendi.</p></div>`,
