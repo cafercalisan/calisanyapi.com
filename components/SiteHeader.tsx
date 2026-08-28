@@ -25,6 +25,7 @@ export function SiteHeader() {
         <div className="nav-services"><Link href="/hizmetler">Hizmetler</Link><div className="nav-popover">{services.map((service) => <Link key={service.slug} href={`/hizmetler/${service.slug}`}>{service.name}<ArrowUpRight size={14}/></Link>)}</div></div>
         <Link href="/istanbul">Hizmet Bölgeleri</Link>
         <Link href="/projeler">Projeler</Link>
+        <Link href="/blog">Rehber</Link>
         <div className="nav-services"><Link href="/kurumsal">Kurumsal</Link><div className="nav-popover nav-corporate-popover"><Link href="/kurumsal"><Building2 size={15}/>Kurumsal<ArrowUpRight size={14}/></Link><Link href="/hakkimizda"><UsersRound size={15}/>Hakkımızda<ArrowUpRight size={14}/></Link><Link href="/sss"><CircleHelp size={15}/>Sık sorulan sorular<ArrowUpRight size={14}/></Link><Link href="/gizlilik"><ShieldCheck size={15}/>Gizlilik ve KVKK<ArrowUpRight size={14}/></Link></div></div>
       </nav>
       <div className="header-actions"><a className="phone-link" href={`tel:${site.phone}`} aria-label={`${site.phoneLabel} numarasını ara`}><span aria-hidden="true">🇹🇷</span><span className="phone-country">+90</span><Phone size={15}/><span className="phone-number">{site.phoneLabel}</span></a><button type="button" className="menu-toggle" aria-label={menuOpen ? "Menüyü kapat" : "Menüyü aç"} aria-expanded={menuOpen} aria-controls="mobile-menu" onClick={() => setMenuOpen(value => !value)}>{menuOpen ? <X/> : <Menu/>}</button></div>
@@ -35,6 +36,7 @@ export function SiteHeader() {
         <div className="mobile-service-links">{services.map(service => <Link key={service.slug} href={`/hizmetler/${service.slug}`} onClick={() => setMenuOpen(false)}>{service.name}</Link>)}</div>
         <Link href="/istanbul" onClick={() => setMenuOpen(false)}>Hizmet bölgeleri <ArrowUpRight/></Link>
         <Link href="/projeler" onClick={() => setMenuOpen(false)}>Projeler <ArrowUpRight/></Link>
+        <Link href="/blog" onClick={() => setMenuOpen(false)}>Yapı rehberi <ArrowUpRight/></Link>
         <Link href="/kurumsal" onClick={() => setMenuOpen(false)}>Kurumsal <ArrowUpRight/></Link>
         <Link href="/sss" onClick={() => setMenuOpen(false)}>Sık sorulan sorular <ArrowUpRight/></Link>
         <Link href="/hakkimizda" onClick={() => setMenuOpen(false)}>Hakkımızda <ArrowUpRight/></Link>
