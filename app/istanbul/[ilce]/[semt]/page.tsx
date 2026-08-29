@@ -11,7 +11,7 @@ import { getDistrict, services, site } from "@/lib/site";
 
 type Props = { params: Promise<{ ilce: string; semt: string }> };
 export function generateStaticParams() { return neighborhoods.map(item => ({ ilce:item.districtSlug, semt:item.slug })); }
-export async function generateMetadata({ params }: Props): Promise<Metadata> { const {ilce,semt}=await params; const item=getNeighborhood(ilce,semt); const district=getDistrict(ilce); if(!item||!district)return{}; return { title:`${item.name} Yapı, PVC ve Cam Balkon Hizmetleri`, description:`${item.name}, ${district.name} bölgesinde PVC pencere, cam balkon, sineklik ve yapı uygulamaları için yerinde keşif ve planlama.`, alternates:{canonical:`/istanbul/${ilce}/${semt}`} }; }
+export async function generateMetadata({ params }: Props): Promise<Metadata> { const {ilce,semt}=await params; const item=getNeighborhood(ilce,semt); const district=getDistrict(ilce); if(!item||!district)return{}; return { title:`${item.name} PVC Pencere ve Cam Balkon Hizmetleri`, description:`${item.name}, ${district.name} bölgesinde PVC pencere, cam balkon, sineklik ve yapı sistemleri için yerinde keşif, ölçü ve planlı uygulama hizmeti alın.`, alternates:{canonical:`/istanbul/${ilce}/${semt}`} }; }
 
 export default async function NeighborhoodPage({ params }: Props) {
   const {ilce,semt}=await params; const item=getNeighborhood(ilce,semt); const district=getDistrict(ilce); if(!item||!district)notFound(); const path=`/istanbul/${ilce}/${semt}`; const url=`${site.url}${path}`;
