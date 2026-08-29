@@ -4,6 +4,7 @@ node_modules
 !.env.example
 coverage
 .vercel
+supabase/.temp/
 output
 *.tsbuildinfo
 .DS_Store
