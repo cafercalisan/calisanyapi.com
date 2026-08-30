@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { dbRequest, supabaseConfigured } from "@/lib/supabase";
+import { dbRequest, isSupabaseConfigured } from "@/lib/supabase";
 import { services } from "@/lib/site";
 
 const optionalMeasurement = z.preprocess(
@@ -68,6 +68,7 @@ function escapeHtml(value: string) {
 }
 
 export async function POST(request: Request) {
+  const supabaseConfigured = isSupabaseConfigured();
   if (process.env.NODE_ENV === "production" && !supabaseConfigured) {
     console.error("[service-request] Supabase production ortamında yapılandırılmamış.");
     return NextResponse.json({ error: "Talep sistemi geçici olarak kullanılamıyor. Lütfen telefonla iletişime geçin." }, { status: 503 });

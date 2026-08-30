@@ -1,5 +1,5 @@
 import { DEFAULT_CATALOG } from "./catalog";
-import { dbRequest, supabaseConfigured } from "./supabase";
+import { dbRequest, isSupabaseConfigured } from "./supabase";
 import type { Catalog, QuoteInput, QuotePricing } from "./types";
 
 type ProductRow = { id: string; slug: string; name: string; short_name: string; description: string; base_price: number; price_per_m2: number; min_width: number; max_width: number; min_height: number; max_height: number; active: boolean };
@@ -7,7 +7,7 @@ type OptionRow = { id: string; slug: string; name: string; hex?: string; price: 
 type SettingsRow = { vat_rate: number; shipping_fee: number; free_shipping_threshold: number; installation_fee: number };
 
 export async function getCatalog(): Promise<Catalog> {
-  if (!supabaseConfigured) return DEFAULT_CATALOG;
+  if (!isSupabaseConfigured()) return DEFAULT_CATALOG;
   try {
     const [products, colors, features, settings] = await Promise.all([
       dbRequest<ProductRow[]>("products?select=*&order=sort_order"), dbRequest<OptionRow[]>("product_colors?select=*&order=sort_order"),
@@ -26,7 +26,7 @@ export async function getCatalog(): Promise<Catalog> {
 }
 
 export async function saveQuote(input: QuoteInput, pricing: QuotePricing) {
-  if (!supabaseConfigured) return { id: crypto.randomUUID(), reference: `CY-${Date.now().toString().slice(-6)}`, persisted: false };
+  if (!isSupabaseConfigured()) return { id: crypto.randomUUID(), reference: `CY-${Date.now().toString().slice(-6)}`, persisted: false };
   const reference = `CY-${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 5).toUpperCase()}`;
   const [quote] = await dbRequest<Array<{ id: string }>>("quotes", { method: "POST", body: JSON.stringify({ reference, status: "new", customer_name: input.customer.name, customer_phone: input.customer.phone, customer_email: input.customer.email || null, customer_notes: input.customer.notes || null, fulfilment_type: input.fulfilment.type, city: input.fulfilment.city, district: input.fulfilment.district, address: input.fulfilment.address, products_subtotal: pricing.productsSubtotal, service_fee: pricing.serviceFee, subtotal: pricing.subtotal, vat: pricing.vat, total: pricing.total, pricing_snapshot: pricing }) });
   await dbRequest("quote_items", { method: "POST", body: JSON.stringify(pricing.items.map((item) => ({ quote_id: quote.id, opening_type: item.openingType, label: item.label, product_slug: item.productSlug, product_name: item.productName, width: item.width, height: item.height, quantity: item.quantity, color_slug: item.colorSlug, color_name: item.colorName, feature_slugs: item.featureSlugs, feature_names: item.featureNames, unit_price: item.unitPrice, line_total: item.lineTotal, photo_path: item.photoPath || null }))) });
@@ -34,13 +34,13 @@ export async function saveQuote(input: QuoteInput, pricing: QuotePricing) {
 }
 
 export async function listQuotes() {
-  if (!supabaseConfigured && process.env.DEMO_ADMIN_ENABLED === "true") return DEMO_QUOTES;
-  if (!supabaseConfigured) return [];
+  if (!isSupabaseConfigured() && process.env.DEMO_ADMIN_ENABLED === "true") return DEMO_QUOTES;
+  if (!isSupabaseConfigured()) return [];
   return dbRequest<Array<Record<string, unknown>>>("quotes?select=*,quote_items(*)&order=created_at.desc&limit=250");
 }
 
 export async function listServiceRequests() {
-  if (!supabaseConfigured) return [];
+  if (!isSupabaseConfigured()) return [];
   return dbRequest<Array<Record<string, unknown>>>("service_requests?select=*&order=created_at.desc&limit=250");
 }
 
