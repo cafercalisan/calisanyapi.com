@@ -7,6 +7,45 @@ type LocalServiceShowcaseProps = {
   placeName: string;
 };
 
+const projectImages: Record<string, { before: string; after: string }> = {
+  "pvc-kapi-pencere": {
+    before: "/projects/generated/pvc-kaldir-sur-oncesi.webp",
+    after: "/projects/generated/pvc-kaldir-sur-sonrasi.webp",
+  },
+  "cam-balkon": {
+    before: "/projects/generated/cam-balkon-katlanir-oncesi.webp",
+    after: "/projects/generated/cam-balkon-katlanir-sonrasi.webp",
+  },
+  kupeste: {
+    before: "/projects/generated/kupeste-duvar-tutamak-oncesi.webp",
+    after: "/projects/generated/kupeste-duvar-tutamak-sonrasi.webp",
+  },
+  korkuluk: {
+    before: "/projects/generated/korkuluk-cam-oncesi.webp",
+    after: "/projects/generated/korkuluk-cam-sonrasi.webp",
+  },
+  "asma-tavan": {
+    before: "/projects/generated/asma-tavan-baffle-oncesi.webp",
+    after: "/projects/generated/asma-tavan-baffle-sonrasi.webp",
+  },
+  sineklik: {
+    before: "/projects/generated/plise-pencere-oncesi.webp",
+    after: "/projects/generated/plise-pencere-sonrasi.webp",
+  },
+  "kis-bahcesi": {
+    before: "/projects/generated/kis-bahcesi-cam-catili-oncesi.webp",
+    after: "/projects/generated/kis-bahcesi-cam-catili-sonrasi.webp",
+  },
+  pergola: {
+    before: "/projects/generated/pergola-motorlu-oncesi.webp",
+    after: "/projects/generated/pergola-motorlu-sonrasi.webp",
+  },
+  "giyotin-cam": {
+    before: "/projects/generated/giyotin-cam-uc-panel-oncesi.webp",
+    after: "/projects/generated/giyotin-cam-uc-panel-sonrasi.webp",
+  },
+};
+
 export function LocalServiceShowcase({ placeName }: LocalServiceShowcaseProps) {
   return (
     <section className="local-showcase">
@@ -25,19 +64,33 @@ export function LocalServiceShowcase({ placeName }: LocalServiceShowcaseProps) {
       </header>
 
       <div className="local-showcase-grid">
-        {services.map((service, index) => (
-          <Link
+        {services.map((service, index) => {
+          const images = projectImages[service.slug];
+
+          return <Link
             className="local-showcase-card"
             href={`/hizmetler/${service.slug}`}
             key={service.slug}
           >
             <div className="local-showcase-image">
-              <Image
-                src={service.image}
-                alt={`${placeName} ${service.name} uygulama örneği`}
-                fill
-                sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw"
-              />
+              <figure>
+                <Image
+                  src={images.before}
+                  alt={`${placeName} ${service.name} uygulama öncesi`}
+                  fill
+                  sizes="(max-width: 520px) 50vw, (max-width: 900px) 25vw, 17vw"
+                />
+                <figcaption>Öncesi</figcaption>
+              </figure>
+              <figure>
+                <Image
+                  src={images.after}
+                  alt={`${placeName} ${service.name} uygulama sonrası`}
+                  fill
+                  sizes="(max-width: 520px) 50vw, (max-width: 900px) 25vw, 17vw"
+                />
+                <figcaption>Sonrası</figcaption>
+              </figure>
               <span>{String(index + 1).padStart(2, "0")}</span>
             </div>
             <div className="local-showcase-copy">
@@ -48,8 +101,8 @@ export function LocalServiceShowcase({ placeName }: LocalServiceShowcaseProps) {
                 <ArrowUpRight aria-hidden="true" size={20} />
               </div>
             </div>
-          </Link>
-        ))}
+          </Link>;
+        })}
       </div>
     </section>
   );
