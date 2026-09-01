@@ -17,7 +17,7 @@ export function SiteHeader() {
   }, [menuOpen]);
 
   return <>
-    <header className="site-header">
+    <header id="sayfa-baslangici" className="site-header">
       <Link href="/" className="brand" aria-label="Çalışan Yapı ana sayfa">
         <Image src="/brand/calisan-yapi-logo-header.webp" alt="Çalışan Yapı" width={900} height={160}/>
       </Link>

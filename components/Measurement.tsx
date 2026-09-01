@@ -52,13 +52,6 @@ export function Measurement() {
   function save(next: Consent) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     setConsent(next);
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(["consent", "update", {
-      analytics_storage: next.analytics ? "granted" : "denied",
-      ad_storage: next.marketing ? "granted" : "denied",
-      ad_user_data: next.marketing ? "granted" : "denied",
-      ad_personalization: next.marketing ? "granted" : "denied",
-    }]);
   }
 
   return <>
@@ -66,7 +59,16 @@ export function Measurement() {
       <Script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} strategy="afterInteractive" />
     )}
     {consent?.analytics && gaId && (
-      <Script id="ga4" strategy="afterInteractive">{`gtag('js',new Date());gtag('config','${gaId}',{anonymize_ip:true});`}</Script>
+      <Script id="ga4" strategy="afterInteractive">{`
+        gtag('consent','update',{
+          analytics_storage:'granted',
+          ad_storage:${consent.marketing ? "'granted'" : "'denied'"},
+          ad_user_data:${consent.marketing ? "'granted'" : "'denied'"},
+          ad_personalization:${consent.marketing ? "'granted'" : "'denied'"}
+        });
+        gtag('js',new Date());
+        gtag('config','${gaId}',{anonymize_ip:true});
+      `}</Script>
     )}
     {consent?.marketing && pixelId && <Script id="meta-pixel" strategy="afterInteractive">{`
       !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${pixelId}');fbq('track','PageView');

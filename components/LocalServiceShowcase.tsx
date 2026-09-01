@@ -69,7 +69,7 @@ export function LocalServiceShowcase({ placeName }: LocalServiceShowcaseProps) {
 
           return <Link
             className="local-showcase-card"
-            href={`/hizmetler/${service.slug}#hizmet-baslangici`}
+            href={`/hizmetler/${service.slug}#sayfa-baslangici`}
             key={service.slug}
           >
             <div className="local-showcase-image">
