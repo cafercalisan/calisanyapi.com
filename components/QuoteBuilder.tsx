@@ -9,14 +9,16 @@ import { productImage } from "@/lib/product-images";
 import type { Catalog, CustomerInput, Fulfilment, QuoteItemInput, QuotePricing } from "@/lib/types";
 
 const DRAFT_KEY = "cy_quote_draft_v8";
-const makeItem = (): QuoteItemInput => ({ id: crypto.randomUUID(), openingType: "window", label: "Pencere", productSlug: "sabit-citcitli", width: 0, height: 0, quantity: 1, colorSlug: "beyaz", featureSlugs: [] });
+const makeItem = (productSlug: string): QuoteItemInput => ({ id: crypto.randomUUID(), openingType: "window", label: "Pencere", productSlug, width: 0, height: 0, quantity: 1, colorSlug: "beyaz", featureSlugs: [] });
 type Draft = { items: QuoteItemInput[]; fulfilment: Fulfilment; customer: CustomerInput; kvkk: boolean };
-const initialDraft = (): Draft => ({ items: [makeItem()], fulfilment: { type: "shipping", city: "", district: "", address: "" }, customer: { name: "", phone: "", email: "", notes: "" }, kvkk: false });
+const initialDraft = (productSlug: string): Draft => ({ items: [makeItem(productSlug)], fulfilment: { type: "shipping", city: "", district: "", address: "" }, customer: { name: "", phone: "", email: "", notes: "" }, kvkk: false });
 const steps = ["Ürün ve ölçü", "Teslimat", "İletişim"];
 
 export function QuoteBuilder({ catalog }: { catalog: Catalog }) {
+  const defaultProduct = catalog.products.find((product) => product.active && product.slug === "sabit-citcitli")
+    ?? catalog.products.find((product) => product.active && ["surme", "duble"].includes(product.slug));
   const [step, setStep] = useState(0);
-  const [draft, setDraft] = useState<Draft>(initialDraft);
+  const [draft, setDraft] = useState<Draft>(() => initialDraft(defaultProduct?.slug ?? ""));
   const [hydrated, setHydrated] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -24,10 +26,21 @@ export function QuoteBuilder({ catalog }: { catalog: Catalog }) {
 
   useEffect(() => {
     queueMicrotask(() => {
-      try { const saved = localStorage.getItem(DRAFT_KEY); if (saved) setDraft(JSON.parse(saved)); } catch {}
+      try {
+        const saved = localStorage.getItem(DRAFT_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved) as Draft;
+          if (Array.isArray(parsed.items) && parsed.items.length > 0) {
+            parsed.items = parsed.items.map((item) => catalog.products.some((product) => product.active && product.slug === item.productSlug)
+              ? item
+              : { ...item, productSlug: defaultProduct?.slug ?? "", width: 0, height: 0 });
+            setDraft(parsed);
+          }
+        }
+      } catch {}
       setHydrated(true);
     });
-  }, []);
+  }, [catalog, defaultProduct?.slug]);
   useEffect(() => { if (hydrated) localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); }, [draft, hydrated]);
 
   const pricing = useMemo(() => { if (draft.items.some(item => item.width <= 0 || item.height <= 0)) return null; try { return calculateQuote(draft.items, draft.fulfilment.type, catalog); } catch { return null; } }, [draft.items, draft.fulfilment.type, catalog]);
@@ -55,7 +68,8 @@ export function QuoteBuilder({ catalog }: { catalog: Catalog }) {
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Bağlantı hatası."); } finally { setBusy(false); }
   };
 
-  if (success) return <Success reference={success.reference} pricing={success.pricing} onReset={() => { setDraft(initialDraft()); setSuccess(null); setStep(0); }} />;
+  if (!defaultProduct) return <section id="teklif" className="technical-paper px-4 py-20 text-center"><h2 className="font-display text-4xl">Teklif seçenekleri hazırlanıyor.</h2><p className="mt-4">Size uygun sineklik için doğrudan iletişime geçebilirsiniz.</p><a className="btn-primary mt-6" href="/teklif-al?hizmet=sineklik">Keşif iste</a></section>;
+  if (success) return <Success reference={success.reference} pricing={success.pricing} onReset={() => { setDraft(initialDraft(defaultProduct.slug)); setSuccess(null); setStep(0); }} />;
 
   return (
     <section id="teklif" className="technical-paper min-h-screen overflow-x-clip scroll-mt-0 px-4 pb-28 pt-14 md:px-8 md:py-24">
@@ -98,13 +112,13 @@ function Measurements({ catalog, item, updateItem }: { catalog: Catalog; item: Q
 
 function ItemEditor({item,catalog,updateItem}:{item:QuoteItemInput;catalog:Catalog;updateItem:(id:string,p:Partial<QuoteItemInput>)=>void}) {
   const [guideOpen,setGuideOpen]=useState(false);
-  const product=catalog.products.find((p)=>p.slug===item.productSlug)!;
+  const product=catalog.products.find((p)=>p.active&&p.slug===item.productSlug);
   const upload=async(file?:File)=>{if(!file)return;const form=new FormData();form.append("file",file);const res=await fetch("/api/uploads",{method:"POST",body:form});const json=await res.json();if(res.ok)updateItem(item.id,{photoPath:json.path});else alert(json.error||"Fotoğraf yüklenemedi.");};
   const openingOptions = [
     { type:"window" as const, label:"Pencere", slug:"sabit-citcitli", note:"Standart ve geniş pencereler" },
     { type:"door" as const, label:"Kapı", slug:"surme", note:"Balkon ve teras kapıları" },
     { type:"glass-balcony" as const, label:"Geniş açıklık", slug:"duble", note:"Cam balkon ve geniş geçişler" },
-  ];
+  ].filter((option) => catalog.products.some((candidate) => candidate.active && candidate.slug === option.slug));
   const chooseOpening=(option:(typeof openingOptions)[number])=>updateItem(item.id,{openingType:option.type,label:option.label,productSlug:option.slug,width:0,height:0});
   const solutionCopy: Record<string,{label:string,note:string,fit:string}> = {
     "sabit-citcitli": {label:"Sabit",note:"Açıp kapatmanız gerekmeyen alanlar için yalın çözüm.",fit:"Pencere ve küçük açıklıklar"},
@@ -113,6 +127,7 @@ function ItemEditor({item,catalog,updateItem}:{item:QuoteItemInput;catalog:Catal
   };
   const systemOptions = ["sabit-citcitli","surme","duble"].map(slug=>{const product=catalog.products.find(candidate=>candidate.slug===slug);return product&&product.active?{slug,...solutionCopy[slug]}:null}).filter((option): option is {slug:string;label:string;note:string;fit:string}=>Boolean(option));
   const chooseSystem=(slug:string)=>updateItem(item.id,{productSlug:slug,width:0,height:0});
+  if (!product) return <p role="alert">Seçilen sineklik modeli şu anda kullanılamıyor. Lütfen sayfayı yenileyin.</p>;
   return <div className="border border-[var(--line)] bg-white/55 p-4 md:p-6">
     <div className="grid gap-2 sm:grid-cols-3">{openingOptions.map(option=><button key={option.type} onClick={()=>chooseOpening(option)} className={`group min-h-28 min-w-0 border p-3 text-left transition md:min-h-36 md:p-4 ${item.openingType===option.type?"border-[var(--ink)] bg-[var(--ink)] text-white":"border-[var(--line)] bg-[var(--paper-deep)] hover:border-[var(--teal-dark)]"}`}><OpeningIcon type={option.type}/><strong className="font-display mt-2 block text-2xl md:mt-3 md:text-3xl">{option.label}</strong><span className={`mt-1 block text-[8px] leading-3 md:text-[10px] ${item.openingType===option.type?"text-white/50":"text-[var(--ink-soft)]"}`}>{option.note}</span></button>)}</div>
 
