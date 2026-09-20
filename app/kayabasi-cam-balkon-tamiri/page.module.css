@@ -44,3 +44,20 @@
   .visualStory figure,.mainVisual{min-height:315px!important}
   .steps li{grid-template-columns:50px 1fr}
 }
+
+.problemCta{display:inline-flex;align-items:center;gap:.65rem;margin-top:2rem;color:var(--repair-teal);font-size:.7rem;font-weight:900;text-decoration:none}
+.problemCta svg{transition:transform .2s ease}
+.problemCta:hover svg{transform:translateX(4px)}
+.tags .primaryTag{color:#fff;border-color:var(--repair-teal);background:var(--repair-teal)}
+@media(max-width:900px){
+  .mobileContact{grid-template-columns:1fr}
+  .mobileContact a{color:#fff;background:#0c8d63}
+}
+@media(max-width:520px){
+  .heroContent{padding-top:7.5rem;padding-bottom:3rem}
+  .hero h1{margin:1rem 0;font-size:clamp(3.25rem,14vw,4.8rem)}
+  .heroLead{line-height:1.65}
+  .actions{margin-top:1.4rem}
+  .primaryCta,.secondaryCta{min-height:52px}
+  .microcopy{margin-top:.9rem}
+}

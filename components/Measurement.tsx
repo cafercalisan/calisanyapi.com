@@ -27,9 +27,10 @@ export function Measurement() {
       const link = (event.target as HTMLElement).closest("a");
       if (!link) return;
       const href = link.getAttribute("href") || "";
-      if (href.startsWith("tel:")) track("phone_click", { location: location.pathname });
-      else if (href.includes("wa.me") || href.includes("whatsapp")) track("whatsapp_click", { location: location.pathname });
-      else if (href.includes("teklif-al") || href.startsWith("#teklif")) track("cta_click", { href, location: location.pathname });
+      const ctaId = link.dataset.ctaId;
+      if (href.startsWith("tel:")) track("phone_click", { location: location.pathname, cta_id: ctaId });
+      else if (href.includes("wa.me") || href.includes("whatsapp")) track("whatsapp_click", { location: location.pathname, cta_id: ctaId });
+      else if (href.includes("teklif-al") || href.startsWith("#teklif")) track("cta_click", { href, location: location.pathname, cta_id: ctaId });
     };
     document.addEventListener("click", click);
     return () => document.removeEventListener("click", click);
