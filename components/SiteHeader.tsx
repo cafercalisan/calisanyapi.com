@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { ArrowUpRight, Building2, CircleHelp, Menu, Phone, ShieldCheck, UsersRound, X } from "lucide-react";
 import { services, site } from "@/lib/site";
 
-export function SiteHeader() {
+export function SiteHeader({ hideMobileConversion = false }: { hideMobileConversion?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -43,9 +43,9 @@ export function SiteHeader() {
       </nav>
       <a className="mobile-menu-phone" href={`tel:${site.phone}`}><Phone/> Hemen arayın · {site.phoneLabel}</a>
     </div>
-    <aside className="mobile-conversion-bar" aria-label="Hızlı iletişim">
+    {!hideMobileConversion && <aside className="mobile-conversion-bar" aria-label="Hızlı iletişim">
       <a href={`tel:${site.phone}`}><Phone/><span>Ara</span></a>
       <Link href="/teklif-al"><span>Fiyat iste</span><ArrowUpRight/></Link>
-    </aside>
+    </aside>}
   </>;
 }

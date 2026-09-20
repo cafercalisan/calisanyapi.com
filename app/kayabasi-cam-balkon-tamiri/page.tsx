@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { ArrowRight, Camera, Check, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
+import { ArrowRight, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -53,7 +53,7 @@ export default function KayabasiCamBalkonTamiriPage() {
 
   return <>
     <JsonLd data={schema}/>
-    <SiteHeader/>
+    <SiteHeader hideMobileConversion/>
     <main className={styles.page}>
       <section className={styles.hero}>
         <Image src="/landing/kayabasi-cam-balkon/hero.webp" alt="Kayabaşı'nda modern cam balkon sistemi" fill priority sizes="100vw" className={styles.heroImage}/>
@@ -64,18 +64,15 @@ export default function KayabasiCamBalkonTamiriPage() {
           <p className={styles.heroLead}>Cam balkonunuz su mu alıyor, zor mu kapanıyor veya teknik sorunlar mı çıkarıyor? Kayabaşı ve çevresinde yerinde kontrol ve çözüm için bize ulaşın.</p>
           <div className={styles.actions}>
             <a href={whatsappUrl} target="_blank" rel="noreferrer" className={styles.primaryCta}><MessageCircle size={19}/> WhatsApp&apos;tan Ulaş</a>
-            <a href={whatsappUrl} target="_blank" rel="noreferrer" className={styles.secondaryCta}><Camera size={18}/> Fotoğraf Gönder</a>
+            <a href={`tel:${site.phone}`} className={styles.secondaryCta}><Phone size={18}/> Hemen Ara</a>
           </div>
-          <p className={styles.microcopy}><ShieldCheck size={15}/> Fotoğrafla ön değerlendirme · Kayabaşı ve yakın çevre</p>
+          <p className={styles.microcopy}><ShieldCheck size={15}/> Kayabaşı ve yakın çevrede yerinde kontrol</p>
         </div>
       </section>
 
       <section className={styles.visualStory} aria-label="Cam balkon tamiri uygulama detayları">
-        <figure className={styles.mainVisual}><Image src="/landing/kayabasi-cam-balkon/teknik-kontrol.webp" alt="Cam balkon ray ve fitil kontrolü" fill sizes="(max-width: 800px) 100vw, 62vw"/><figcaption>Ray, fitil ve hareket kontrolü</figcaption></figure>
-        <div className={styles.sideVisuals}>
-          <figure><Image src="/services/lifestyle/cam-balkon-cephe-02.jpg" alt="Cam balkon birleşim detayları" fill sizes="(max-width: 800px) 50vw, 38vw"/><figcaption>Birleşim detayları</figcaption></figure>
-          <figure><Image src="/services/cam-balkon-v2.webp" alt="Bakımı yapılmış cam balkon görünümü" fill sizes="(max-width: 800px) 50vw, 38vw"/><figcaption>Temiz ve dengeli çalışma</figcaption></figure>
-        </div>
+        <figure className={styles.mainVisual}><Image src="/landing/kayabasi-cam-balkon/teknik-kontrol.webp" alt="Cam balkon ray ve fitil kontrolü" fill sizes="(max-width: 800px) 100vw, 58vw"/><figcaption>Ray, fitil ve hareket kontrolü</figcaption></figure>
+        <figure className={styles.waterVisual}><Image src="/landing/kayabasi-cam-balkon/su-alma.webp" alt="Cam balkon alt rayında su alma problemi" fill sizes="(max-width: 800px) 100vw, 42vw"/><figcaption>Su alma ve sızdırmazlık kontrolü</figcaption></figure>
       </section>
 
       <section className={styles.intro}>
@@ -91,9 +88,9 @@ export default function KayabasiCamBalkonTamiriPage() {
       <section className={styles.funnel}>
         <div className={styles.funnelCopy}><p className={styles.eyebrowLight}>Hızlı ön değerlendirme</p><h2>Sorununuzu<br/><em>Fotoğrafla Gönderin</em></h2><p>Cam balkonunuzdaki sorunu WhatsApp üzerinden bize iletin. Uygunsa fotoğraf gönderin, durumu birlikte değerlendirelim.</p><a href={whatsappUrl} target="_blank" rel="noreferrer" className={styles.lightCta}><MessageCircle size={20}/> WhatsApp&apos;tan Fotoğraf Gönder <ArrowRight size={18}/></a></div>
         <ol className={styles.steps}>
-          <li><b>01</b><Camera/><div><strong>Sorunu fotoğraflayın</strong><span>Yakın detay ve balkonun genel görünümü yeterli.</span></div></li>
-          <li><b>02</b><MessageCircle/><div><strong>WhatsApp&apos;tan gönderin</strong><span>Konumunuzu ve yaşadığınız sorunu kısaca yazın.</span></div></li>
-          <li><b>03</b><Check/><div><strong>Bilgi ve yönlendirme alın</strong><span>Uygun müdahale ve yerinde kontrol seçeneğini konuşalım.</span></div></li>
+          <li><b>01</b><div><strong>Sorunu fotoğraflayın</strong><span>Yakın detay ve balkonun genel görünümü yeterli.</span></div></li>
+          <li><b>02</b><div><strong>WhatsApp&apos;tan gönderin</strong><span>Konumunuzu ve yaşadığınız sorunu kısaca yazın.</span></div></li>
+          <li><b>03</b><div><strong>Bilgi ve yönlendirme alın</strong><span>Uygun müdahale ve yerinde kontrol seçeneğini konuşalım.</span></div></li>
         </ol>
       </section>
 
@@ -103,8 +100,8 @@ export default function KayabasiCamBalkonTamiriPage() {
       </section>
 
       <section className={styles.area}>
-        <div className={styles.areaMap}><span className={styles.mapPulse}/><span>Kayabaşı</span><small>Başakşehir · İstanbul</small></div>
-        <div><p className={styles.eyebrow}>Hizmet bölgelerimiz</p><h2>Kayabaşı ve yakın çevre</h2><p>Kayabaşı başta olmak üzere Başakşehir, Bahçeşehir, İkitelli ve yakın çevrede cam balkon tamiri ve teknik kontrol taleplerini değerlendiriyoruz.</p><div className={styles.tags}><span>Kayabaşı</span><span>Başakşehir</span><span>Bahçeşehir</span><span>İkitelli</span><span>Yakın çevre</span></div></div>
+        <figure className={styles.areaVisual}><Image src="/landing/kayabasi-cam-balkon/kayabasi-konutlari.webp" alt="Kayabaşı Başakşehir konut blokları" fill sizes="(max-width: 900px) 100vw, 50vw"/><figcaption>Kayabaşı konut bölgesi · Görsel kaynağı: TOKİ</figcaption></figure>
+        <div><p className={styles.eyebrow}>Kayabaşı · Başakşehir</p><h2>Bölgenizde en uygun yapı çözümleri</h2><p>Kayabaşı&apos;ndaki farklı konut tiplerinin cam balkon sistemleri de farklı bakım ve ayar ihtiyaçları doğurur. Başakşehir, Bahçeşehir, İkitelli ve yakın çevrede sorunu bulunduğu yerde değerlendiriyoruz.</p><div className={styles.tags}><span>Kayabaşı</span><span>Başakşehir</span><span>Bahçeşehir</span><span>İkitelli</span><span>Yakın çevre</span></div></div>
       </section>
 
       <section className={styles.faq}>
@@ -113,13 +110,15 @@ export default function KayabasiCamBalkonTamiriPage() {
       </section>
 
       <section className={styles.finalCta}>
-        <p className={styles.eyebrowLight}>Kayabaşı · Başakşehir</p>
-        <h2>Kayabaşı cam balkon tamiri için hemen iletişime geçin</h2>
-        <p>Cam balkonunuzdaki su alma ve teknik problemler için WhatsApp üzerinden bize ulaşabilirsiniz.</p>
+        <Image src="/landing/kayabasi-cam-balkon/hero.webp" alt="" fill sizes="100vw" className={styles.finalImage}/><div className={styles.finalShade}/>
+        <div className={styles.finalContent}><p className={styles.eyebrowLight}>Çalışan Yapı güvencesi</p>
+        <h2>Başakşehir bölgesinde hızlı ve güvenilir çözümler</h2>
+        <p>Cam balkonunuzdaki su alma ve teknik problemler için doğrudan ekibimize ulaşın.</p>
         <div className={styles.finalActions}><a href={whatsappUrl} target="_blank" rel="noreferrer" className={styles.lightCta}><MessageCircle size={20}/> WhatsApp&apos;tan Mesaj Gönder</a><a href={`tel:${site.phone}`}><Phone size={17}/> {site.phoneLabel}</a></div>
+        </div>
       </section>
     </main>
-    <SiteFooter/>
-    <a href={whatsappUrl} target="_blank" rel="noreferrer" className={styles.mobileWhatsapp} aria-label="WhatsApp'tan fotoğraf gönder"><MessageCircle/><span>Fotoğraf gönder</span></a>
+    <SiteFooter hideLead/>
+    <aside className={styles.mobileContact} aria-label="Hızlı iletişim"><a href={`tel:${site.phone}`}><Phone/><span>Ara</span></a><a href={whatsappUrl} target="_blank" rel="noreferrer"><MessageCircle/><span>WhatsApp</span></a></aside>
   </>;
 }

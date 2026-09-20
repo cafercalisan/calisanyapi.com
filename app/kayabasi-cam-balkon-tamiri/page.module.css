@@ -13,3 +13,34 @@
 .finalCta{padding:8rem 7vw;text-align:center;color:#fff;background:var(--repair-teal)}.finalCta h2{max-width:900px;margin:.7rem auto;font-family:var(--font-display);font-size:clamp(3.5rem,6vw,6.7rem);font-weight:500;letter-spacing:-.05em;line-height:.86}.finalCta>p:not(.eyebrowLight){max-width:620px;margin:1.5rem auto;color:rgba(255,255,255,.75);line-height:1.8}.finalActions{justify-content:center}.finalActions>a:last-child{display:inline-flex;align-items:center;gap:.5rem;padding:0 1rem;color:#fff;font-size:.75rem;text-decoration:none}.mobileWhatsapp{display:none}
 @media(max-width:900px){.hero{min-height:760px}.heroShade{background:linear-gradient(0deg,rgba(12,26,29,.94) 0%,rgba(12,26,29,.66) 60%,rgba(12,26,29,.15))}.heroContent{padding:9rem 1.25rem 4rem}.hero h1{font-size:clamp(3.5rem,15vw,5.7rem)}.visualStory{grid-template-columns:1fr}.mainVisual{min-height:480px!important}.sideVisuals{grid-template-columns:1fr 1fr}.sideVisuals figure{min-height:270px}.intro,.trust,.area,.faq,.funnel{grid-template-columns:1fr;gap:3rem;padding:6rem 1.25rem}.issues{padding:6rem 1.25rem}.issues header{grid-template-columns:1fr;gap:1rem}.issueList article{grid-template-columns:34px 1fr;gap:1rem}.issueList article>div{display:block}.issueList p{margin-top:.5rem}.faq header{position:static}.areaMap{min-height:340px}.mobileWhatsapp{position:fixed;z-index:70;right:14px;bottom:82px;display:flex;align-items:center;gap:.55rem;min-height:50px;padding:0 1rem;color:#fff;border-radius:999px;background:#0c8d63;box-shadow:0 12px 35px rgba(0,0,0,.28);font-size:.68rem;font-weight:900;text-decoration:none}.mobileWhatsapp svg{width:19px}.finalCta{padding:6rem 1.25rem 9rem}}
 @media(max-width:520px){.hero{min-height:720px}.heroLead{font-size:.86rem}.actions{display:grid}.primaryCta,.secondaryCta{width:100%}.visualStory{padding:5px;gap:5px}.mainVisual{min-height:360px!important}.sideVisuals{gap:5px}.sideVisuals figure{min-height:190px}.intro h2,.issues h2,.trust h2,.area h2,.faq h2{font-size:3.1rem}.issueList h3{font-size:1.65rem}.funnel h2{font-size:3.8rem}.lightCta{width:100%}.steps li{grid-template-columns:28px 38px 1fr}.faq summary{font-size:1.2rem}.finalCta h2{font-size:3.6rem}}
+
+/* Simplified conversion and visual flow */
+.visualStory{grid-template-columns:1.15fr .85fr}
+.visualStory figure{min-height:520px}
+.mainVisual{min-height:520px!important}
+.steps li{grid-template-columns:54px 1fr;gap:1.2rem;align-items:start;padding:1.7rem 0}
+.steps b{display:grid;width:42px;height:42px;place-items:center;align-self:auto;color:var(--repair-dark);border-radius:50%;background:#70ddd7;font-size:.68rem}
+.areaVisual{position:relative;min-height:460px;margin:0;overflow:hidden;background:#d7dfdc}
+.areaVisual img{object-fit:cover}
+.areaVisual:after{content:"";position:absolute;inset:45% 0 0;background:linear-gradient(transparent,rgba(20,36,39,.7))}
+.areaVisual figcaption{position:absolute;z-index:2;right:1rem;bottom:1rem;color:rgba(255,255,255,.8);font-size:.55rem;letter-spacing:.07em}
+.finalCta{position:relative;display:grid;min-height:650px;padding:0;place-items:center;overflow:hidden;background:var(--repair-dark)}
+.finalImage{object-fit:cover}
+.finalShade{position:absolute;inset:0;background:rgba(14,31,34,.78)}
+.finalContent{position:relative;z-index:2;padding:7rem 7vw}
+.finalContent>p:not(.eyebrowLight){max-width:620px;margin:1.5rem auto;color:rgba(255,255,255,.75);line-height:1.8}
+.mobileContact{display:none}
+@media(max-width:900px){
+  .visualStory figure,.mainVisual{min-height:360px!important}
+  .areaVisual{min-height:360px}
+  .finalCta{min-height:600px;padding:0}
+  .finalContent{padding:6rem 1.25rem 8rem}
+  .mobileContact{position:fixed;z-index:70;right:0;bottom:0;left:0;display:grid;grid-template-columns:90px 1fr;height:62px;padding:6px;background:#fff;box-shadow:0 -10px 30px rgba(0,0,0,.14)}
+  .mobileContact a{display:flex;align-items:center;justify-content:center;gap:.45rem;color:var(--repair-dark);font-size:.68rem;font-weight:900;text-decoration:none}
+  .mobileContact a+a{color:#fff;background:#0c8d63}
+  .mobileContact svg{width:18px}
+}
+@media(max-width:520px){
+  .visualStory figure,.mainVisual{min-height:315px!important}
+  .steps li{grid-template-columns:50px 1fr}
+}
