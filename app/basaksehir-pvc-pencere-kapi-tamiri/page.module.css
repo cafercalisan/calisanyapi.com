@@ -49,6 +49,11 @@
 .problemCta svg{transition:transform .2s ease}
 .problemCta:hover svg{transform:translateX(4px)}
 .tags .primaryTag{color:#fff;border-color:var(--repair-teal);background:var(--repair-teal)}
+.introCta{display:flex;align-items:center;justify-content:space-between;gap:2rem;margin:0 7vw 5rem;padding:1.8rem 2rem;border-left:3px solid var(--repair-teal);background:#edf5f3}
+.introCta p{margin:0 0 .35rem;color:var(--repair-teal);font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.introCta h2{margin:0;font-family:var(--font-display);font-size:clamp(1.7rem,2.5vw,2.5rem);font-weight:600;line-height:1.1}
+.introCta a{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;min-height:54px;padding:0 1.2rem;flex-shrink:0;color:#fff;background:var(--repair-teal);font-size:.72rem;font-weight:900;text-decoration:none}
+@media(max-width:900px){.introCta{flex-direction:column;align-items:stretch;gap:1.3rem;margin:0 1.25rem 4rem;padding:1.5rem}.introCta a{width:100%}}
 @media(max-width:900px){
   .mobileContact{grid-template-columns:1fr}
   .mobileContact a{color:#fff;background:#0c8d63}

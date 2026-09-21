@@ -80,6 +80,11 @@ export default function KayabasiCamBalkonTamiriPage() {
         <div><p>Cam balkon sistemlerinde benzer görünen iki sorun farklı nedenlerden kaynaklanabilir. Su alma, kapanmama veya zor çalışma şikâyetinde yalnız görünen parçaya değil; ray, teker, fitil, tahliye ve kanat ayarının bütününe bakıyoruz.</p><p>Kayabaşı ve Başakşehir çevresindeki konutlarda sorunu önce fotoğraf üzerinden dinliyor, uygun durumlarda yerinde kontrol ederek gerekli müdahaleyi açıkça paylaşıyoruz.</p></div>
       </section>
 
+      <section className={styles.introCta} aria-label="Cam balkon sorunu için iletişim">
+        <div><p>İlk adımı fotoğrafla atalım</p><h2>Cam balkonunuzdaki sorunu gösterin.</h2></div>
+        <a href={whatsappUrl} target="_blank" rel="noreferrer" data-cta-id="intro_whatsapp"><MessageCircle size={19}/> Sorunun Fotoğrafını Gönder <ArrowRight size={17}/></a>
+      </section>
+
       <section className={styles.issues}>
         <header><p className={styles.eyebrow}>Sık karşılaşılan durumlar</p><h2>Hangi Cam Balkon Problemlerinde Hizmet Veriyoruz?</h2></header>
         <div className={styles.issueList}>{issues.map(([title, text], index) => <article key={title}><span>{String(index + 1).padStart(2, "0")}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div>
