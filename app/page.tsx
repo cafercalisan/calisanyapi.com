@@ -30,7 +30,7 @@ export default function HomePage() {
       <section id="hizmetler" className="bg-[var(--paper)] px-5 py-20 sm:px-8 lg:px-[7vw] lg:py-32">
         <div className="mx-auto max-w-[1500px]">
           <div className="mb-12 flex flex-col justify-between gap-6 border-b border-[var(--line)] pb-8 md:flex-row md:items-end lg:mb-16">
-            <div><p className="kicker">Hizmetlerimiz</p><h2 className="font-display max-w-3xl text-5xl leading-[.9] font-medium tracking-[-.04em] sm:text-6xl lg:text-8xl">Alanınıza göre<br/><em className="font-normal text-[var(--teal)]">doğru çözüm.</em></h2></div>
+            <div><p className="kicker">Çalışan Yapı</p><h2 className="font-display max-w-3xl text-5xl leading-[.9] font-medium tracking-[-.04em] sm:text-6xl lg:text-8xl">Sunduğumuz<br/><em className="font-normal text-[var(--teal)]">hizmetler.</em></h2></div>
             <p className="max-w-md text-sm leading-7 text-[var(--ink-soft)]">PVC doğramadan cam ve dış mekân sistemlerine kadar ihtiyacınızı doğru ekiple eşleştiriyor, kapsamı uygulamadan önce netleştiriyoruz.</p>
           </div>
           <div className="grid grid-cols-1 gap-px overflow-hidden bg-[var(--line)] sm:grid-cols-2">
