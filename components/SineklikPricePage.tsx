@@ -61,6 +61,8 @@ export function SineklikPricePage() {
   function selectArea(next: Area) {
     setArea(next);
     setSystem(null);
+    setWidth("");
+    setHeight("");
     requestAnimationFrame(() => systemRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }));
   }
 
@@ -155,6 +157,10 @@ export function SineklikPricePage() {
                 <FlyscreenDrawing area={area} system={system} width={parsedWidth} height={parsedHeight} />
                 <span>{width} × {height} cm · {system === "sliding" ? "Sürgülü" : "Menteşeli"}</span>
               </div>}
+              {quoteReady && quotePrice && <button type="button" className={styles.addItemAction} onClick={addItem}>
+                <span><strong>Bu ölçüyü listeye ekle</strong><small>{area === "window" ? "Pencere" : "Kapı"} · {system === "sliding" ? "Sürgülü" : "Menteşeli"} · {money.format(quotePrice)} ₺</small></span>
+                <span className={styles.addItemIcon}><Plus size={20} /></span>
+              </button>}
             </section>
 
             {items.length > 0 && <section className={styles.itemsPanel} aria-live="polite" aria-labelledby="items-title">
@@ -183,7 +189,6 @@ export function SineklikPricePage() {
               <div className={styles.priceTop}><span>{quoteReady ? "BU ÜRÜNÜN FİYATI" : items.length > 0 ? "ÜRÜN LİSTENİN TOPLAMI" : "FİYATIN BURADA GÖRÜNECEK"}<small>{quoteReady ? "Ölçünle birlikte listene ekle" : items.length > 0 ? `${items.length} ürün · Teklif toplamı` : "3 kısa adım · Ücretsiz"}</small></span><span className={styles.priceIcon}><Check size={17} /></span></div>
               {quoteReady && quotePrice ? <strong className={styles.price}>{money.format(quotePrice)} <i>₺</i></strong> : items.length > 0 ? <strong className={styles.price}>{money.format(quoteTotal)} <i>₺</i></strong> : <div className={styles.pricePlaceholder}>— — — <i>₺</i></div>}
               {quoteReady && quotePrice ? <p className={styles.priceNote}>{items.length > 0 ? `Listedeki ${items.length} ürün: ${money.format(quoteTotal)} ₺. Yeni ölçüyü de ekleyebilirsin.` : "Tek ürün fiyatı · Farklı ölçülerle ürün ekleyebilirsin."}</p> : items.length > 0 ? <p className={styles.priceNote}>Ürünlerin ve ölçüleri teklif mesajına eklenir.</p> : <p className={styles.priceNote}>Önce alanını, sonra sistem ve ölçünü seç.</p>}
-              {quoteReady && quotePrice && <button type="button" className={`${styles.whatsappButton} ${styles.addItemButton}`} onClick={addItem}>Bu ürünü listeye ekle <Plus size={17} /></button>}
               {!quoteReady && items.length > 0 && <a className={styles.whatsappButton} href={whatsappUrl} target="_blank" rel="noreferrer" data-cta-id="sineklik-calculator-whatsapp">WhatsApp’tan teklif al <ArrowRight size={17} /></a>}
             </div>
             <p className={styles.footnote}>Fiyat: pencere {money.format(prices.window)} ₺ · kapı {money.format(prices.door)} ₺</p>

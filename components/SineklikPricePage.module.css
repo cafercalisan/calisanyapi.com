@@ -2,11 +2,11 @@
   --calc-ink: #18211f;
   --calc-muted: #78827e;
   --calc-line: #e7eae8;
-  --calc-green: #14836c;
-  --calc-green-dark: #09644f;
+  --calc-green: #08a66b;
+  --calc-green-dark: #08734c;
   min-height: 100vh;
   color: var(--calc-ink);
-  background: #f6f7f5;
+  background: radial-gradient(ellipse at 48% -12%, #dcf8e9 0%, #f2f8f3 36%, transparent 68%), #f7f9f7;
   font-family: var(--font-body), Arial, sans-serif;
   padding: 0 28px;
 }
@@ -20,7 +20,7 @@
 .headerNote i, .previewLabel i { width: 7px; height: 7px; border-radius: 50%; background: #29a77c; box-shadow: 0 0 0 3px #29a77c1a; }
 
 .intro { padding: 39px 0 26px; }
-.eyebrow { margin: 0 0 11px; color: var(--calc-green-dark); font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.eyebrow { margin: 0 0 11px; color: #078754; font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
 .intro h1 { margin: 0; font-size: clamp(35px, 5vw, 49px); font-weight: 650; letter-spacing: -.065em; line-height: 1.08; }
 .intro h1 span { color: var(--calc-green); }
 .introText { margin: 10px 0 17px; color: #69736f; font-size: 13px; }
@@ -29,7 +29,7 @@
 .progress b { display: grid; width: 21px; height: 21px; place-items: center; border: 1px solid #dfe4e0; border-radius: 50%; color: #8c9691; font-size: 9px; }
 .progress > i { width: 25px; height: 1px; background: #e1e5e2; }
 .progress .progressActive { color: var(--calc-ink); }
-.progress .progressActive b { border-color: var(--calc-ink); background: var(--calc-ink); color: white; }
+.progress .progressActive b { border-color: #099c68; background: #099c68; color: white; box-shadow: 0 0 0 3px #099c681c; }
 .progress .progressDone { color: var(--calc-green-dark); }
 .progress .progressDone b { border-color: #d5ebe2; background: #e7f4ee; color: var(--calc-green-dark); }
 
@@ -37,7 +37,7 @@
 .steps { display: grid; gap: 10px; }
 .step, .preview { border: 1px solid var(--calc-line); border-radius: 17px; background: #fff; box-shadow: 0 3px 12px #17232108; }
 .step { padding: 19px 20px; transition: border-color .2s, box-shadow .2s, opacity .2s; scroll-margin-top: 24px; }
-.stepCurrent { border-color: #9dcdbb; box-shadow: 0 0 0 3px #2687640a; }
+.stepCurrent { border-color: #74cba3; box-shadow: 0 0 0 3px #1aaa6c14; }
 .stepLocked { opacity: .55; }
 .stepHeading { display: flex; align-items: center; gap: 11px; }
 .stepNumber { display: grid; width: 32px; height: 32px; flex: 0 0 32px; place-items: center; border-radius: 10px; background: #f0f2ef; color: #68736d; font-size: 10px; font-weight: 800; }
@@ -46,8 +46,8 @@
 .stepHeading h2 { margin: 0; font-size: 15px; font-weight: 720; letter-spacing: -.035em; }
 .choiceGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 13px; }
 .choice { position: relative; display: flex; min-width: 0; min-height: 65px; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #e8ebe8; border-radius: 12px; background: #fff; color: var(--calc-ink); text-align: left; cursor: pointer; transition: border-color .16s, background .16s, transform .16s; }
-.choice:hover:not(:disabled) { border-color: #9abdaf; transform: translateY(-1px); }
-.choiceSelected { border-color: #3b9678; background: #f2f8f5; }
+.choice:hover:not(:disabled) { border-color: #52bb88; background: #fbfffc; transform: translateY(-1px); }
+.choiceSelected { border-color: #12a86b; background: #eaf8f0; box-shadow: inset 0 0 0 1px #12a86b24; }
 .choice:disabled { cursor: default; }
 .choiceIcon, .systemGlyph { display: grid; width: 36px; height: 36px; flex: 0 0 36px; place-items: center; border-radius: 10px; background: #f2f4f1; color: #5d6a63; }
 .choiceSelected .choiceIcon, .choiceSelected .systemGlyph { background: #e3f1eb; color: var(--calc-green-dark); }
@@ -71,11 +71,11 @@
 .measureHint { display: flex; align-items: center; gap: 6px; margin: 9px 0 0; color: #89938e; font-size: 9px; }
 .validation { margin: 7px 0 0; color: #ad4938; font-size: 10px; }
 .inlinePreview { display: none; }
-.itemsPanel { overflow: hidden; border: 1px solid var(--calc-line); border-radius: 15px; background: #fff; box-shadow: 0 3px 12px #17232108; }
+.itemsPanel { overflow: hidden; border: 1px solid #cbe9d8; border-radius: 15px; background: linear-gradient(155deg, #fff 45%, #f3fbf5 100%); box-shadow: 0 5px 18px #168a5610; }
 .itemsHeading { display: flex; align-items: center; justify-content: space-between; padding: 15px 16px 11px; }
 .itemsHeading p { margin: 0 0 4px; color: #89938e; font-size: 8px; font-weight: 800; letter-spacing: .12em; }
 .itemsHeading h2 { margin: 0; font-size: 15px; font-weight: 750; letter-spacing: -.03em; }
-.itemsHeading > span { padding: 6px 9px; border-radius: 8px; background: #eaf4ef; color: var(--calc-green-dark); font-size: 9px; font-weight: 750; }
+.itemsHeading > span { padding: 6px 9px; border-radius: 8px; background: #d9f89d; color: #355c0e; font-size: 9px; font-weight: 800; }
 .itemList { padding: 0 15px; }
 .itemRow { display: grid; grid-template-columns: 25px minmax(0, 1fr) auto 28px; align-items: center; gap: 7px; min-height: 50px; border-top: 1px solid #eff1ef; }
 .itemIndex { color: #9ba49f; font-size: 9px; font-weight: 700; }
@@ -89,22 +89,28 @@
 .itemsTotal { display: flex; align-items: center; justify-content: space-between; margin: 0 15px; padding: 12px 0; border-top: 1px solid #e9edea; color: #626e67; font-size: 10px; font-weight: 650; }
 .itemsTotal strong { color: var(--calc-ink); font-size: 18px; font-weight: 800; letter-spacing: -.04em; }
 .itemsTotal i { color: var(--calc-green-dark); font-size: 12px; font-style: normal; }
-.itemsSubmit { display: flex; min-height: 44px; align-items: center; justify-content: space-between; gap: 8px; margin: 0 12px 12px; padding: 0 13px; border-radius: 9px; background: #e8f4ed; color: #1c6448; text-decoration: none; font-size: 10px; font-weight: 800; transition: background .16s, transform .16s; }
-.itemsSubmit:hover { transform: translateY(-1px); background: #d8efe2; }
+.itemsSubmit { display: flex; min-height: 44px; align-items: center; justify-content: space-between; gap: 8px; margin: 0 12px 12px; padding: 0 13px; border-radius: 9px; background: #0e9e67; color: white; text-decoration: none; font-size: 10px; font-weight: 800; box-shadow: 0 4px 12px #0b9a6230; transition: background .16s, transform .16s; }
+.itemsSubmit:hover { transform: translateY(-1px); background: #087d51; }
+.addItemAction { display: flex; width: 100%; min-height: 53px; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; padding: 9px 12px 9px 14px; border: 0; border-radius: 11px; background: linear-gradient(100deg, #07965f 0%, #0fbd78 100%); color: white; text-align: left; cursor: pointer; box-shadow: 0 5px 14px #0ba4692b; transition: filter .16s, transform .16s, box-shadow .16s; }
+.addItemAction:hover { filter: saturate(1.12) brightness(1.04); transform: translateY(-1px); box-shadow: 0 7px 17px #0ba46938; }
+.addItemAction strong, .addItemAction small { display: block; }
+.addItemAction strong { font-size: 11px; font-weight: 800; }
+.addItemAction small { margin-top: 3px; color: #e1fff0; font-size: 9px; }
+.addItemIcon { display: grid; width: 33px; height: 33px; flex: 0 0 33px; place-items: center; border-radius: 9px; background: #ffffff29; }
 
 .preview { position: sticky; top: 16px; overflow: hidden; }
 .previewTop { display: flex; height: 45px; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid #eff1ee; }
 .previewLabel { display: flex; align-items: center; gap: 7px; color: #57635c; font-size: 8px; font-weight: 800; letter-spacing: .13em; }
 .previewLabel i { width: 6px; height: 6px; }
 .previewIndex { color: #a0a9a4; font-size: 9px; font-weight: 650; letter-spacing: .08em; }
-.drawing { display: grid; min-height: 245px; place-items: center; padding: 0 14px; background: linear-gradient(180deg, #fbfcfa 0%, #f6f8f5 100%); }
+.drawing { display: grid; min-height: 245px; place-items: center; padding: 0 14px; background: radial-gradient(ellipse at 50% 40%, #e5f8ee 0%, #f2fbf6 48%, #eff8fa 100%); }
 .svg { display: block; width: 100%; max-width: 390px; height: 245px; overflow: visible; }
 .previewCaption { display: flex; min-height: 58px; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 16px; border-top: 1px solid #edf0ed; }
 .previewCaption div > span, .previewCaption strong { display: block; }
 .previewCaption div > span { margin-bottom: 3px; color: #89938e; font-size: 8px; font-weight: 750; letter-spacing: .12em; }
 .previewCaption strong { font-size: 12px; font-weight: 730; }
 .dimensionTag { padding: 6px 8px; border-radius: 7px; background: #f1f4f1; color: #526159; font-size: 9px; font-weight: 700; white-space: nowrap; }
-.pricePanel { margin: 0 11px 10px; padding: 14px 15px 13px; border-radius: 13px; background: #17221f; color: #fff; }
+.pricePanel { margin: 0 11px 10px; padding: 14px 15px 13px; border-radius: 13px; background: linear-gradient(135deg, #123b31, #08694e 100%); color: #fff; }
 .priceTop { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; color: #cad3cf; font-size: 8px; font-weight: 800; letter-spacing: .11em; }
 .priceTop small { display: block; margin-top: 5px; color: #84948c; font-size: 9px; font-weight: 500; letter-spacing: 0; }
 .priceIcon { display: grid; width: 27px; height: 27px; place-items: center; border-radius: 8px; background: #ffffff12; color: #9be1c2; }
@@ -113,9 +119,8 @@
 .pricePlaceholder { margin-top: 6px; color: #d1d9d5; font-size: 29px; font-weight: 600; letter-spacing: .04em; line-height: 1; }
 .pricePlaceholder i { color: #9fbaae; font-size: 16px; font-style: normal; }
 .priceNote { margin: 7px 0 0; color: #aab7b1; font-size: 9px; line-height: 1.5; }
-.whatsappButton { display: flex; min-height: 42px; align-items: center; justify-content: space-between; gap: 8px; margin-top: 11px; padding: 0 12px; border-radius: 9px; background: #b8efd2; color: #123c2c; text-decoration: none; font-size: 10px; font-weight: 800; transition: background .16s, transform .16s; }
-.whatsappButton:hover { transform: translateY(-1px); background: #d0f7e1; }
-.addItemButton { width: 100%; border: 0; font-family: inherit; text-align: left; cursor: pointer; }
+.whatsappButton { display: flex; min-height: 42px; align-items: center; justify-content: space-between; gap: 8px; margin-top: 11px; padding: 0 12px; border-radius: 9px; background: #cafa70; color: #21480b; text-decoration: none; font-size: 10px; font-weight: 800; transition: background .16s, transform .16s; }
+.whatsappButton:hover { transform: translateY(-1px); background: #dcff9b; }
 .footnote { margin: 0 14px 11px; color: #909a95; font-size: 8px; text-align: center; }
 .footer { display: flex; justify-content: space-between; padding: 18px 0 24px; color: #929b96; font-size: 9px; }
 .footer a { color: #67726c; text-decoration: none; }
@@ -145,9 +150,9 @@
   .choice { min-height: 61px; gap: 8px; padding: 8px; }
   .choiceIcon, .systemGlyph { width: 32px; height: 32px; flex-basis: 32px; }
   .choice small { font-size: 8px; }
-  .inlinePreview { display: grid; justify-items: center; margin-top: 12px; padding: 10px 10px 8px; border: 1px solid #e8ece8; border-radius: 11px; background: #fafbf9; }
+  .inlinePreview { display: grid; justify-items: center; margin-top: 12px; padding: 10px 10px 8px; border: 1px solid #d7eee1; border-radius: 11px; background: linear-gradient(140deg, #f4fff7, #f2fbff); }
   .inlinePreview > p { display: flex; align-items: center; gap: 6px; justify-self: start; margin: 0; color: #68746d; font-size: 8px; font-weight: 800; letter-spacing: .1em; }
-  .inlinePreview > p i { width: 6px; height: 6px; border-radius: 50%; background: #29a77c; }
+  .inlinePreview > p i { width: 6px; height: 6px; border-radius: 50%; background: #18c37e; box-shadow: 0 0 0 3px #18c37e20; }
   .inlinePreview .svg { height: 158px; }
   .inlinePreview > span { color: #79847e; font-size: 9px; font-weight: 650; }
   .preview { position: static; grid-row: 2; border-radius: 14px; }
@@ -170,6 +175,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .choice, .step, .whatsappButton { transition: none; }
-  .choice:hover:not(:disabled), .whatsappButton:hover { transform: none; }
+  .choice, .step, .whatsappButton, .itemsSubmit, .addItemAction { transition: none; }
+  .choice:hover:not(:disabled), .whatsappButton:hover, .itemsSubmit:hover, .addItemAction:hover { transform: none; }
 }
