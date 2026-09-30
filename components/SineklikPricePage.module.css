@@ -71,6 +71,26 @@
 .measureHint { display: flex; align-items: center; gap: 6px; margin: 9px 0 0; color: #89938e; font-size: 9px; }
 .validation { margin: 7px 0 0; color: #ad4938; font-size: 10px; }
 .inlinePreview { display: none; }
+.itemsPanel { overflow: hidden; border: 1px solid var(--calc-line); border-radius: 15px; background: #fff; box-shadow: 0 3px 12px #17232108; }
+.itemsHeading { display: flex; align-items: center; justify-content: space-between; padding: 15px 16px 11px; }
+.itemsHeading p { margin: 0 0 4px; color: #89938e; font-size: 8px; font-weight: 800; letter-spacing: .12em; }
+.itemsHeading h2 { margin: 0; font-size: 15px; font-weight: 750; letter-spacing: -.03em; }
+.itemsHeading > span { padding: 6px 9px; border-radius: 8px; background: #eaf4ef; color: var(--calc-green-dark); font-size: 9px; font-weight: 750; }
+.itemList { padding: 0 15px; }
+.itemRow { display: grid; grid-template-columns: 25px minmax(0, 1fr) auto 28px; align-items: center; gap: 7px; min-height: 50px; border-top: 1px solid #eff1ef; }
+.itemIndex { color: #9ba49f; font-size: 9px; font-weight: 700; }
+.itemDetails { min-width: 0; }
+.itemDetails strong, .itemDetails small { display: block; }
+.itemDetails strong { overflow: hidden; color: #35413b; font-size: 10px; font-weight: 730; text-overflow: ellipsis; white-space: nowrap; }
+.itemDetails small { margin-top: 3px; color: #8a948e; font-size: 9px; }
+.itemPrice { color: #34443c; font-size: 10px; white-space: nowrap; }
+.removeItem { display: grid; width: 28px; height: 28px; place-items: center; border: 0; border-radius: 7px; background: transparent; color: #89938e; cursor: pointer; }
+.removeItem:hover { background: #f7edeb; color: #a34737; }
+.itemsTotal { display: flex; align-items: center; justify-content: space-between; margin: 0 15px; padding: 12px 0; border-top: 1px solid #e9edea; color: #626e67; font-size: 10px; font-weight: 650; }
+.itemsTotal strong { color: var(--calc-ink); font-size: 18px; font-weight: 800; letter-spacing: -.04em; }
+.itemsTotal i { color: var(--calc-green-dark); font-size: 12px; font-style: normal; }
+.itemsSubmit { display: flex; min-height: 44px; align-items: center; justify-content: space-between; gap: 8px; margin: 0 12px 12px; padding: 0 13px; border-radius: 9px; background: #e8f4ed; color: #1c6448; text-decoration: none; font-size: 10px; font-weight: 800; transition: background .16s, transform .16s; }
+.itemsSubmit:hover { transform: translateY(-1px); background: #d8efe2; }
 
 .preview { position: sticky; top: 16px; overflow: hidden; }
 .previewTop { display: flex; height: 45px; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid #eff1ee; }
@@ -95,6 +115,7 @@
 .priceNote { margin: 7px 0 0; color: #aab7b1; font-size: 9px; line-height: 1.5; }
 .whatsappButton { display: flex; min-height: 42px; align-items: center; justify-content: space-between; gap: 8px; margin-top: 11px; padding: 0 12px; border-radius: 9px; background: #b8efd2; color: #123c2c; text-decoration: none; font-size: 10px; font-weight: 800; transition: background .16s, transform .16s; }
 .whatsappButton:hover { transform: translateY(-1px); background: #d0f7e1; }
+.addItemButton { width: 100%; border: 0; font-family: inherit; text-align: left; cursor: pointer; }
 .footnote { margin: 0 14px 11px; color: #909a95; font-size: 8px; text-align: center; }
 .footer { display: flex; justify-content: space-between; padding: 18px 0 24px; color: #929b96; font-size: 9px; }
 .footer a { color: #67726c; text-decoration: none; }

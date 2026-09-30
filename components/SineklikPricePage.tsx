@@ -1,13 +1,14 @@
 "use client";
 
 import { useId, useMemo, useRef, useState } from "react";
-import { ArrowLeftRight, ArrowRight, Check, DoorOpen, PanelsTopLeft, Ruler } from "lucide-react";
+import { ArrowLeftRight, ArrowRight, Check, DoorOpen, PanelsTopLeft, Plus, Ruler, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import styles from "./SineklikPricePage.module.css";
 
 type Area = "window" | "door";
 type System = "hinged" | "sliding";
+type EstimateItem = { id: string; area: Area; system: System; width: string; height: string; price: number };
 
 const prices: Record<Area, number> = { window: 1300, door: 2200 };
 const money = new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 0 });
@@ -22,6 +23,7 @@ export function SineklikPricePage() {
   const [system, setSystem] = useState<System | null>(null);
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
+  const [items, setItems] = useState<EstimateItem[]>([]);
   const systemRef = useRef<HTMLElement>(null);
   const widthRef = useRef<HTMLInputElement>(null);
   const parsedWidth = readMeasure(width);
@@ -29,14 +31,32 @@ export function SineklikPricePage() {
   const dimensionsReady = parsedWidth !== null && parsedHeight !== null;
   const quoteReady = Boolean(area && system && dimensionsReady);
   const quotePrice = area ? prices[area] : null;
+  const quoteTotal = items.reduce((total, item) => total + item.price, 0);
 
   const whatsappUrl = useMemo(() => {
-    if (!quoteReady || !area || !system || !quotePrice || !parsedWidth || !parsedHeight) return "#";
-    const areaName = area === "window" ? "Pencere" : "Kapı";
-    const systemName = system === "hinged" ? "Menteşeli" : "Sürgülü";
-    const message = `Merhaba, sineklik fiyat teklifimi iletmek istiyorum.\n\nAlan: ${areaName}\nSistem: ${systemName}\nÖlçü: ${width} × ${height} cm\nFiyat: ${money.format(quotePrice)} TL`;
+    if (items.length === 0) return "#";
+    const lines = items.map((item, index) => {
+      const areaName = item.area === "window" ? "Pencere" : "Kapı";
+      const systemName = item.system === "hinged" ? "Menteşeli" : "Sürgülü";
+      return `${index + 1}. ${areaName} · ${systemName} · ${item.width} × ${item.height} cm · ${money.format(item.price)} TL`;
+    });
+    const message = `Merhaba, sineklik fiyat teklifimi iletmek istiyorum.\n\n${lines.join("\n")}\n\nToplam (${items.length} ürün): ${money.format(quoteTotal)} TL`;
     return `https://wa.me/${site.phone.replace(/\D/g, "")}?text=${encodeURIComponent(message)}`;
-  }, [area, height, parsedHeight, parsedWidth, quotePrice, quoteReady, system, width]);
+  }, [items, quoteTotal]);
+
+  function addItem() {
+    if (!quoteReady || !area || !system || !quotePrice || !parsedWidth || !parsedHeight) return;
+    setItems((current) => [...current, {
+      id: crypto.randomUUID(), area, system, width, height, price: quotePrice,
+    }]);
+    setWidth("");
+    setHeight("");
+    requestAnimationFrame(() => widthRef.current?.focus({ preventScroll: true }));
+  }
+
+  function removeItem(id: string) {
+    setItems((current) => current.filter((item) => item.id !== id));
+  }
 
   function selectArea(next: Area) {
     setArea(next);
@@ -136,6 +156,18 @@ export function SineklikPricePage() {
                 <span>{width} × {height} cm · {system === "sliding" ? "Sürgülü" : "Menteşeli"}</span>
               </div>}
             </section>
+
+            {items.length > 0 && <section className={styles.itemsPanel} aria-live="polite" aria-labelledby="items-title">
+              <div className={styles.itemsHeading}><div><p>ÖLÇÜLERİNİ TEK TEKLİFTE TOPLA</p><h2 id="items-title">Ürün listen</h2></div><span>{items.length} ürün</span></div>
+              <div className={styles.itemList}>{items.map((item, index) => <div className={styles.itemRow} key={item.id}>
+                <span className={styles.itemIndex}>{String(index + 1).padStart(2, "0")}</span>
+                <div className={styles.itemDetails}><strong>{item.area === "window" ? "Pencere" : "Kapı"} · {item.system === "hinged" ? "Menteşeli" : "Sürgülü"}</strong><small>{item.width} × {item.height} cm</small></div>
+                <b className={styles.itemPrice}>{money.format(item.price)} ₺</b>
+                <button type="button" className={styles.removeItem} onClick={() => removeItem(item.id)} aria-label={`${index + 1}. ürünü listeden kaldır`}><Trash2 size={15} /></button>
+              </div>)}</div>
+              <div className={styles.itemsTotal}><span>Teklif toplamı</span><strong>{money.format(quoteTotal)} <i>₺</i></strong></div>
+              <a className={styles.itemsSubmit} href={whatsappUrl} target="_blank" rel="noreferrer" data-cta-id="sineklik-calculator-whatsapp">{items.length} ürün için WhatsApp’tan teklif al <ArrowRight size={16} /></a>
+            </section>}
           </div>
 
           <aside className={styles.preview} aria-live="polite">
@@ -148,10 +180,11 @@ export function SineklikPricePage() {
               {dimensionsReady && <span className={styles.dimensionTag}>{width} × {height} cm</span>}
             </div>
             <div className={styles.pricePanel}>
-              <div className={styles.priceTop}><span>{quoteReady ? "SİNEKLİĞİNİN TEK ÜRÜN FİYATI" : "FİYATIN BURADA GÖRÜNECEK"}<small>{quoteReady ? "Seçimine göre anında hesaplandı" : "3 kısa adım · Ücretsiz"}</small></span><span className={styles.priceIcon}><Check size={17} /></span></div>
-              {quoteReady && quotePrice ? <strong className={styles.price}>{money.format(quotePrice)} <i>₺</i></strong> : <div className={styles.pricePlaceholder}>— — — <i>₺</i></div>}
-              {quoteReady && quotePrice ? <p className={styles.priceNote}>Tek ürün fiyatıdır. Seçimlerin WhatsApp teklif mesajına eklenir.</p> : <p className={styles.priceNote}>Önce alanını, sonra sistem ve ölçünü seç.</p>}
-              {quoteReady && <a className={styles.whatsappButton} href={whatsappUrl} target="_blank" rel="noreferrer" data-cta-id="sineklik-calculator-whatsapp">Teklifimi WhatsApp’tan gönder <ArrowRight size={17} /></a>}
+              <div className={styles.priceTop}><span>{quoteReady ? "BU ÜRÜNÜN FİYATI" : items.length > 0 ? "ÜRÜN LİSTENİN TOPLAMI" : "FİYATIN BURADA GÖRÜNECEK"}<small>{quoteReady ? "Ölçünle birlikte listene ekle" : items.length > 0 ? `${items.length} ürün · Teklif toplamı` : "3 kısa adım · Ücretsiz"}</small></span><span className={styles.priceIcon}><Check size={17} /></span></div>
+              {quoteReady && quotePrice ? <strong className={styles.price}>{money.format(quotePrice)} <i>₺</i></strong> : items.length > 0 ? <strong className={styles.price}>{money.format(quoteTotal)} <i>₺</i></strong> : <div className={styles.pricePlaceholder}>— — — <i>₺</i></div>}
+              {quoteReady && quotePrice ? <p className={styles.priceNote}>{items.length > 0 ? `Listedeki ${items.length} ürün: ${money.format(quoteTotal)} ₺. Yeni ölçüyü de ekleyebilirsin.` : "Tek ürün fiyatı · Farklı ölçülerle ürün ekleyebilirsin."}</p> : items.length > 0 ? <p className={styles.priceNote}>Ürünlerin ve ölçüleri teklif mesajına eklenir.</p> : <p className={styles.priceNote}>Önce alanını, sonra sistem ve ölçünü seç.</p>}
+              {quoteReady && quotePrice && <button type="button" className={`${styles.whatsappButton} ${styles.addItemButton}`} onClick={addItem}>Bu ürünü listeye ekle <Plus size={17} /></button>}
+              {!quoteReady && items.length > 0 && <a className={styles.whatsappButton} href={whatsappUrl} target="_blank" rel="noreferrer" data-cta-id="sineklik-calculator-whatsapp">WhatsApp’tan teklif al <ArrowRight size={17} /></a>}
             </div>
             <p className={styles.footnote}>Fiyat: pencere {money.format(prices.window)} ₺ · kapı {money.format(prices.door)} ₺</p>
           </aside>
