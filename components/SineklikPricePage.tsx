@@ -3,7 +3,6 @@
 import { useId, useMemo, useRef, useState } from "react";
 import { ArrowLeftRight, ArrowRight, Check, ChevronDown, DoorOpen, Palette, PanelsTopLeft, Plus, Ruler, Trash2 } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 import { site } from "@/lib/site";
 import styles from "./SineklikPricePage.module.css";
 
@@ -156,15 +155,16 @@ export function SineklikPricePage() {
                 <ChevronDown className={styles.measureGuideChevron} size={18} />
               </summary>
               <div className={styles.measureGuideBody}>
-                <div className={styles.measureGuideImage}><Image src="/guide/olcurehber.jpg" alt="Pencere sinekliği için fitiller arasından en ve boy ölçme örneği" fill sizes="(max-width: 760px) 34vw, 160px" /></div>
+                <div className={styles.measureScene}><strong>Bir açıklık, iki ölçü.</strong><span>Ölçüyü sinekliğin oturacağı iç kanaldan al.</span><MeasurementGuideIllustration /></div>
                 <div className={styles.measureGuideCopy}>
-                  <p>Üç kısa adım</p>
+                  <p>Şöyle ölç</p>
                   <ol>
-                    <li><b>En:</b> Fitiller arasındaki net açıklığı soldan sağa ölç.</li>
-                    <li><b>Boy:</b> Aynı açıklığı üstten alta ölç.</li>
-                    <li>Ölçüleri santimetre olarak gir. Yaklaşık ölçü yeterli.</li>
+                    <li><b>Kanadı aç:</b> Fitil kanallarının göründüğü iç boşluğu bul.</li>
+                    <li><b>En:</b> Karşılıklı iç kanallar arasında soldan sağa ölç.</li>
+                    <li><b>Boy:</b> Aynı kanallar arasında yukarıdan aşağı ölç.</li>
+                    <li>Santimetreyi gir. Yaklaşık değer yeterli.</li>
                   </ol>
-                  <small>Kesin ölçü uygulama öncesinde doğrulanır.</small>
+                  <small>Fitilin kendisini değil, oturduğu kanalın iç açıklığını ölç. Kesin ölçü uygulama öncesinde doğrulanır.</small>
                 </div>
               </div>
             </details>
@@ -249,6 +249,32 @@ export function SineklikPricePage() {
       </div>
     </main>
   );
+}
+
+function MeasurementGuideIllustration() {
+  const gridId = `measureGrid-${useId().replace(/:/g, "")}`;
+
+  return <svg className={styles.measureDiagram} viewBox="0 0 360 250" role="img" aria-label="Ölçülecek açıklıkta en yatay, boy dikey oklarla gösterilmiştir">
+    <defs>
+      <pattern id={gridId} width="7" height="7" patternUnits="userSpaceOnUse"><path d="M7 0H0V7" fill="none" stroke="#169c73" strokeWidth=".55" opacity=".38" /></pattern>
+      <marker id={`${gridId}-arrow`} markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto-start-reverse" markerUnits="strokeWidth"><path d="M0 0 7 3.5 0 7Z" fill="#087f59" /></marker>
+    </defs>
+    <rect x="2" y="2" width="356" height="246" rx="15" fill="#f5fbf7" />
+    <path d="M62 37H267V185H62Z" fill="#e0e9e3" stroke="#3a5146" strokeWidth="8" strokeLinejoin="round" />
+    <path d="M76 51H253V171H76Z" fill="#eef8f2" stroke="#82978b" strokeWidth="3" />
+    <path d="M81 56H248V166H81Z" fill={`url(#${gridId})`} />
+    <path d="M54 31H267M54 191H267" stroke="#91a59a" strokeWidth="3" strokeLinecap="round" />
+    <path d="M73 219H256" stroke="#087f59" strokeWidth="2" markerStart={`url(#${gridId}-arrow)`} markerEnd={`url(#${gridId}-arrow)`} />
+    <rect x="140" y="205" width="50" height="27" rx="13.5" fill="#08a66b" />
+    <text x="165" y="223" textAnchor="middle" fill="white" fontSize="12" fontWeight="800" fontFamily="Arial, sans-serif">EN</text>
+    <path d="M297 52V170" stroke="#087f59" strokeWidth="2" markerStart={`url(#${gridId}-arrow)`} markerEnd={`url(#${gridId}-arrow)`} />
+    <rect x="279" y="96" width="36" height="28" rx="14" fill="#f4a13c" />
+    <text x="297" y="115" textAnchor="middle" fill="#4d2c07" fontSize="10" fontWeight="800" fontFamily="Arial, sans-serif">BOY</text>
+    <circle cx="62" cy="38" r="12" fill="#f4a13c" stroke="white" strokeWidth="3" />
+    <text x="62" y="42" textAnchor="middle" fill="#4d2c07" fontSize="9" fontWeight="800" fontFamily="Arial, sans-serif">1</text>
+    <circle cx="254" cy="184" r="12" fill="#08a66b" stroke="white" strokeWidth="3" />
+    <text x="254" y="188" textAnchor="middle" fill="white" fontSize="9" fontWeight="800" fontFamily="Arial, sans-serif">2</text>
+  </svg>;
 }
 
 function FlyscreenDrawing({ area, system, finish, paintCode, width, height }: { area: Area | null; system: System | null; finish: Finish; paintCode: string; width: number | null; height: number | null }) {

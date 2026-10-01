@@ -69,14 +69,17 @@
 .measureGuideTitle small { margin-top: 3px; color: #75857b; font-size: 9px; }
 .measureGuideChevron { color: #16885b; transition: transform .18s; }
 .measureGuide[open] .measureGuideChevron { transform: rotate(180deg); }
-.measureGuideBody { display: grid; grid-template-columns: 132px minmax(0, 1fr); align-items: center; gap: 14px; padding: 0 14px 14px; }
-.measureGuideImage { position: relative; width: 100%; aspect-ratio: 3 / 4; overflow: hidden; border: 1px solid #edf0ec; border-radius: 9px; background: white; }
-.measureGuideImage img { object-fit: contain; }
-.measureGuideCopy > p { margin: 0 0 8px; color: #078754; font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-.measureGuideCopy ol { display: grid; gap: 6px; margin: 0; padding-left: 17px; color: #506157; font-size: 9px; line-height: 1.55; }
-.measureGuideCopy li::marker { color: #0c9e65; font-weight: 800; }
+.measureGuideBody { display: grid; gap: 11px; padding: 0 14px 14px; }
+.measureScene { display: grid; justify-items: center; gap: 3px; padding: 10px 12px 2px; border: 1px solid #e1efe5; border-radius: 12px; background: radial-gradient(ellipse at 50% 38%, #edfff3, #f8fbf8 70%); }
+.measureScene > strong { color: #253f31; font-size: 11px; font-weight: 800; }
+.measureScene > span { color: #6d8074; font-size: 9px; text-align: center; }
+.measureDiagram { display: block; width: min(100%, 360px); height: auto; }
+.measureGuideCopy > p { margin: 0 0 7px; color: #078754; font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.measureGuideCopy ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; margin: 0; padding: 0; list-style: none; counter-reset: measure-step; color: #506157; font-size: 9px; line-height: 1.5; }
+.measureGuideCopy li { position: relative; min-height: 43px; padding: 8px 8px 8px 29px; border: 1px solid #e8eee9; border-radius: 9px; background: #fff; counter-increment: measure-step; }
+.measureGuideCopy li::before { position: absolute; top: 8px; left: 8px; display: grid; width: 15px; height: 15px; place-items: center; border-radius: 50%; background: #d9f5e3; color: #087b50; content: counter(measure-step, decimal-leading-zero); font-size: 6px; font-weight: 800; }
 .measureGuideCopy b { color: #2c4034; }
-.measureGuideCopy > small { display: block; margin-top: 8px; color: #7b8a80; font-size: 8px; line-height: 1.45; }
+.measureGuideCopy > small { display: block; margin-top: 8px; padding-left: 8px; border-left: 2px solid #f4a13c; color: #718178; font-size: 8px; line-height: 1.45; }
 
 .measureGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 13px; }
 .finishPicker { margin-top: 15px; padding-top: 13px; border-top: 1px solid #e9efeb; }
