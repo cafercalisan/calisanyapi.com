@@ -136,6 +136,31 @@
 .addItemAction small { margin-top: 3px; color: #e1fff0; font-size: 9px; }
 .addItemIcon { display: grid; width: 33px; height: 33px; flex: 0 0 33px; place-items: center; border-radius: 9px; background: #ffffff29; }
 
+.brand img { display: block; width: 154px; height: auto; }
+.doubleSuggestion { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 11px; border: 1px solid #f0c782; border-radius: 12px; background: linear-gradient(110deg, #fff9e9, #fff); }
+.doubleSelected { border-color: #09a66a; background: #edfaf2; }
+.doubleModel { position: relative; display: grid; width: 53px; height: 42px; flex: 0 0 53px; grid-template-columns: 1fr 1fr; gap: 3px; padding: 4px; border: 2px solid #69776e; border-radius: 5px; background: #fff; }
+.doubleModel span { border: 1px solid #9da9a0; background: repeating-linear-gradient(0deg, #dbe9e0 0 1px, transparent 1px 4px); }
+.doubleModel i, .doubleModel b { position: absolute; top: 8px; color: #079b62; font-size: 18px; font-style: normal; line-height: 1; }
+.doubleModel i { left: 12px; }.doubleModel b { right: 12px; }
+.doubleText { display: grid; min-width: 0; flex: 1; gap: 3px; }
+.doubleText strong { color: #39453d; font-size: 10px; font-weight: 800; }
+.doubleText small { color: #7c887e; font-size: 8px; line-height: 1.4; }
+.doubleSuggestion > button { min-height: 34px; padding: 0 10px; border: 0; border-radius: 8px; background: #eea53b; color: #38240b; font-size: 9px; font-weight: 800; cursor: pointer; }
+.doubleSelected > button { background: #0ba66b; color: #fff; }
+.mediaSection { margin-top: 25px; padding: 21px; border: 1px solid var(--calc-line); border-radius: 18px; background: #fff; box-shadow: 0 3px 12px #17232108; }
+.mediaHeading { margin-bottom: 14px; }
+.mediaHeading p { margin: 0 0 5px; color: #078754; font-size: 8px; font-weight: 800; letter-spacing: .14em; }
+.mediaHeading h2 { margin: 0; font-size: 19px; font-weight: 700; letter-spacing: -.045em; }
+.mediaGrid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(270px, .9fr); gap: 12px; }
+.applicationVideo { display: block; width: 100%; height: 100%; min-height: 250px; max-height: 370px; border-radius: 12px; background: #18211f; object-fit: cover; }
+.mediaGallery { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 8px; min-height: 250px; }
+.mediaGallery figure { position: relative; overflow: hidden; min-width: 0; min-height: 0; margin: 0; border-radius: 10px; background: #edf2ee; }
+.mediaGallery figure:first-child { grid-column: 1 / -1; }
+.mediaGallery img { display: block; width: 100%; height: 100%; min-height: 105px; object-fit: cover; }
+.mediaGallery figcaption { position: absolute; right: 6px; bottom: 6px; left: 6px; padding: 6px 8px; border-radius: 6px; background: #15221cb8; color: #fff; font-size: 8px; font-weight: 700; backdrop-filter: blur(6px); }
+.serviceNote { margin: 12px 0 0; color: #77847c; font-size: 9px; }
+
 .preview { position: sticky; top: 16px; overflow: hidden; }
 .previewTop { display: flex; height: 45px; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid #eff1ee; }
 .previewLabel { display: flex; align-items: center; gap: 7px; color: #57635c; font-size: 8px; font-weight: 800; letter-spacing: .13em; }
@@ -182,6 +207,10 @@
   .progress > i { width: clamp(8px, 4vw, 22px); }
   .progress b { width: 19px; height: 19px; }
   .workspace { grid-template-columns: 1fr; gap: 12px; }
+  .mediaSection { margin-top: 12px; padding: 14px; }
+  .mediaGrid { grid-template-columns: 1fr; }
+  .applicationVideo { min-height: 210px; max-height: none; }
+  .mediaGallery { min-height: 210px; }
   .steps { gap: 8px; }
   .step { padding: 15px 14px; border-radius: 14px; }
   .stepHeading { gap: 9px; }

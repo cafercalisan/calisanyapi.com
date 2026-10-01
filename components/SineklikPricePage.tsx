@@ -2,12 +2,13 @@
 
 import { useId, useMemo, useRef, useState } from "react";
 import { ArrowLeftRight, ArrowRight, Check, ChevronDown, DoorOpen, Palette, PanelsTopLeft, Plus, Ruler, Trash2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import styles from "./SineklikPricePage.module.css";
 
 type Area = "window" | "door";
-type System = "hinged" | "sliding";
+type System = "hinged" | "sliding" | "double";
 type Finish = "anthracite" | "gray" | "white" | "golden-oak" | "custom";
 type EstimateItem = { id: string; area: Area; system: System; width: string; height: string; price: number; finish: Finish; paintCode: string };
 
@@ -48,7 +49,7 @@ export function SineklikPricePage() {
     if (items.length === 0) return "#";
     const lines = items.map((item, index) => {
       const areaName = item.area === "window" ? "Pencere" : "Kapı";
-      const systemName = item.system === "hinged" ? "Menteşeli" : "Sürgülü";
+      const systemName = item.system === "hinged" ? "Menteşeli" : item.system === "double" ? "Duble sürgülü" : "Sürgülü";
       const colorName = item.finish === "custom" ? `Özel boya kodu ${item.paintCode}` : finishOptions.find((option) => option.value === item.finish)?.label ?? "Beyaz";
       return `${index + 1}. ${areaName} · ${systemName} · ${item.width} × ${item.height} cm · ${colorName} · ${money.format(item.price)} TL`;
     });
@@ -89,16 +90,13 @@ export function SineklikPricePage() {
       <div className={styles.shell}>
         <header className={styles.header}>
           <Link className={styles.brand} href="/" aria-label="Çalışan Yapı ana sayfa">
-            <span className={styles.brandMark}>ÇY</span>
-            <span>ÇALIŞAN YAPI<small>SİNEKLİK FİYAT HESAPLAMA</small></span>
+            <Image src="/brand/calisan-yapi-logo-header.webp" alt="Çalışan Yapı" width={164} height={42} priority />
           </Link>
-          <span className={styles.headerNote}><i /> Ücretsiz fiyat hesabı</span>
         </header>
 
         <section className={styles.intro}>
           <p className={styles.eyebrow}>Ölçünü gir · Fiyatını hemen gör</p>
           <h1>Sineklik fiyatını<br /><span>3 adımda öğren.</span></h1>
-          <p className={styles.introText}>Alanını ve sistemini seç. Yaklaşık ölçünü girince fiyatın hazır.</p>
           <div className={styles.progress} aria-label="Üç adımda fiyat hesaplama">
             <span className={area ? styles.progressDone : styles.progressActive}><b>{area ? <Check size={13} /> : "1"}</b> Alan</span>
             <i />
@@ -155,16 +153,16 @@ export function SineklikPricePage() {
                 <ChevronDown className={styles.measureGuideChevron} size={18} />
               </summary>
               <div className={styles.measureGuideBody}>
-                <div className={styles.measureScene}><strong>Bir açıklık, iki ölçü.</strong><span>Ölçüyü sinekliğin oturacağı iç kanaldan al.</span><MeasurementGuideIllustration /></div>
+                <div className={styles.measureScene}><strong>İç fitilden iç fitile ölç.</strong><span>Karşılıklı fitil kanallarının iç kenarları arası.</span><MeasurementGuideIllustration /></div>
                 <div className={styles.measureGuideCopy}>
                   <p>Şöyle ölç</p>
                   <ol>
                     <li><b>Kanadı aç:</b> Fitil kanallarının göründüğü iç boşluğu bul.</li>
-                    <li><b>En:</b> Karşılıklı iç kanallar arasında soldan sağa ölç.</li>
-                    <li><b>Boy:</b> Aynı kanallar arasında yukarıdan aşağı ölç.</li>
+                    <li><b>En:</b> Sol fitilin iç kenarından sağ fitilin iç kenarına ölç.</li>
+                    <li><b>Boy:</b> Üst fitilin iç kenarından alt fitilin iç kenarına ölç.</li>
                     <li>Santimetreyi gir. Yaklaşık değer yeterli.</li>
                   </ol>
-                  <small>Fitilin kendisini değil, oturduğu kanalın iç açıklığını ölç. Kesin ölçü uygulama öncesinde doğrulanır.</small>
+                  <small>Ölçü çizgisi fitillerin iç kenarından başlar; dış çerçeveyi ölçme.</small>
                 </div>
               </div>
             </details>
@@ -184,6 +182,15 @@ export function SineklikPricePage() {
                   <span className={styles.inputWrap}><input type="text" inputMode="decimal" autoComplete="off" placeholder="Örn. 140" value={height} onChange={(event) => setHeight(event.target.value.replace(/[^\d.,]/g, "").replace(/(,|\.).*(,|\.)/, "$1"))} disabled={!system} aria-label="Yükseklik, santimetre" /><i>cm</i></span>
                 </label>
               </div>
+              {quoteReady && quotePrice && <button type="button" className={styles.addItemAction} onClick={addItem}>
+                <span><strong>Yeni ölçü ekle</strong><small>{area === "window" ? "Pencere" : "Kapı"} · {system === "hinged" ? "Menteşeli" : system === "double" ? "Duble sürgülü" : "Sürgülü"} · {money.format(quotePrice)} ₺</small></span>
+                <span className={styles.addItemIcon}><Plus size={20} /></span>
+              </button>}
+              {parsedWidth !== null && parsedWidth > 200 && <div className={`${styles.doubleSuggestion} ${system === "double" ? styles.doubleSelected : ""}`}>
+                <div className={styles.doubleModel} aria-hidden="true"><span /><span /><i>‹</i><b>›</b></div>
+                <div className={styles.doubleText}><strong>Geniş açıklık için duble önerisi</strong><small>İki kanat ortadan ayrılarak iki yana açılır.</small></div>
+                <button type="button" onClick={() => setSystem("double")} aria-pressed={system === "double"}>{system === "double" ? "Seçildi" : "Duble seç"}</button>
+              </div>}
               <div className={styles.finishPicker}>
                 <div className={styles.finishHeading}><span>Profil rengini seç</span><small>Açık tonlardan ilhamla</small></div>
                 <div className={styles.finishGrid} role="group" aria-label="Sineklik profil rengi">
@@ -208,17 +215,13 @@ export function SineklikPricePage() {
                 <FlyscreenDrawing area={area} system={system} finish={finish} paintCode={paintCode} width={parsedWidth} height={parsedHeight} />
                 <span>{width} × {height} cm · {system === "sliding" ? "Sürgülü" : "Menteşeli"}</span>
               </div>}
-              {quoteReady && quotePrice && <button type="button" className={styles.addItemAction} onClick={addItem}>
-                <span><strong>Bu ölçüyü listeye ekle</strong><small>{area === "window" ? "Pencere" : "Kapı"} · {system === "sliding" ? "Sürgülü" : "Menteşeli"} · {money.format(quotePrice)} ₺</small></span>
-                <span className={styles.addItemIcon}><Plus size={20} /></span>
-              </button>}
             </section>
 
             {items.length > 0 && <section className={styles.itemsPanel} aria-live="polite" aria-labelledby="items-title">
               <div className={styles.itemsHeading}><div><p>ÖLÇÜLERİNİ TEK TEKLİFTE TOPLA</p><h2 id="items-title">Ürün listen</h2></div><span>{items.length} ürün</span></div>
               <div className={styles.itemList}>{items.map((item, index) => <div className={styles.itemRow} key={item.id}>
                 <span className={styles.itemIndex}>{String(index + 1).padStart(2, "0")}</span>
-                <div className={styles.itemDetails}><strong>{item.area === "window" ? "Pencere" : "Kapı"} · {item.system === "hinged" ? "Menteşeli" : "Sürgülü"}</strong><small>{item.width} × {item.height} cm · {item.finish === "custom" ? `Özel · ${item.paintCode}` : finishOptions.find((option) => option.value === item.finish)?.label}</small></div>
+                <div className={styles.itemDetails}><strong>{item.area === "window" ? "Pencere" : "Kapı"} · {item.system === "hinged" ? "Menteşeli" : item.system === "double" ? "Duble sürgülü" : "Sürgülü"}</strong><small>{item.width} × {item.height} cm · {item.finish === "custom" ? `Özel · ${item.paintCode}` : finishOptions.find((option) => option.value === item.finish)?.label}</small></div>
                 <b className={styles.itemPrice}>{money.format(item.price)} ₺</b>
                 <button type="button" className={styles.removeItem} onClick={() => removeItem(item.id)} aria-label={`${index + 1}. ürünü listeden kaldır`}><Trash2 size={15} /></button>
               </div>)}</div>
@@ -233,7 +236,7 @@ export function SineklikPricePage() {
               <FlyscreenDrawing area={area} system={system} finish={finish} paintCode={paintCode} width={parsedWidth} height={parsedHeight} />
             </div>
             <div className={styles.previewCaption}>
-                <div><span>{area ? area === "window" ? "PENCERE SİNEKLİĞİ" : "KAPI SİNEKLİĞİ" : "SİNEKLİK MODELİ"}</span><strong>{system ? system === "hinged" ? "Menteşeli sistem" : "Sürgülü sistem" : "Seçimlerinle şekillenir"}</strong><small className={styles.previewFinish}>{finish === "custom" ? `Özel renk · ${paintCode || "kod bekleniyor"}` : finishOptions.find((option) => option.value === finish)?.label}</small></div>
+                <div><span>{area ? area === "window" ? "PENCERE SİNEKLİĞİ" : "KAPI SİNEKLİĞİ" : "SİNEKLİK MODELİ"}</span><strong>{system ? system === "hinged" ? "Menteşeli sistem" : system === "double" ? "Duble, iki yana açılır" : "Sürgülü sistem" : "Seçimlerinle şekillenir"}</strong><small className={styles.previewFinish}>{finish === "custom" ? `Özel renk · ${paintCode || "kod bekleniyor"}` : finishOptions.find((option) => option.value === finish)?.label}</small></div>
               {dimensionsReady && <span className={styles.dimensionTag}>{width} × {height} cm</span>}
             </div>
             <div className={styles.pricePanel}>
@@ -242,9 +245,23 @@ export function SineklikPricePage() {
               {quoteReady && quotePrice ? <p className={styles.priceNote}>{items.length > 0 ? `Listedeki ${items.length} ürün: ${money.format(quoteTotal)} ₺. Yeni ölçüyü de ekleyebilirsin.` : "Tek ürün fiyatı · Farklı ölçülerle ürün ekleyebilirsin."}</p> : items.length > 0 ? <p className={styles.priceNote}>Ürünlerin ve ölçüleri teklif mesajına eklenir.</p> : <p className={styles.priceNote}>Önce alanını, sonra sistem ve ölçünü seç.</p>}
               {!quoteReady && items.length > 0 && <a className={styles.whatsappButton} href={whatsappUrl} target="_blank" rel="noreferrer" data-cta-id="sineklik-calculator-whatsapp">WhatsApp’tan teklif al <ArrowRight size={17} /></a>}
             </div>
-            <p className={styles.footnote}>Fiyat: pencere {money.format(prices.window)} ₺ · kapı {money.format(prices.door)} ₺</p>
           </aside>
         </div>
+        <section className={styles.mediaSection} aria-labelledby="application-title">
+          <div className={styles.mediaHeading}><p>UYGULAMADAN</p><h2 id="application-title">Plise sineklik, yakından.</h2></div>
+          <div className={styles.mediaGrid}>
+            <video className={styles.applicationVideo} controls playsInline preload="metadata" poster="/products/pliseli-kapi-ref2.webp" aria-label="Plise sineklik uygulama videosu">
+              <source src="/videos/plisemodelsineklik.mp4" type="video/mp4" />
+              Tarayıcınız video oynatmayı desteklemiyor.
+            </video>
+            <div className={styles.mediaGallery}>
+              <figure><Image src="/products/pliseli-kapi-ref2.webp" alt="Farklı renklerde plise sineklik profilleri" width={720} height={480} /><figcaption>Renk seçenekleri</figcaption></figure>
+              <figure><Image src="/products/lifestyle-kapi-plise.jpg" alt="Balkon kapısında plise sineklik uygulaması" width={900} height={600} /><figcaption>Kapı uygulaması</figcaption></figure>
+              <figure><Image src="/products/lifestyle-pencere-plise.jpg" alt="Pencerede plise sineklik uygulaması" width={900} height={600} /><figcaption>Pencere uygulaması</figcaption></figure>
+            </div>
+          </div>
+          <p className={styles.serviceNote}>Ölçünü ve rengini seç, uygulama öncesi ekibimizle netleştir.</p>
+        </section>
         <footer className={styles.footer}><span>Çalışan Yapı · İstanbul</span><a href={`tel:${site.phone}`}>{site.phoneLabel}</a></footer>
       </div>
     </main>
@@ -264,16 +281,16 @@ function MeasurementGuideIllustration() {
     <path d="M76 51H253V171H76Z" fill="#eef8f2" stroke="#82978b" strokeWidth="3" />
     <path d="M81 56H248V166H81Z" fill={`url(#${gridId})`} />
     <path d="M54 31H267M54 191H267" stroke="#91a59a" strokeWidth="3" strokeLinecap="round" />
-    <path d="M73 219H256" stroke="#087f59" strokeWidth="2" markerStart={`url(#${gridId}-arrow)`} markerEnd={`url(#${gridId}-arrow)`} />
+    <path d="M81 166V207M248 166V207" stroke="#087f59" strokeWidth="1.2" strokeDasharray="3 3" />
+    <path d="M81 207H248" stroke="#087f59" strokeWidth="2" markerStart={`url(#${gridId}-arrow)`} markerEnd={`url(#${gridId}-arrow)`} />
     <rect x="140" y="205" width="50" height="27" rx="13.5" fill="#08a66b" />
     <text x="165" y="223" textAnchor="middle" fill="white" fontSize="12" fontWeight="800" fontFamily="Arial, sans-serif">EN</text>
-    <path d="M297 52V170" stroke="#087f59" strokeWidth="2" markerStart={`url(#${gridId}-arrow)`} markerEnd={`url(#${gridId}-arrow)`} />
+    <path d="M248 56H291M248 166H291" stroke="#087f59" strokeWidth="1.2" strokeDasharray="3 3" />
+    <path d="M291 56V166" stroke="#087f59" strokeWidth="2" markerStart={`url(#${gridId}-arrow)`} markerEnd={`url(#${gridId}-arrow)`} />
     <rect x="279" y="96" width="36" height="28" rx="14" fill="#f4a13c" />
     <text x="297" y="115" textAnchor="middle" fill="#4d2c07" fontSize="10" fontWeight="800" fontFamily="Arial, sans-serif">BOY</text>
-    <circle cx="62" cy="38" r="12" fill="#f4a13c" stroke="white" strokeWidth="3" />
-    <text x="62" y="42" textAnchor="middle" fill="#4d2c07" fontSize="9" fontWeight="800" fontFamily="Arial, sans-serif">1</text>
-    <circle cx="254" cy="184" r="12" fill="#08a66b" stroke="white" strokeWidth="3" />
-    <text x="254" y="188" textAnchor="middle" fill="white" fontSize="9" fontWeight="800" fontFamily="Arial, sans-serif">2</text>
+    <circle cx="81" cy="56" r="5" fill="#f4a13c" stroke="white" strokeWidth="2" />
+    <circle cx="248" cy="166" r="5" fill="#08a66b" stroke="white" strokeWidth="2" />
   </svg>;
 }
 
@@ -313,7 +330,7 @@ function FlyscreenDrawing({ area, system, finish, paintCode, width, height }: { 
       <rect x={x} y={y} width={frameWidth} height={frameHeight} rx="2" fill={`url(#${frameId})`} stroke={tones.edge} strokeWidth={bar} />
       <rect x={x + bar * 1.7} y={y + bar * 1.7} width={frameWidth - bar * 3.4} height={frameHeight - bar * 3.4} fill="#e9efec" />
       <rect x={x + bar * 1.7} y={y + bar * 1.7} width={frameWidth - bar * 3.4} height={frameHeight - bar * 3.4} fill={`url(#${meshId})`} />
-      {system === "sliding" ? <>
+      {system === "sliding" || system === "double" ? <>
         <path d={`M${x + frameWidth / 2} ${y + bar}v${frameHeight - bar * 2}`} stroke="#89958f" strokeWidth={bar * 0.8} />
         <path d={`M${x + frameWidth * 0.3} ${y + frameHeight * 0.52}h-${Math.min(16, frameWidth * 0.1)}m0 0 4-4m-4 4 4 4M${x + frameWidth * 0.7} ${y + frameHeight * 0.52}h${Math.min(16, frameWidth * 0.1)}m0 0-4-4m4 4-4 4`} fill="none" stroke="#65746c" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
       </> : <>
