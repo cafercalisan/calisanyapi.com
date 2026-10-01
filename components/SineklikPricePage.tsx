@@ -142,7 +142,7 @@ export function SineklikPricePage() {
                 </button>
                 <button type="button" disabled={!area} onClick={() => selectSystem("sliding")} aria-pressed={system === "sliding"} className={`${styles.choice} ${system === "sliding" ? styles.choiceSelected : ""}`}>
                   <span className={styles.systemGlyph}><ArrowLeftRight size={23} strokeWidth={1.7} /></span>
-                  <span><strong>Sürgülü</strong><small>Yana doğru kayar</small></span>
+                  <span><strong>Sürgülü</strong><small>Plise katlanarak açılır</small></span>
                   {system === "sliding" && <Check className={styles.choiceCheck} size={17} />}
                 </button>
               </div>
@@ -217,7 +217,7 @@ export function SineklikPricePage() {
               {dimensionsReady && <div className={styles.inlinePreview}>
                 <p><i /> ÖLÇÜNE GÖRE CANLI MODEL</p>
                 <FlyscreenDrawing area={area} system={system} finish={finish} paintCode={paintCode} width={parsedWidth} height={parsedHeight} />
-                <span>{width} × {height} cm · {system === "sliding" ? "Sürgülü" : "Menteşeli"}</span>
+                <span>{width} × {height} cm · {system === "hinged" ? "Menteşeli" : system === "double" ? "Duble, iki yana açılır" : "Sürgülü plise"}</span>
               </div>}
             </section>
 
@@ -318,9 +318,18 @@ function FlyscreenDrawing({ area, system, finish, paintCode, width, height }: { 
   const x = 220 - frameWidth / 2;
   const y = 148 - frameHeight / 2;
   const bar = Math.max(4, Math.min(7, frameWidth * 0.025));
+  const isPleated = system === "sliding" || system === "double";
+  const innerX = x + bar * 1.7;
+  const innerY = y + bar * 1.7;
+  const innerWidth = frameWidth - bar * 3.4;
+  const innerHeight = frameHeight - bar * 3.4;
+  const halfWidth = innerWidth / 2;
+  const pleatCount = Math.max(8, Math.round(innerWidth / 6));
+  const halfPleatCount = Math.max(4, Math.round(pleatCount / 2));
+  const animationTiming = { dur: "6s", repeatCount: "indefinite", calcMode: "spline", keyTimes: "0;.4;.55;.95;1", keySplines: ".45 0 .55 1;0 0 1 1;.45 0 .55 1;0 0 1 1" };
 
   return (
-    <svg className={styles.svg} viewBox="0 0 400 300" role="img" aria-label={`${area === "door" ? "Kapı" : "Pencere"} sinekliği, ${system === "sliding" ? "sürgülü" : "menteşeli"} sistem${width && height ? `, ${width} çarpı ${height} santimetre` : ""}`}>
+    <svg className={styles.svg} viewBox="0 0 400 300" role="img" aria-label={`${area === "door" ? "Kapı" : "Pencere"} sinekliği, ${system === "double" ? "iki yana açılan hareketli duble plise" : system === "sliding" ? "hareketli plise sürgü" : "menteşeli"} sistem${width && height ? `, ${width} çarpı ${height} santimetre` : ""}`}>
       <defs>
         <pattern id={meshId} width="5" height="5" patternUnits="userSpaceOnUse"><path d="M 5 0 L 0 0 0 5" fill="none" stroke="#9da7a2" strokeWidth=".55" opacity=".75" /></pattern>
         <linearGradient id={frameId} x1="0" x2="1" y1="0" y2="1"><stop offset="0" stopColor={tones.light}/><stop offset="1" stopColor={tones.shade}/></linearGradient>
@@ -332,11 +341,50 @@ function FlyscreenDrawing({ area, system, finish, paintCode, width, height }: { 
       <text x="22" y="150" textAnchor="middle" fill="#64736c" fontSize="10" fontFamily="Arial, sans-serif" transform="rotate(-90 22 150)">{height && height <= 600 ? `${height} cm` : "YÜKSEKLİK"}</text>
       <rect x={x + 4} y={y + 5} width={frameWidth} height={frameHeight} rx="1" fill="#182421" opacity=".08" />
       <rect x={x} y={y} width={frameWidth} height={frameHeight} rx="2" fill={`url(#${frameId})`} stroke={tones.edge} strokeWidth={bar} />
-      <rect x={x + bar * 1.7} y={y + bar * 1.7} width={frameWidth - bar * 3.4} height={frameHeight - bar * 3.4} fill="#e9efec" />
-      <rect x={x + bar * 1.7} y={y + bar * 1.7} width={frameWidth - bar * 3.4} height={frameHeight - bar * 3.4} fill={`url(#${meshId})`} />
-      {system === "sliding" || system === "double" ? <>
-        <path d={`M${x + frameWidth / 2} ${y + bar}v${frameHeight - bar * 2}`} stroke="#89958f" strokeWidth={bar * 0.8} />
-        <path d={`M${x + frameWidth * 0.3} ${y + frameHeight * 0.52}h-${Math.min(16, frameWidth * 0.1)}m0 0 4-4m-4 4 4 4M${x + frameWidth * 0.7} ${y + frameHeight * 0.52}h${Math.min(16, frameWidth * 0.1)}m0 0-4-4m4 4-4 4`} fill="none" stroke="#65746c" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      {!isPleated && <>
+        <rect x={innerX} y={innerY} width={innerWidth} height={innerHeight} fill="#e9efec" />
+        <rect x={innerX} y={innerY} width={innerWidth} height={innerHeight} fill={`url(#${meshId})`} />
+      </>}
+      {system === "sliding" ? <>
+        <g transform={`translate(${innerX} ${innerY})`}>
+          <g>
+            <animateTransform attributeName="transform" type="scale" values="1 1;.12 1;.12 1;1 1;1 1" dur={animationTiming.dur} repeatCount={animationTiming.repeatCount} calcMode={animationTiming.calcMode} keyTimes={animationTiming.keyTimes} keySplines={animationTiming.keySplines} />
+            <rect width={innerWidth} height={innerHeight} fill="#dcebe3" fillOpacity=".72" />
+            {Array.from({ length: pleatCount + 1 }, (_, index) => {
+              const foldX = (innerWidth * index) / pleatCount;
+              return <path key={index} d={`M${foldX} 0v${innerHeight}`} stroke="#54685c" strokeOpacity={index % 2 ? ".3" : ".12"} strokeWidth={index % 2 ? "1.3" : ".7"} />;
+            })}
+          </g>
+        </g>
+        <g>
+          <animateTransform attributeName="transform" type="translate" values={`0 0;${-innerWidth * .88} 0;${-innerWidth * .88} 0;0 0;0 0`} dur={animationTiming.dur} repeatCount={animationTiming.repeatCount} calcMode={animationTiming.calcMode} keyTimes={animationTiming.keyTimes} keySplines={animationTiming.keySplines} />
+          <rect x={innerX + innerWidth - bar * 1.25} y={innerY} width={bar * 1.25} height={innerHeight} fill={`url(#${frameId})`} stroke={tones.edge} strokeWidth=".8" />
+        </g>
+        <path d={`M${innerX + innerWidth * .32} ${y + frameHeight * .52}h-${Math.min(16, frameWidth * .1)}m0 0 4-4m-4 4 4 4M${innerX + innerWidth * .68} ${y + frameHeight * .52}h${Math.min(16, frameWidth * .1)}m0 0-4-4m4 4-4 4`} fill="none" stroke="#65746c" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      </> : system === "double" ? <>
+        <g transform={`translate(${innerX} ${innerY})`}>
+          <g>
+            <animateTransform attributeName="transform" type="scale" values="1 1;.12 1;.12 1;1 1;1 1" dur={animationTiming.dur} repeatCount={animationTiming.repeatCount} calcMode={animationTiming.calcMode} keyTimes={animationTiming.keyTimes} keySplines={animationTiming.keySplines} />
+            <rect width={halfWidth} height={innerHeight} fill="#dcebe3" fillOpacity=".72" />
+            {Array.from({ length: halfPleatCount + 1 }, (_, index) => <path key={index} d={`M${(halfWidth * index) / halfPleatCount} 0v${innerHeight}`} stroke="#54685c" strokeOpacity={index % 2 ? ".3" : ".12"} strokeWidth={index % 2 ? "1.3" : ".7"} />)}
+          </g>
+        </g>
+        <g transform={`translate(${innerX + innerWidth} ${innerY}) scale(-1 1)`}>
+          <g>
+            <animateTransform attributeName="transform" type="scale" values="1 1;.12 1;.12 1;1 1;1 1" dur={animationTiming.dur} repeatCount={animationTiming.repeatCount} calcMode={animationTiming.calcMode} keyTimes={animationTiming.keyTimes} keySplines={animationTiming.keySplines} />
+            <rect width={halfWidth} height={innerHeight} fill="#dcebe3" fillOpacity=".72" />
+            {Array.from({ length: halfPleatCount + 1 }, (_, index) => <path key={index} d={`M${(halfWidth * index) / halfPleatCount} 0v${innerHeight}`} stroke="#54685c" strokeOpacity={index % 2 ? ".3" : ".12"} strokeWidth={index % 2 ? "1.3" : ".7"} />)}
+          </g>
+        </g>
+        <g>
+          <animateTransform attributeName="transform" type="translate" values={`0 0;${-halfWidth * .88} 0;${-halfWidth * .88} 0;0 0;0 0`} dur={animationTiming.dur} repeatCount={animationTiming.repeatCount} calcMode={animationTiming.calcMode} keyTimes={animationTiming.keyTimes} keySplines={animationTiming.keySplines} />
+          <rect x={innerX + halfWidth - bar / 2} y={innerY} width={bar} height={innerHeight} fill={`url(#${frameId})`} stroke={tones.edge} strokeWidth=".8" />
+        </g>
+        <g>
+          <animateTransform attributeName="transform" type="translate" values={`0 0;${halfWidth * .88} 0;${halfWidth * .88} 0;0 0;0 0`} dur={animationTiming.dur} repeatCount={animationTiming.repeatCount} calcMode={animationTiming.calcMode} keyTimes={animationTiming.keyTimes} keySplines={animationTiming.keySplines} />
+          <rect x={innerX + halfWidth - bar / 2} y={innerY} width={bar} height={innerHeight} fill={`url(#${frameId})`} stroke={tones.edge} strokeWidth=".8" />
+        </g>
+        <path d={`M${x + frameWidth * .33} ${y + frameHeight * .52}h-${Math.min(15, frameWidth * .08)}m0 0 4-4m-4 4 4 4M${x + frameWidth * .67} ${y + frameHeight * .52}h${Math.min(15, frameWidth * .08)}m0 0-4-4m4 4-4 4`} fill="none" stroke="#65746c" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
       </> : <>
         <path d={`M${x + bar} ${y + frameHeight * 0.25}h${bar * 1.3}m-${bar * 1.3} 0v${Math.max(9, frameHeight * 0.07)}m0 0h${bar * 1.3}M${x + bar} ${y + frameHeight * 0.72}h${bar * 1.3}m-${bar * 1.3} 0v${Math.max(9, frameHeight * 0.07)}m0 0h${bar * 1.3}`} fill="none" stroke="#84928b" strokeWidth="1.2" />
         <rect x={x + frameWidth - bar * 3.4} y={y + frameHeight * 0.47} width={bar * 1.2} height={Math.max(12, frameHeight * 0.09)} rx="2" fill="#6b7871" />
