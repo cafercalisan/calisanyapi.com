@@ -1,8 +1,9 @@
 "use client";
 
 import { useId, useMemo, useRef, useState } from "react";
-import { ArrowLeftRight, ArrowRight, Check, DoorOpen, Palette, PanelsTopLeft, Plus, Ruler, Trash2 } from "lucide-react";
+import { ArrowLeftRight, ArrowRight, Check, ChevronDown, DoorOpen, Palette, PanelsTopLeft, Plus, Ruler, Trash2 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { site } from "@/lib/site";
 import styles from "./SineklikPricePage.module.css";
 
@@ -147,6 +148,26 @@ export function SineklikPricePage() {
                 </button>
               </div>
             </section>
+
+            <details className={styles.measureGuide}>
+              <summary>
+                <span className={styles.measureGuideIcon}><Ruler size={17} /></span>
+                <span className={styles.measureGuideTitle}><strong>Ölçüyü nasıl almalıyım?</strong><small>Görselli kısa rehber</small></span>
+                <ChevronDown className={styles.measureGuideChevron} size={18} />
+              </summary>
+              <div className={styles.measureGuideBody}>
+                <div className={styles.measureGuideImage}><Image src="/guide/olcurehber.jpg" alt="Pencere sinekliği için fitiller arasından en ve boy ölçme örneği" fill sizes="(max-width: 760px) 34vw, 160px" /></div>
+                <div className={styles.measureGuideCopy}>
+                  <p>Üç kısa adım</p>
+                  <ol>
+                    <li><b>En:</b> Fitiller arasındaki net açıklığı soldan sağa ölç.</li>
+                    <li><b>Boy:</b> Aynı açıklığı üstten alta ölç.</li>
+                    <li>Ölçüleri santimetre olarak gir. Yaklaşık ölçü yeterli.</li>
+                  </ol>
+                  <small>Kesin ölçü uygulama öncesinde doğrulanır.</small>
+                </div>
+              </div>
+            </details>
 
             <section className={`${styles.step} ${system && !dimensionsReady ? styles.stepCurrent : ""} ${!system ? styles.stepLocked : ""}`} aria-labelledby="step-measure">
               <div className={styles.stepHeading}>
