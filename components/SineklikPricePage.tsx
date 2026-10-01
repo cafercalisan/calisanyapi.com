@@ -39,6 +39,8 @@ export function SineklikPricePage() {
   const widthRef = useRef<HTMLInputElement>(null);
   const parsedWidth = readMeasure(width);
   const parsedHeight = readMeasure(height);
+  const widthRange = area === "door" ? [60, 300] : [30, 300];
+  const heightRange = area === "door" ? [150, 280] : [30, 250];
   const dimensionsReady = parsedWidth !== null && parsedHeight !== null;
   const finishReady = finish !== "custom" || paintCode.trim().length > 0;
   const quoteReady = Boolean(area && system && dimensionsReady && finishReady);
@@ -176,10 +178,12 @@ export function SineklikPricePage() {
                 <label className={styles.measureField}>
                   <span>Genişlik</span>
                   <span className={styles.inputWrap}><input ref={widthRef} type="text" inputMode="decimal" autoComplete="off" placeholder="Örn. 120" value={width} onChange={(event) => setWidth(event.target.value.replace(/[^\d.,]/g, "").replace(/(,|\.).*(,|\.)/, "$1"))} disabled={!system} aria-label="Genişlik, santimetre" /><i>cm</i></span>
+                  <input className={styles.measureRange} type="range" min={widthRange[0]} max={widthRange[1]} step="1" value={parsedWidth ?? widthRange[0]} onChange={(event) => setWidth(event.target.value)} disabled={!system} aria-label="Genişliği kaydırarak ayarla" />
                 </label>
                 <label className={styles.measureField}>
                   <span>Yükseklik</span>
                   <span className={styles.inputWrap}><input type="text" inputMode="decimal" autoComplete="off" placeholder="Örn. 140" value={height} onChange={(event) => setHeight(event.target.value.replace(/[^\d.,]/g, "").replace(/(,|\.).*(,|\.)/, "$1"))} disabled={!system} aria-label="Yükseklik, santimetre" /><i>cm</i></span>
+                  <input className={styles.measureRange} type="range" min={heightRange[0]} max={heightRange[1]} step="1" value={parsedHeight ?? heightRange[0]} onChange={(event) => setHeight(event.target.value)} disabled={!system} aria-label="Yüksekliği kaydırarak ayarla" />
                 </label>
               </div>
               {quoteReady && quotePrice && <button type="button" className={styles.addItemAction} onClick={addItem}>
@@ -271,26 +275,26 @@ export function SineklikPricePage() {
 function MeasurementGuideIllustration() {
   const gridId = `measureGrid-${useId().replace(/:/g, "")}`;
 
-  return <svg className={styles.measureDiagram} viewBox="0 0 360 250" role="img" aria-label="Ölçülecek açıklıkta en yatay, boy dikey oklarla gösterilmiştir">
+  return <svg className={styles.measureDiagram} viewBox="0 0 360 300" role="img" aria-label="Pencere açıklığında en ve daha uzun boy, fitil iç kenarları arasında gösterilmiştir">
     <defs>
       <pattern id={gridId} width="7" height="7" patternUnits="userSpaceOnUse"><path d="M7 0H0V7" fill="none" stroke="#169c73" strokeWidth=".55" opacity=".38" /></pattern>
       <marker id={`${gridId}-arrow`} markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto-start-reverse" markerUnits="strokeWidth"><path d="M0 0 7 3.5 0 7Z" fill="#087f59" /></marker>
     </defs>
-    <rect x="2" y="2" width="356" height="246" rx="15" fill="#f5fbf7" />
-    <path d="M62 37H267V185H62Z" fill="#e0e9e3" stroke="#3a5146" strokeWidth="8" strokeLinejoin="round" />
-    <path d="M76 51H253V171H76Z" fill="#eef8f2" stroke="#82978b" strokeWidth="3" />
-    <path d="M81 56H248V166H81Z" fill={`url(#${gridId})`} />
-    <path d="M54 31H267M54 191H267" stroke="#91a59a" strokeWidth="3" strokeLinecap="round" />
-    <path d="M81 166V207M248 166V207" stroke="#087f59" strokeWidth="1.2" strokeDasharray="3 3" />
-    <path d="M81 207H248" stroke="#087f59" strokeWidth="2" markerStart={`url(#${gridId}-arrow)`} markerEnd={`url(#${gridId}-arrow)`} />
-    <rect x="140" y="205" width="50" height="27" rx="13.5" fill="#08a66b" />
-    <text x="165" y="223" textAnchor="middle" fill="white" fontSize="12" fontWeight="800" fontFamily="Arial, sans-serif">EN</text>
-    <path d="M248 56H291M248 166H291" stroke="#087f59" strokeWidth="1.2" strokeDasharray="3 3" />
-    <path d="M291 56V166" stroke="#087f59" strokeWidth="2" markerStart={`url(#${gridId}-arrow)`} markerEnd={`url(#${gridId}-arrow)`} />
-    <rect x="279" y="96" width="36" height="28" rx="14" fill="#f4a13c" />
-    <text x="297" y="115" textAnchor="middle" fill="#4d2c07" fontSize="10" fontWeight="800" fontFamily="Arial, sans-serif">BOY</text>
-    <circle cx="81" cy="56" r="5" fill="#f4a13c" stroke="white" strokeWidth="2" />
-    <circle cx="248" cy="166" r="5" fill="#08a66b" stroke="white" strokeWidth="2" />
+    <rect x="2" y="2" width="356" height="296" rx="15" fill="#f5fbf7" />
+    <path d="M105 20H247V244H105Z" fill="#e0e9e3" stroke="#3a5146" strokeWidth="8" strokeLinejoin="round" />
+    <path d="M118 33H234V231H118Z" fill="#eef8f2" stroke="#82978b" strokeWidth="3" />
+    <path d="M123 38H229V226H123Z" fill={`url(#${gridId})`} />
+    <path d="M97 14H255M97 251H255" stroke="#91a59a" strokeWidth="3" strokeLinecap="round" />
+    <path d="M123 226V265M229 226V265" stroke="#087f59" strokeWidth="1.2" strokeDasharray="3 3" />
+    <path d="M123 265H229" stroke="#087f59" strokeWidth="2" markerStart={`url(#${gridId}-arrow)`} markerEnd={`url(#${gridId}-arrow)`} />
+    <rect x="151" y="253" width="50" height="26" rx="13" fill="#08a66b" />
+    <text x="176" y="271" textAnchor="middle" fill="white" fontSize="12" fontWeight="800" fontFamily="Arial, sans-serif">EN</text>
+    <path d="M229 38H274M229 226H274" stroke="#087f59" strokeWidth="1.2" strokeDasharray="3 3" />
+    <path d="M274 38V226" stroke="#087f59" strokeWidth="2" markerStart={`url(#${gridId}-arrow)`} markerEnd={`url(#${gridId}-arrow)`} />
+    <rect x="256" y="119" width="36" height="28" rx="14" fill="#f4a13c" />
+    <text x="274" y="138" textAnchor="middle" fill="#4d2c07" fontSize="10" fontWeight="800" fontFamily="Arial, sans-serif">BOY</text>
+    <circle cx="123" cy="38" r="5" fill="#f4a13c" stroke="white" strokeWidth="2" />
+    <circle cx="229" cy="226" r="5" fill="#08a66b" stroke="white" strokeWidth="2" />
   </svg>;
 }
 
