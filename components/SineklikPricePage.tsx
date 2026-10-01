@@ -1,14 +1,22 @@
 "use client";
 
 import { useId, useMemo, useRef, useState } from "react";
-import { ArrowLeftRight, ArrowRight, Check, DoorOpen, PanelsTopLeft, Plus, Ruler, Trash2 } from "lucide-react";
+import { ArrowLeftRight, ArrowRight, Check, DoorOpen, Palette, PanelsTopLeft, Plus, Ruler, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import styles from "./SineklikPricePage.module.css";
 
 type Area = "window" | "door";
 type System = "hinged" | "sliding";
-type EstimateItem = { id: string; area: Area; system: System; width: string; height: string; price: number };
+type Finish = "anthracite" | "gray" | "white" | "golden-oak" | "custom";
+type EstimateItem = { id: string; area: Area; system: System; width: string; height: string; price: number; finish: Finish; paintCode: string };
+
+const finishOptions: { value: Exclude<Finish, "custom">; label: string; swatch: string; edge?: string }[] = [
+  { value: "anthracite", label: "Antrasit", swatch: "#414748" },
+  { value: "gray", label: "Gri", swatch: "#aeb4b0" },
+  { value: "white", label: "Beyaz", swatch: "#fbfcf9", edge: "#d8dfd9" },
+  { value: "golden-oak", label: "Altın meşe", swatch: "linear-gradient(140deg, #f0d7a4 0%, #bc8950 48%, #e5c48c 100%)" },
+];
 
 const prices: Record<Area, number> = { window: 1300, door: 2200 };
 const money = new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 0 });
@@ -23,13 +31,16 @@ export function SineklikPricePage() {
   const [system, setSystem] = useState<System | null>(null);
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
+  const [finish, setFinish] = useState<Finish>("white");
+  const [paintCode, setPaintCode] = useState("");
   const [items, setItems] = useState<EstimateItem[]>([]);
   const systemRef = useRef<HTMLElement>(null);
   const widthRef = useRef<HTMLInputElement>(null);
   const parsedWidth = readMeasure(width);
   const parsedHeight = readMeasure(height);
   const dimensionsReady = parsedWidth !== null && parsedHeight !== null;
-  const quoteReady = Boolean(area && system && dimensionsReady);
+  const finishReady = finish !== "custom" || paintCode.trim().length > 0;
+  const quoteReady = Boolean(area && system && dimensionsReady && finishReady);
   const quotePrice = area ? prices[area] : null;
   const quoteTotal = items.reduce((total, item) => total + item.price, 0);
 
@@ -38,7 +49,8 @@ export function SineklikPricePage() {
     const lines = items.map((item, index) => {
       const areaName = item.area === "window" ? "Pencere" : "Kapı";
       const systemName = item.system === "hinged" ? "Menteşeli" : "Sürgülü";
-      return `${index + 1}. ${areaName} · ${systemName} · ${item.width} × ${item.height} cm · ${money.format(item.price)} TL`;
+      const colorName = item.finish === "custom" ? `Özel boya kodu ${item.paintCode}` : finishOptions.find((option) => option.value === item.finish)?.label ?? "Beyaz";
+      return `${index + 1}. ${areaName} · ${systemName} · ${item.width} × ${item.height} cm · ${colorName} · ${money.format(item.price)} TL`;
     });
     const message = `Merhaba, sineklik fiyat teklifimi iletmek istiyorum.\n\n${lines.join("\n")}\n\nToplam (${items.length} ürün): ${money.format(quoteTotal)} TL`;
     return `https://wa.me/${site.phone.replace(/\D/g, "")}?text=${encodeURIComponent(message)}`;
@@ -47,7 +59,8 @@ export function SineklikPricePage() {
   function addItem() {
     if (!quoteReady || !area || !system || !quotePrice || !parsedWidth || !parsedHeight) return;
     setItems((current) => [...current, {
-      id: crypto.randomUUID(), area, system, width, height, price: quotePrice,
+      id: crypto.randomUUID(), area, system, width, height, price: quotePrice, finish,
+      paintCode: finish === "custom" ? paintCode.trim() : "",
     }]);
     setWidth("");
     setHeight("");
@@ -91,7 +104,7 @@ export function SineklikPricePage() {
             <i />
             <span className={system ? styles.progressDone : area ? styles.progressActive : ""}><b>{system ? <Check size={13} /> : "2"}</b> Sistem</span>
             <i />
-            <span className={dimensionsReady ? styles.progressDone : system ? styles.progressActive : ""}><b>{dimensionsReady ? <Check size={13} /> : "3"}</b> Ölçü & fiyat</span>
+            <span className={quoteReady ? styles.progressDone : system ? styles.progressActive : ""}><b>{quoteReady ? <Check size={13} /> : "3"}</b> Ölçü & fiyat</span>
           </div>
         </section>
 
@@ -137,7 +150,7 @@ export function SineklikPricePage() {
 
             <section className={`${styles.step} ${system && !dimensionsReady ? styles.stepCurrent : ""} ${!system ? styles.stepLocked : ""}`} aria-labelledby="step-measure">
               <div className={styles.stepHeading}>
-                <span className={styles.stepNumber}>{dimensionsReady ? <Check size={15} /> : "03"}</span>
+                <span className={styles.stepNumber}>{quoteReady ? <Check size={15} /> : "03"}</span>
                 <div><p>YAKLAŞIK ÖLÇÜ YETERLİ</p><h2 id="step-measure">En ve boyu gir</h2></div>
               </div>
               <div className={styles.measureGrid}>
@@ -150,11 +163,28 @@ export function SineklikPricePage() {
                   <span className={styles.inputWrap}><input type="text" inputMode="decimal" autoComplete="off" placeholder="Örn. 140" value={height} onChange={(event) => setHeight(event.target.value.replace(/[^\d.,]/g, "").replace(/(,|\.).*(,|\.)/, "$1"))} disabled={!system} aria-label="Yükseklik, santimetre" /><i>cm</i></span>
                 </label>
               </div>
+              <div className={styles.finishPicker}>
+                <div className={styles.finishHeading}><span>Profil rengini seç</span><small>Açık tonlardan ilhamla</small></div>
+                <div className={styles.finishGrid} role="group" aria-label="Sineklik profil rengi">
+                  {finishOptions.map((option) => <button key={option.value} type="button" className={`${styles.finishOption} ${finish === option.value ? styles.finishSelected : ""}`} onClick={() => setFinish(option.value)} aria-pressed={finish === option.value}>
+                    <span className={styles.finishSwatch} style={{ background: option.swatch, borderColor: option.edge || "transparent" }} />
+                    <span>{option.label}</span>
+                    {finish === option.value && <Check size={13} className={styles.finishCheck} />}
+                  </button>)}
+                </div>
+                <button type="button" className={`${styles.customFinish} ${finish === "custom" ? styles.customFinishSelected : ""}`} onClick={() => setFinish("custom")} aria-pressed={finish === "custom"}>
+                  <span className={styles.customFinishIcon}><Palette size={16} /></span>
+                  <span><strong>İsteğe özel boya kodu</strong><small>RAL, NCS veya renk kodu</small></span>
+                  {finish === "custom" && <Check size={16} className={styles.finishCheck} />}
+                </button>
+                {finish === "custom" && <label className={styles.paintCodeField}><span>Boya kodu</span><input type="text" value={paintCode} onChange={(event) => setPaintCode(event.target.value.slice(0, 32))} placeholder="Örn. RAL 7016 veya #3D4142" maxLength={32} autoCapitalize="characters" autoComplete="off" /><small>Kod teklifine eklenir; renk üretim öncesi teyit edilir.</small></label>}
+              </div>
               <p className={styles.measureHint}><Ruler size={14} /> Metreyle, çerçevenin içinden yaklaşık ölç.</p>
               {((width && !parsedWidth) || (height && !parsedHeight)) && <p className={styles.validation}>Ölçüyü 1 ile 600 cm arasında gir.</p>}
+              {finish === "custom" && !paintCode.trim() && <p className={styles.validation}>Devam etmek için boya kodunu yaz.</p>}
               {dimensionsReady && <div className={styles.inlinePreview}>
                 <p><i /> ÖLÇÜNE GÖRE CANLI MODEL</p>
-                <FlyscreenDrawing area={area} system={system} width={parsedWidth} height={parsedHeight} />
+                <FlyscreenDrawing area={area} system={system} finish={finish} paintCode={paintCode} width={parsedWidth} height={parsedHeight} />
                 <span>{width} × {height} cm · {system === "sliding" ? "Sürgülü" : "Menteşeli"}</span>
               </div>}
               {quoteReady && quotePrice && <button type="button" className={styles.addItemAction} onClick={addItem}>
@@ -167,7 +197,7 @@ export function SineklikPricePage() {
               <div className={styles.itemsHeading}><div><p>ÖLÇÜLERİNİ TEK TEKLİFTE TOPLA</p><h2 id="items-title">Ürün listen</h2></div><span>{items.length} ürün</span></div>
               <div className={styles.itemList}>{items.map((item, index) => <div className={styles.itemRow} key={item.id}>
                 <span className={styles.itemIndex}>{String(index + 1).padStart(2, "0")}</span>
-                <div className={styles.itemDetails}><strong>{item.area === "window" ? "Pencere" : "Kapı"} · {item.system === "hinged" ? "Menteşeli" : "Sürgülü"}</strong><small>{item.width} × {item.height} cm</small></div>
+                <div className={styles.itemDetails}><strong>{item.area === "window" ? "Pencere" : "Kapı"} · {item.system === "hinged" ? "Menteşeli" : "Sürgülü"}</strong><small>{item.width} × {item.height} cm · {item.finish === "custom" ? `Özel · ${item.paintCode}` : finishOptions.find((option) => option.value === item.finish)?.label}</small></div>
                 <b className={styles.itemPrice}>{money.format(item.price)} ₺</b>
                 <button type="button" className={styles.removeItem} onClick={() => removeItem(item.id)} aria-label={`${index + 1}. ürünü listeden kaldır`}><Trash2 size={15} /></button>
               </div>)}</div>
@@ -179,10 +209,10 @@ export function SineklikPricePage() {
           <aside className={styles.preview} aria-live="polite">
             <div className={styles.previewTop}><span className={styles.previewLabel}><i /> CANLI ÖNİZLEME</span><span className={styles.previewIndex}>01 / 01</span></div>
             <div className={styles.drawing}>
-              <FlyscreenDrawing area={area} system={system} width={parsedWidth} height={parsedHeight} />
+              <FlyscreenDrawing area={area} system={system} finish={finish} paintCode={paintCode} width={parsedWidth} height={parsedHeight} />
             </div>
             <div className={styles.previewCaption}>
-              <div><span>{area ? area === "window" ? "PENCERE SİNEKLİĞİ" : "KAPI SİNEKLİĞİ" : "SİNEKLİK MODELİ"}</span><strong>{system ? system === "hinged" ? "Menteşeli sistem" : "Sürgülü sistem" : "Seçimlerinle şekillenir"}</strong></div>
+                <div><span>{area ? area === "window" ? "PENCERE SİNEKLİĞİ" : "KAPI SİNEKLİĞİ" : "SİNEKLİK MODELİ"}</span><strong>{system ? system === "hinged" ? "Menteşeli sistem" : "Sürgülü sistem" : "Seçimlerinle şekillenir"}</strong><small className={styles.previewFinish}>{finish === "custom" ? `Özel renk · ${paintCode || "kod bekleniyor"}` : finishOptions.find((option) => option.value === finish)?.label}</small></div>
               {dimensionsReady && <span className={styles.dimensionTag}>{width} × {height} cm</span>}
             </div>
             <div className={styles.pricePanel}>
@@ -200,8 +230,18 @@ export function SineklikPricePage() {
   );
 }
 
-function FlyscreenDrawing({ area, system, width, height }: { area: Area | null; system: System | null; width: number | null; height: number | null }) {
+function FlyscreenDrawing({ area, system, finish, paintCode, width, height }: { area: Area | null; system: System | null; finish: Finish; paintCode: string; width: number | null; height: number | null }) {
   const meshId = `screenMesh-${useId().replace(/:/g, "")}`;
+  const frameId = `frameLight-${useId().replace(/:/g, "")}`;
+  const customHex = paintCode.trim().match(/^#([\da-f]{3}|[\da-f]{6})$/i)?.[0];
+  const frameTones: Record<Finish, { light: string; shade: string; edge: string }> = {
+    anthracite: { light: "#777e7e", shade: "#343a3b", edge: "#252b2c" },
+    gray: { light: "#d3d7d3", shade: "#9da49f", edge: "#858c87" },
+    white: { light: "#ffffff", shade: "#e0e6e1", edge: "#aab5ae" },
+    "golden-oak": { light: "#f2d9a4", shade: "#a7763e", edge: "#926331" },
+    custom: { light: customHex || "#edf4ef", shade: customHex || "#b9c9bf", edge: customHex || "#8a9b90" },
+  };
+  const tones = frameTones[finish];
   const sourceWidth = width ?? (area === "door" ? 90 : 120);
   const sourceHeight = height ?? (area === "door" ? 205 : 140);
   const scale = Math.min(222 / sourceWidth, 204 / sourceHeight);
@@ -215,7 +255,7 @@ function FlyscreenDrawing({ area, system, width, height }: { area: Area | null; 
     <svg className={styles.svg} viewBox="0 0 400 300" role="img" aria-label={`${area === "door" ? "Kapı" : "Pencere"} sinekliği, ${system === "sliding" ? "sürgülü" : "menteşeli"} sistem${width && height ? `, ${width} çarpı ${height} santimetre` : ""}`}>
       <defs>
         <pattern id={meshId} width="5" height="5" patternUnits="userSpaceOnUse"><path d="M 5 0 L 0 0 0 5" fill="none" stroke="#9da7a2" strokeWidth=".55" opacity=".75" /></pattern>
-        <linearGradient id="frameLight" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stopColor="#fafbf9"/><stop offset="1" stopColor="#d9dfdc"/></linearGradient>
+        <linearGradient id={frameId} x1="0" x2="1" y1="0" y2="1"><stop offset="0" stopColor={tones.light}/><stop offset="1" stopColor={tones.shade}/></linearGradient>
       </defs>
       <path d="M30 258H370" stroke="#e6e9e6" strokeWidth="1" />
       <path d={`M${x} 27v8m0-4h${frameWidth}m0-4v8`} stroke="#84928b" strokeWidth="1" />
@@ -223,7 +263,7 @@ function FlyscreenDrawing({ area, system, width, height }: { area: Area | null; 
       <path d={`M65 ${y}h8m-4 0v${frameHeight}m-4 0h8`} stroke="#84928b" strokeWidth="1" />
       <text x="22" y="150" textAnchor="middle" fill="#64736c" fontSize="10" fontFamily="Arial, sans-serif" transform="rotate(-90 22 150)">{height && height <= 600 ? `${height} cm` : "YÜKSEKLİK"}</text>
       <rect x={x + 4} y={y + 5} width={frameWidth} height={frameHeight} rx="1" fill="#182421" opacity=".08" />
-      <rect x={x} y={y} width={frameWidth} height={frameHeight} rx="2" fill="url(#frameLight)" stroke="#8d9992" strokeWidth={bar} />
+      <rect x={x} y={y} width={frameWidth} height={frameHeight} rx="2" fill={`url(#${frameId})`} stroke={tones.edge} strokeWidth={bar} />
       <rect x={x + bar * 1.7} y={y + bar * 1.7} width={frameWidth - bar * 3.4} height={frameHeight - bar * 3.4} fill="#e9efec" />
       <rect x={x + bar * 1.7} y={y + bar * 1.7} width={frameWidth - bar * 3.4} height={frameHeight - bar * 3.4} fill={`url(#${meshId})`} />
       {system === "sliding" ? <>

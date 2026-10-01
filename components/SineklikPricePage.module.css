@@ -61,6 +61,27 @@
 .glyphHinged::before { top: 3px; }.glyphHinged::after { bottom: 3px; }
 
 .measureGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 13px; }
+.finishPicker { margin-top: 15px; padding-top: 13px; border-top: 1px solid #e9efeb; }
+.finishHeading { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
+.finishHeading span { color: #45554c; font-size: 10px; font-weight: 800; }
+.finishHeading small { color: #96a29b; font-size: 8px; }
+.finishGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
+.finishOption { position: relative; display: grid; justify-items: center; gap: 6px; min-width: 0; padding: 8px 4px 7px; border: 1px solid #e5ebe7; border-radius: 10px; background: #fff; color: #56645c; font-size: 8px; font-weight: 700; cursor: pointer; transition: border-color .16s, background .16s, transform .16s; }
+.finishOption:hover { border-color: #9cceaf; background: #fbfefb; transform: translateY(-1px); }
+.finishSelected { border-color: #0eaa6a; background: #effaf3; box-shadow: inset 0 0 0 1px #0eaa6a20; color: #176843; }
+.finishSwatch { width: 31px; height: 25px; border: 1px solid transparent; border-radius: 7px; box-shadow: inset 0 1px 1px #ffffff75, 0 1px 2px #1c30251a; }
+.finishCheck { position: absolute; top: 5px; right: 5px; color: #0a9e62; }
+.customFinish { display: flex; width: 100%; align-items: center; gap: 9px; margin-top: 8px; padding: 8px 10px; border: 1px solid #e5ebe7; border-radius: 10px; background: #fff; color: #49574f; text-align: left; cursor: pointer; transition: border-color .16s, background .16s; }
+.customFinish:hover, .customFinishSelected { border-color: #66bb8c; background: #f4fbf6; }
+.customFinishIcon { display: grid; width: 30px; height: 30px; flex: 0 0 30px; place-items: center; border-radius: 8px; background: linear-gradient(135deg, #e5faf0, #e8f4ff); color: #168b5c; }
+.customFinish strong, .customFinish small { display: block; }
+.customFinish strong { font-size: 9px; font-weight: 800; }
+.customFinish small { margin-top: 2px; color: #929d96; font-size: 8px; }
+.paintCodeField { display: grid; gap: 5px; margin-top: 8px; color: #58665e; font-size: 9px; font-weight: 750; }
+.paintCodeField input { min-height: 40px; padding: 0 10px; border: 1px solid #dfe8e2; border-radius: 9px; background: #fff; color: var(--calc-ink); font-size: 12px; outline: none; }
+.paintCodeField input:focus { border-color: #41ad76; box-shadow: 0 0 0 3px #1aaa6c18; }
+.paintCodeField input::placeholder { color: #a7b0ab; font-size: 10px; font-weight: 450; }
+.paintCodeField > small { color: #929d96; font-size: 8px; font-weight: 500; }
 .measureField { display: grid; gap: 6px; color: #606b66; font-size: 10px; font-weight: 700; }
 .inputWrap { display: flex; height: 45px; align-items: center; border: 1px solid #e4e8e4; border-radius: 10px; background: white; transition: border-color .15s, box-shadow .15s; }
 .inputWrap:focus-within { border-color: #559a7c; box-shadow: 0 0 0 3px #1a8c6c14; }
@@ -109,6 +130,7 @@
 .previewCaption div > span, .previewCaption strong { display: block; }
 .previewCaption div > span { margin-bottom: 3px; color: #89938e; font-size: 8px; font-weight: 750; letter-spacing: .12em; }
 .previewCaption strong { font-size: 12px; font-weight: 730; }
+.previewFinish { display: block; margin-top: 3px; color: #148259; font-size: 9px; font-weight: 700; }
 .dimensionTag { padding: 6px 8px; border-radius: 7px; background: #f1f4f1; color: #526159; font-size: 9px; font-weight: 700; white-space: nowrap; }
 .pricePanel { margin: 0 11px 10px; padding: 14px 15px 13px; border-radius: 13px; background: linear-gradient(135deg, #123b31, #08694e 100%); color: #fff; }
 .priceTop { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; color: #cad3cf; font-size: 8px; font-weight: 800; letter-spacing: .11em; }
@@ -150,6 +172,10 @@
   .choice { min-height: 61px; gap: 8px; padding: 8px; }
   .choiceIcon, .systemGlyph { width: 32px; height: 32px; flex-basis: 32px; }
   .choice small { font-size: 8px; }
+  .finishPicker { margin-top: 12px; padding-top: 11px; }
+  .finishGrid { gap: 5px; }
+  .finishOption { padding: 7px 2px 6px; font-size: 8px; }
+  .finishSwatch { width: 29px; height: 23px; }
   .inlinePreview { display: grid; justify-items: center; margin-top: 12px; padding: 10px 10px 8px; border: 1px solid #d7eee1; border-radius: 11px; background: linear-gradient(140deg, #f4fff7, #f2fbff); }
   .inlinePreview > p { display: flex; align-items: center; gap: 6px; justify-self: start; margin: 0; color: #68746d; font-size: 8px; font-weight: 800; letter-spacing: .1em; }
   .inlinePreview > p i { width: 6px; height: 6px; border-radius: 50%; background: #18c37e; box-shadow: 0 0 0 3px #18c37e20; }
