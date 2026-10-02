@@ -312,11 +312,11 @@ function FlyscreenDrawing({ area, system, finish, paintCode, width, height }: { 
   const tones = frameTones[finish];
   const sourceWidth = width ?? (area === "door" ? 90 : 120);
   const sourceHeight = height ?? (area === "door" ? 205 : 140);
-  const scale = Math.min(222 / sourceWidth, 204 / sourceHeight);
+  const scale = Math.min(270 / sourceWidth, 236 / sourceHeight);
   const frameWidth = Math.max(52, sourceWidth * scale);
   const frameHeight = Math.max(52, sourceHeight * scale);
   const x = 220 - frameWidth / 2;
-  const y = 148 - frameHeight / 2;
+  const y = 150 - frameHeight / 2;
   const bar = Math.max(4, Math.min(7, frameWidth * 0.025));
   const isPleated = system === "sliding" || system === "double";
   const innerX = x + bar * 1.7;
@@ -329,12 +329,12 @@ function FlyscreenDrawing({ area, system, finish, paintCode, width, height }: { 
   const animationTiming = { dur: "6s", repeatCount: "indefinite", calcMode: "spline", keyTimes: "0;.4;.55;.95;1", keySplines: ".45 0 .55 1;0 0 1 1;.45 0 .55 1;0 0 1 1" };
 
   return (
-    <svg className={styles.svg} viewBox="0 0 400 300" role="img" aria-label={`${area === "door" ? "Kapı" : "Pencere"} sinekliği, ${system === "double" ? "iki yana açılan hareketli duble plise" : system === "sliding" ? "hareketli plise sürgü" : "menteşeli"} sistem${width && height ? `, ${width} çarpı ${height} santimetre` : ""}`}>
+    <svg className={styles.svg} viewBox="0 0 400 330" role="img" aria-label={`${area === "door" ? "Kapı" : "Pencere"} sinekliği, ${system === "double" ? "iki yana açılan hareketli duble plise" : system === "sliding" ? "hareketli plise sürgü" : "menteşeli"} sistem${width && height ? `, ${width} çarpı ${height} santimetre` : ""}`}>
       <defs>
         <pattern id={meshId} width="5" height="5" patternUnits="userSpaceOnUse"><path d="M 5 0 L 0 0 0 5" fill="none" stroke="#9da7a2" strokeWidth=".55" opacity=".75" /></pattern>
         <linearGradient id={frameId} x1="0" x2="1" y1="0" y2="1"><stop offset="0" stopColor={tones.light}/><stop offset="1" stopColor={tones.shade}/></linearGradient>
       </defs>
-      <path d="M30 258H370" stroke="#e6e9e6" strokeWidth="1" />
+      <path d="M30 300H370" stroke="#e6e9e6" strokeWidth="1" />
       <path d={`M${x} 27v8m0-4h${frameWidth}m0-4v8`} stroke="#84928b" strokeWidth="1" />
       <text x="220" y="18" textAnchor="middle" fill="#64736c" fontSize="10" fontFamily="Arial, sans-serif">{width && width <= 600 ? `${width} cm` : "GENİŞLİK"}</text>
       <path d={`M65 ${y}h8m-4 0v${frameHeight}m-4 0h8`} stroke="#84928b" strokeWidth="1" />
@@ -390,7 +390,7 @@ function FlyscreenDrawing({ area, system, finish, paintCode, width, height }: { 
         <rect x={x + frameWidth - bar * 3.4} y={y + frameHeight * 0.47} width={bar * 1.2} height={Math.max(12, frameHeight * 0.09)} rx="2" fill="#6b7871" />
       </>}
       <path d={`M${x - 4} ${y + frameHeight + 9}h${frameWidth + 8}`} stroke="#b7c0bb" strokeWidth="1.2" />
-      <circle cx="344" cy="248" r="2" fill="#87958d" />
+      <circle cx="344" cy="290" r="2" fill="#87958d" />
     </svg>
   );
 }
