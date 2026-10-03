@@ -60,6 +60,7 @@
 .glyphHinged::before { top: 3px; }.glyphHinged::after { bottom: 3px; }
 
 .measureGuide { overflow: hidden; border: 1px solid #cfe8d9; border-radius: 14px; background: linear-gradient(120deg, #f2fbf5, #f4fbff); }
+.step > .measureGuide { margin-top: 13px; }
 .measureGuide summary { display: flex; min-height: 58px; align-items: center; gap: 10px; padding: 8px 14px; color: var(--calc-ink); cursor: pointer; list-style: none; }
 .measureGuide summary::-webkit-details-marker { display: none; }
 .measureGuideIcon { display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; border-radius: 10px; background: #d9f5e3; color: #078754; }
@@ -88,7 +89,7 @@
 .finishHeading { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
 .finishHeading span { color: #45554c; font-size: 10px; font-weight: 800; }
 .finishHeading small { color: #96a29b; font-size: 8px; }
-.finishGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
+.finishGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
 .finishOption { position: relative; display: grid; justify-items: center; gap: 6px; min-width: 0; padding: 8px 4px 7px; border: 1px solid #e5ebe7; border-radius: 10px; background: #fff; color: #56645c; font-size: 8px; font-weight: 700; cursor: pointer; transition: border-color .16s, background .16s, transform .16s; }
 .finishSelected { border-color: #0eaa6a; background: #effaf3; box-shadow: inset 0 0 0 1px #0eaa6a20; color: #176843; }
 .finishSwatch { width: 31px; height: 25px; border: 1px solid transparent; border-radius: 7px; box-shadow: inset 0 1px 1px #ffffff75, 0 1px 2px #1c30251a; }
@@ -132,6 +133,9 @@
 .itemsTotal strong { color: var(--calc-ink); font-size: 18px; font-weight: 800; letter-spacing: -.04em; }
 .itemsTotal i { color: var(--calc-green-dark); font-size: 12px; font-style: normal; }
 .itemsSubmit { display: flex; min-height: 44px; align-items: center; justify-content: space-between; gap: 8px; margin: 0 12px 12px; padding: 0 13px; border-radius: 9px; background: #0e9e67; color: white; text-decoration: none; font-size: 10px; font-weight: 800; box-shadow: 0 4px 12px #0b9a6230; transition: background .16s, transform .16s; }
+.finalizeCopy { display: grid; gap: 3px; margin: 2px 14px 10px; padding: 11px 12px; border: 1px solid #dceee4; border-radius: 10px; background: #f5fbf7; }
+.finalizeCopy strong { color: #24513c; font-size: 10px; font-weight: 800; }
+.finalizeCopy span { color: #74847a; font-size: 9px; }
 .addItemAction { display: flex; width: 100%; min-height: 53px; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; padding: 9px 12px 9px 14px; border: 0; border-radius: 11px; background: linear-gradient(100deg, #07965f 0%, #0fbd78 100%); color: white; text-align: left; cursor: pointer; box-shadow: 0 5px 14px #0ba4692b; transition: filter .16s, transform .16s, box-shadow .16s; }
 .addItemAction strong, .addItemAction small { display: block; }
 .addItemAction strong { font-size: 11px; font-weight: 800; }

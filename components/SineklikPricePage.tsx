@@ -9,12 +9,11 @@ import styles from "./SineklikPricePage.module.css";
 
 type Area = "window" | "door";
 type System = "hinged" | "sliding" | "double";
-type Finish = "anthracite" | "gray" | "white" | "golden-oak" | "custom";
+type Finish = "anthracite" | "white" | "golden-oak" | "custom";
 type EstimateItem = { id: string; area: Area; system: System; width: string; height: string; price: number; finish: Finish; paintCode: string };
 
 const finishOptions: { value: Exclude<Finish, "custom">; label: string; swatch: string; edge?: string }[] = [
-  { value: "anthracite", label: "Antrasit", swatch: "#414748" },
-  { value: "gray", label: "Gri", swatch: "#aeb4b0" },
+  { value: "anthracite", label: "Antrasit gri", swatch: "#414748" },
   { value: "white", label: "Beyaz", swatch: "#fbfcf9", edge: "#d8dfd9" },
   { value: "golden-oak", label: "Altın meşe", swatch: "linear-gradient(140deg, #f0d7a4 0%, #bc8950 48%, #e5c48c 100%)" },
 ];
@@ -148,32 +147,31 @@ export function SineklikPricePage() {
               </div>
             </section>
 
-            <details className={styles.measureGuide}>
-              <summary>
-                <span className={styles.measureGuideIcon}><Ruler size={17} /></span>
-                <span className={styles.measureGuideTitle}><strong>Ölçüyü nasıl almalıyım?</strong><small>Görselli kısa rehber</small></span>
-                <ChevronDown className={styles.measureGuideChevron} size={18} />
-              </summary>
-              <div className={styles.measureGuideBody}>
-                <div className={styles.measureScene}><strong>İç fitilden iç fitile ölç.</strong><span>Karşılıklı fitil kanallarının iç kenarları arası.</span><MeasurementGuideIllustration /></div>
-                <div className={styles.measureGuideCopy}>
-                  <p>Şöyle ölç</p>
-                  <ol>
-                    <li><b>Kanadı aç:</b> Fitil kanallarının göründüğü iç boşluğu bul.</li>
-                    <li><b>En:</b> Sol fitilin iç kenarından sağ fitilin iç kenarına ölç.</li>
-                    <li><b>Boy:</b> Üst fitilin iç kenarından alt fitilin iç kenarına ölç.</li>
-                    <li>Santimetreyi gir. Yaklaşık değer yeterli.</li>
-                  </ol>
-                  <small>Ölçü çizgisi fitillerin iç kenarından başlar; dış çerçeveyi ölçme.</small>
-                </div>
-              </div>
-            </details>
-
             <section className={`${styles.step} ${system && !dimensionsReady ? styles.stepCurrent : ""} ${!system ? styles.stepLocked : ""}`} aria-labelledby="step-measure">
               <div className={styles.stepHeading}>
                 <span className={styles.stepNumber}>{quoteReady ? <Check size={15} /> : "03"}</span>
                 <div><p>YAKLAŞIK ÖLÇÜ YETERLİ</p><h2 id="step-measure">En ve boyu gir</h2></div>
               </div>
+              <details className={styles.measureGuide}>
+                <summary>
+                  <span className={styles.measureGuideIcon}><Ruler size={17} /></span>
+                  <span className={styles.measureGuideTitle}><strong>Ölçüyü nasıl almalıyım?</strong><small>İç fitilden iç fitile · Kısa rehber</small></span>
+                  <ChevronDown className={styles.measureGuideChevron} size={18} />
+                </summary>
+                <div className={styles.measureGuideBody}>
+                  <div className={styles.measureScene}><strong>İç fitilden iç fitile ölç.</strong><span>Karşılıklı fitil kanallarının iç kenarları arası.</span><MeasurementGuideIllustration /></div>
+                  <div className={styles.measureGuideCopy}>
+                    <p>Şöyle ölç</p>
+                    <ol>
+                      <li><b>Kanadı aç:</b> Fitil kanallarının göründüğü iç boşluğu bul.</li>
+                      <li><b>En:</b> Sol fitilin iç kenarından sağ fitilin iç kenarına ölç.</li>
+                      <li><b>Boy:</b> Üst fitilin iç kenarından alt fitilin iç kenarına ölç.</li>
+                      <li>Santimetreyi gir. Yaklaşık değer yeterli.</li>
+                    </ol>
+                    <small>Ölçü çizgisi fitillerin iç kenarından başlar; dış çerçeveyi ölçme.</small>
+                  </div>
+                </div>
+              </details>
               <div className={styles.measureGrid}>
                 <label className={styles.measureField}>
                   <span>Genişlik</span>
@@ -196,7 +194,7 @@ export function SineklikPricePage() {
                 <button type="button" onClick={() => setSystem("double")} aria-pressed={system === "double"}>{system === "double" ? "Seçildi" : "Duble seç"}</button>
               </div>}
               <div className={styles.finishPicker}>
-                <div className={styles.finishHeading}><span>Profil rengini seç</span><small>Açık tonlardan ilhamla</small></div>
+                <div className={styles.finishHeading}><span>Profil rengini seç</span></div>
                 <div className={styles.finishGrid} role="group" aria-label="Sineklik profil rengi">
                   {finishOptions.map((option) => <button key={option.value} type="button" className={`${styles.finishOption} ${finish === option.value ? styles.finishSelected : ""}`} onClick={() => setFinish(option.value)} aria-pressed={finish === option.value}>
                     <span className={styles.finishSwatch} style={{ background: option.swatch, borderColor: option.edge || "transparent" }} />
@@ -230,7 +228,8 @@ export function SineklikPricePage() {
                 <button type="button" className={styles.removeItem} onClick={() => removeItem(item.id)} aria-label={`${index + 1}. ürünü listeden kaldır`}><Trash2 size={15} /></button>
               </div>)}</div>
               <div className={styles.itemsTotal}><span>Teklif toplamı</span><strong>{money.format(quoteTotal)} <i>₺</i></strong></div>
-              <a className={styles.itemsSubmit} href={whatsappUrl} target="_blank" rel="noreferrer" data-cta-id="sineklik-calculator-whatsapp">{items.length} ürün için WhatsApp’tan teklif al <ArrowRight size={16} /></a>
+              <div className={styles.finalizeCopy}><strong>Teklifin hazır</strong><span>Ölçülerini ilet, detayları konuşalım.</span></div>
+              <a className={styles.itemsSubmit} href={whatsappUrl} target="_blank" rel="noreferrer" data-cta-id="sineklik-calculator-whatsapp">Teklifi ilet, detayları konuş <ArrowRight size={16} /></a>
             </section>}
           </div>
 
@@ -247,12 +246,12 @@ export function SineklikPricePage() {
               <div className={styles.priceTop}><span>{quoteReady ? "BU ÜRÜNÜN FİYATI" : items.length > 0 ? "ÜRÜN LİSTENİN TOPLAMI" : "FİYATIN BURADA GÖRÜNECEK"}<small>{quoteReady ? "Ölçünle birlikte listene ekle" : items.length > 0 ? `${items.length} ürün · Teklif toplamı` : "3 kısa adım · Ücretsiz"}</small></span><span className={styles.priceIcon}><Check size={17} /></span></div>
               {quoteReady && quotePrice ? <strong className={styles.price}>{money.format(quotePrice)} <i>₺</i></strong> : items.length > 0 ? <strong className={styles.price}>{money.format(quoteTotal)} <i>₺</i></strong> : <div className={styles.pricePlaceholder}>— — — <i>₺</i></div>}
               {quoteReady && quotePrice ? <p className={styles.priceNote}>{items.length > 0 ? `Listedeki ${items.length} ürün: ${money.format(quoteTotal)} ₺. Yeni ölçüyü de ekleyebilirsin.` : "Tek ürün fiyatı · Farklı ölçülerle ürün ekleyebilirsin."}</p> : items.length > 0 ? <p className={styles.priceNote}>Ürünlerin ve ölçüleri teklif mesajına eklenir.</p> : <p className={styles.priceNote}>Önce alanını, sonra sistem ve ölçünü seç.</p>}
-              {!quoteReady && items.length > 0 && <a className={styles.whatsappButton} href={whatsappUrl} target="_blank" rel="noreferrer" data-cta-id="sineklik-calculator-whatsapp">WhatsApp’tan teklif al <ArrowRight size={17} /></a>}
+              {!quoteReady && items.length > 0 && <a className={styles.whatsappButton} href={whatsappUrl} target="_blank" rel="noreferrer" data-cta-id="sineklik-calculator-whatsapp">Teklifi ilet, detayları konuş <ArrowRight size={17} /></a>}
             </div>
           </aside>
         </div>
         <section className={styles.mediaSection} aria-labelledby="application-title">
-          <div className={styles.mediaHeading}><p>UYGULAMADAN</p><h2 id="application-title">Plise sineklik, yakından.</h2></div>
+          <div className={styles.mediaHeading}><p>GERÇEK UYGULAMALAR</p><h2 id="application-title">Kapı ve pencere uygulamaları</h2></div>
           <div className={styles.mediaGrid}>
             <video className={styles.applicationVideo} controls playsInline preload="metadata" poster="/products/pliseli-kapi-ref2.webp" aria-label="Plise sineklik uygulama videosu">
               <source src="/videos/plisemodelsineklik.mp4" type="video/mp4" />
@@ -304,7 +303,6 @@ function FlyscreenDrawing({ area, system, finish, paintCode, width, height }: { 
   const customHex = paintCode.trim().match(/^#([\da-f]{3}|[\da-f]{6})$/i)?.[0];
   const frameTones: Record<Finish, { light: string; shade: string; edge: string }> = {
     anthracite: { light: "#777e7e", shade: "#343a3b", edge: "#252b2c" },
-    gray: { light: "#d3d7d3", shade: "#9da49f", edge: "#858c87" },
     white: { light: "#ffffff", shade: "#e0e6e1", edge: "#aab5ae" },
     "golden-oak": { light: "#f2d9a4", shade: "#a7763e", edge: "#926331" },
     custom: { light: customHex || "#edf4ef", shade: customHex || "#b9c9bf", edge: customHex || "#8a9b90" },
@@ -339,17 +337,13 @@ function FlyscreenDrawing({ area, system, finish, paintCode, width, height }: { 
       <text x="220" y="18" textAnchor="middle" fill="#64736c" fontSize="10" fontFamily="Arial, sans-serif">{width && width <= 600 ? `${width} cm` : "GENİŞLİK"}</text>
       <path d={`M65 ${y}h8m-4 0v${frameHeight}m-4 0h8`} stroke="#84928b" strokeWidth="1" />
       <text x="22" y="150" textAnchor="middle" fill="#64736c" fontSize="10" fontFamily="Arial, sans-serif" transform="rotate(-90 22 150)">{height && height <= 600 ? `${height} cm` : "YÜKSEKLİK"}</text>
-      <rect x={x + 4} y={y + 5} width={frameWidth} height={frameHeight} rx="1" fill="#182421" opacity=".08" />
-      <rect x={x} y={y} width={frameWidth} height={frameHeight} rx="2" fill={`url(#${frameId})`} stroke={tones.edge} strokeWidth={bar} />
-      {!isPleated && <>
-        <rect x={innerX} y={innerY} width={innerWidth} height={innerHeight} fill="#e9efec" />
-        <rect x={innerX} y={innerY} width={innerWidth} height={innerHeight} fill={`url(#${meshId})`} />
-      </>}
+      <rect x={x + 4 + bar / 2} y={y + 5 + bar / 2} width={frameWidth - bar} height={frameHeight - bar} rx="2" fill="none" stroke="#182421" strokeWidth={bar} opacity=".08" />
+      <rect x={x + bar / 2} y={y + bar / 2} width={frameWidth - bar} height={frameHeight - bar} rx="2" fill="none" stroke={`url(#${frameId})`} strokeWidth={bar} />
+      {!isPleated && <rect x={innerX} y={innerY} width={innerWidth} height={innerHeight} fill={`url(#${meshId})`} />}
       {system === "sliding" ? <>
         <g transform={`translate(${innerX} ${innerY})`}>
           <g>
             <animateTransform attributeName="transform" type="scale" values="1 1;.12 1;.12 1;1 1;1 1" dur={animationTiming.dur} repeatCount={animationTiming.repeatCount} calcMode={animationTiming.calcMode} keyTimes={animationTiming.keyTimes} keySplines={animationTiming.keySplines} />
-            <rect width={innerWidth} height={innerHeight} fill="#dcebe3" fillOpacity=".72" />
             {Array.from({ length: pleatCount + 1 }, (_, index) => {
               const foldX = (innerWidth * index) / pleatCount;
               return <path key={index} d={`M${foldX} 0v${innerHeight}`} stroke="#54685c" strokeOpacity={index % 2 ? ".3" : ".12"} strokeWidth={index % 2 ? "1.3" : ".7"} />;
@@ -365,14 +359,12 @@ function FlyscreenDrawing({ area, system, finish, paintCode, width, height }: { 
         <g transform={`translate(${innerX} ${innerY})`}>
           <g>
             <animateTransform attributeName="transform" type="scale" values="1 1;.12 1;.12 1;1 1;1 1" dur={animationTiming.dur} repeatCount={animationTiming.repeatCount} calcMode={animationTiming.calcMode} keyTimes={animationTiming.keyTimes} keySplines={animationTiming.keySplines} />
-            <rect width={halfWidth} height={innerHeight} fill="#dcebe3" fillOpacity=".72" />
             {Array.from({ length: halfPleatCount + 1 }, (_, index) => <path key={index} d={`M${(halfWidth * index) / halfPleatCount} 0v${innerHeight}`} stroke="#54685c" strokeOpacity={index % 2 ? ".3" : ".12"} strokeWidth={index % 2 ? "1.3" : ".7"} />)}
           </g>
         </g>
         <g transform={`translate(${innerX + innerWidth} ${innerY}) scale(-1 1)`}>
           <g>
             <animateTransform attributeName="transform" type="scale" values="1 1;.12 1;.12 1;1 1;1 1" dur={animationTiming.dur} repeatCount={animationTiming.repeatCount} calcMode={animationTiming.calcMode} keyTimes={animationTiming.keyTimes} keySplines={animationTiming.keySplines} />
-            <rect width={halfWidth} height={innerHeight} fill="#dcebe3" fillOpacity=".72" />
             {Array.from({ length: halfPleatCount + 1 }, (_, index) => <path key={index} d={`M${(halfWidth * index) / halfPleatCount} 0v${innerHeight}`} stroke="#54685c" strokeOpacity={index % 2 ? ".3" : ".12"} strokeWidth={index % 2 ? "1.3" : ".7"} />)}
           </g>
         </g>
