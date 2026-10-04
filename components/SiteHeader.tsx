@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Building2, CircleHelp, Menu, Phone, ShieldCheck, UsersRound, X } from "lucide-react";
-import { services, site } from "@/lib/site";
+import { getServiceHref, services, site } from "@/lib/site";
 
 export function SiteHeader({ hideMobileConversion = false }: { hideMobileConversion?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -22,7 +22,7 @@ export function SiteHeader({ hideMobileConversion = false }: { hideMobileConvers
         <Image src="/brand/calisan-yapi-logo-header.webp" alt="Çalışan Yapı" width={900} height={160}/>
       </Link>
       <nav aria-label="Ana menü">
-        <div className="nav-services"><Link href="/hizmetler">Hizmetler</Link><div className="nav-popover">{services.map((service) => <Link key={service.slug} href={`/hizmetler/${service.slug}`}>{service.name}<ArrowUpRight size={14}/></Link>)}</div></div>
+        <div className="nav-services"><Link href="/hizmetler">Hizmetler</Link><div className="nav-popover">{services.map((service) => <Link key={service.slug} href={getServiceHref(service.slug)}>{service.name}<ArrowUpRight size={14}/></Link>)}</div></div>
         <Link href="/istanbul">Hizmet Bölgeleri</Link>
         <Link href="/projeler">Projeler</Link>
         <Link href="/blog">Rehber</Link>
@@ -33,7 +33,7 @@ export function SiteHeader({ hideMobileConversion = false }: { hideMobileConvers
     <div id="mobile-menu" className={`mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
       <nav aria-label="Mobil menü">
         <Link href="/hizmetler" onClick={() => setMenuOpen(false)}>Tüm hizmetler <ArrowUpRight/></Link>
-        <div className="mobile-service-links">{services.map(service => <Link key={service.slug} href={`/hizmetler/${service.slug}`} onClick={() => setMenuOpen(false)}>{service.name}</Link>)}</div>
+        <div className="mobile-service-links">{services.map(service => <Link key={service.slug} href={getServiceHref(service.slug)} onClick={() => setMenuOpen(false)}>{service.name}</Link>)}</div>
         <Link href="/istanbul" onClick={() => setMenuOpen(false)}>Hizmet bölgeleri <ArrowUpRight/></Link>
         <Link href="/projeler" onClick={() => setMenuOpen(false)}>Projeler <ArrowUpRight/></Link>
         <Link href="/blog" onClick={() => setMenuOpen(false)}>Yapı rehberi <ArrowUpRight/></Link>

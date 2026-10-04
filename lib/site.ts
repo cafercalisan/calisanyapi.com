@@ -214,4 +214,5 @@ function getSiteUrl() {
 }
 
 export function getService(slug: string) { return services.find((item) => item.slug === slug); }
+export function getServiceHref(slug: string) { return slug === "sineklik" ? "/sineklik-fiyat-hesapla" : `/hizmetler/${slug}`; }
 export function getDistrict(slug: string) { return districts.find((item) => item.slug === slug); }

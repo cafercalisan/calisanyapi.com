@@ -32,7 +32,7 @@ Amaç: İstanbul’da PVC kapı-pencere ve tamamlayıcı yapı sistemlerine ihti
 | 15 | Reels | Katlanır cam balkon 15 saniyede açılıp kapanıyor | Tek hareket, yakın plan, açık/kapalı durum | `/kampanya/cam-balkon` |
 | 16 | Web / Proje | Cam balkon gerçek uygulama hikâyesi | Cephe, iç görünüm, ray, toplanma alanı | Cam balkon teklifi |
 | 17 | Instagram carousel | Katlanır mı sürme cam balkon mu? | İki sistemin kullanım farkları | Sistem seçmeden fotoğraf gönder |
-| 18 | Reels | Kapı için yana katlanan sineklik | Teknik ad yerine kullanım gösterimi | `/hizmetler/sineklik` |
+| 18 | Reels | Kapı için yana katlanan sineklik | Teknik ad yerine kullanım gösterimi | `/sineklik-fiyat-hesapla` |
 | 19 | Web / SSS | Kapı ve pencere için doğru sineklik nasıl seçilir? | Plise, menteşeli, sürme, duble karşılaştırması | Ölçüyle fiyat oluştur |
 | 20 | Instagram carousel | Evcil hayvanlı evde sineklik seçimi | Pet tülü ve çerçeve detayları | Sineklik sayfası |
 | 21 | Google Business | Montaj ekibi ve işçilik detayı | Temiz çalışma, koruma, bitiş kareleri | Hakkımızda + teklif |

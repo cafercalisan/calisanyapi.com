@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { services } from "@/lib/site";
+import { getServiceHref, services } from "@/lib/site";
 
 type LocalServiceShowcaseProps = {
   placeName: string;
@@ -69,7 +69,7 @@ export function LocalServiceShowcase({ placeName }: LocalServiceShowcaseProps) {
 
           return <Link
             className="local-showcase-card"
-            href={`/hizmetler/${service.slug}#sayfa-baslangici`}
+            href={service.slug === "sineklik" ? getServiceHref(service.slug) : `${getServiceHref(service.slug)}#sayfa-baslangici`}
             key={service.slug}
           >
             <div className="local-showcase-image">
