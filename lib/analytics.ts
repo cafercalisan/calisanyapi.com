@@ -11,7 +11,11 @@ export type AnalyticsEvent =
   | "district_selected"
   | "photo_added"
   | "form_validation_error"
-  | "lead_success";
+  | "lead_success"
+  | "quote_started"
+  | "quote_step_view"
+  | "quote_step_complete"
+  | "quote_lead_submit";
 
 export type AnalyticsPayload = Record<string, string | number | boolean | undefined>;
 

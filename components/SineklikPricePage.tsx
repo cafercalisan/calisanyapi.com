@@ -7,9 +7,9 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 import styles from "./SineklikPricePage.module.css";
 
-type Area = "window" | "door";
-type System = "hinged" | "sliding" | "double";
-type Finish = "anthracite" | "white" | "golden-oak" | "custom";
+export type Area = "window" | "door";
+export type System = "hinged" | "sliding" | "double";
+export type Finish = "anthracite" | "white" | "golden-oak" | "gray" | "custom";
 type EstimateItem = { id: string; area: Area; system: System; width: string; height: string; price: number; finish: Finish; paintCode: string };
 
 const finishOptions: { value: Exclude<Finish, "custom">; label: string; swatch: string; edge?: string }[] = [
@@ -268,7 +268,7 @@ export function SineklikPricePage() {
   );
 }
 
-function MeasurementGuideIllustration() {
+export function MeasurementGuideIllustration() {
   const gridId = `measureGrid-${useId().replace(/:/g, "")}`;
 
   return <svg className={styles.measureDiagram} viewBox="0 0 360 300" role="img" aria-label="Pencere açıklığında en ve daha uzun boy, fitil iç kenarları arasında gösterilmiştir">
@@ -294,7 +294,7 @@ function MeasurementGuideIllustration() {
   </svg>;
 }
 
-function FlyscreenDrawing({ area, system, finish, paintCode, width, height }: { area: Area | null; system: System | null; finish: Finish; paintCode: string; width: number | null; height: number | null }) {
+export function FlyscreenDrawing({ area, system, finish, paintCode, width, height }: { area: Area | null; system: System | null; finish: Finish; paintCode: string; width: number | null; height: number | null }) {
   const meshId = `screenMesh-${useId().replace(/:/g, "")}`;
   const frameId = `frameLight-${useId().replace(/:/g, "")}`;
   const customHex = paintCode.trim().match(/^#([\da-f]{3}|[\da-f]{6})$/i)?.[0];
@@ -302,6 +302,7 @@ function FlyscreenDrawing({ area, system, finish, paintCode, width, height }: { 
     anthracite: { light: "#777e7e", shade: "#343a3b", edge: "#252b2c" },
     white: { light: "#ffffff", shade: "#e0e6e1", edge: "#aab5ae" },
     "golden-oak": { light: "#f2d9a4", shade: "#a7763e", edge: "#926331" },
+    gray: { light: "#cbd0d0", shade: "#929999", edge: "#737b7b" },
     custom: { light: customHex || "#edf4ef", shade: customHex || "#b9c9bf", edge: customHex || "#8a9b90" },
   };
   const tones = frameTones[finish];

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { SineklikPricePage } from "@/components/SineklikPricePage";
+import { SineklikQuoteFlow } from "@/components/SineklikQuoteFlow";
 
 export const metadata: Metadata = {
   title: "Sineklik Ölçünü Gir, Fiyatını Gör",
-  description: "Kapı veya pencerenizi seçin, sineklik sistemini belirleyin ve ölçünüze göre fiyat teklifinizi hemen görün.",
+  description: "Kapı veya pencereniz için sineklik modelini ve ölçüsünü seçin, adım adım ön teklif alın.",
   alternates: { canonical: "/sineklik-fiyat-hesapla" },
 };
 
 export default function Page() {
-  return <SineklikPricePage />;
+  return <SineklikQuoteFlow />;
 }
