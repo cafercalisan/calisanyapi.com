@@ -96,7 +96,6 @@ export function SineklikPricePage() {
         </header>
 
         <section className={styles.intro}>
-          <p className={styles.eyebrow}>Ölçünü gir · Fiyatını hemen gör</p>
           <h1>Sineklik fiyatını<br /><span>3 adımda öğren.</span></h1>
           <div className={styles.progress} aria-label="Üç adımda fiyat hesaplama">
             <span className={area ? styles.progressDone : styles.progressActive}><b>{area ? <Check size={13} /> : "1"}</b> Alan</span>
@@ -112,7 +111,7 @@ export function SineklikPricePage() {
             <section className={`${styles.step} ${!area ? styles.stepCurrent : ""}`} aria-labelledby="step-area">
               <div className={styles.stepHeading}>
                 <span className={styles.stepNumber}>{area ? <Check size={15} /> : "01"}</span>
-                <div><p>ÖNCE ALANINI SEÇ</p><h2 id="step-area">Nereye sineklik?</h2></div>
+                <div><h2 id="step-area">Nereye sineklik?</h2></div>
               </div>
               <div className={styles.choiceGrid}>
                 <button type="button" onClick={() => selectArea("window")} aria-pressed={area === "window"} className={`${styles.choice} ${area === "window" ? styles.choiceSelected : ""}`}>
@@ -131,7 +130,7 @@ export function SineklikPricePage() {
             <section ref={systemRef} className={`${styles.step} ${area && !system ? styles.stepCurrent : ""} ${!area ? styles.stepLocked : ""}`} aria-labelledby="step-system">
               <div className={styles.stepHeading}>
                 <span className={styles.stepNumber}>{system ? <Check size={15} /> : "02"}</span>
-                <div><p>{area ? "KULLANIMINA UYGUN SİSTEM" : "ALAN SEÇİMİNDEN SONRA"}</p><h2 id="step-system">Açılım biçimi</h2></div>
+                <div><h2 id="step-system">Açılım biçimi</h2></div>
               </div>
               <div className={styles.choiceGrid}>
                 <button type="button" disabled={!area} onClick={() => selectSystem("hinged")} aria-pressed={system === "hinged"} className={`${styles.choice} ${system === "hinged" ? styles.choiceSelected : ""}`}>
@@ -150,7 +149,7 @@ export function SineklikPricePage() {
             <section className={`${styles.step} ${system && !dimensionsReady ? styles.stepCurrent : ""} ${!system ? styles.stepLocked : ""}`} aria-labelledby="step-measure">
               <div className={styles.stepHeading}>
                 <span className={styles.stepNumber}>{quoteReady ? <Check size={15} /> : "03"}</span>
-                <div><p>YAKLAŞIK ÖLÇÜ YETERLİ</p><h2 id="step-measure">En ve boyu gir</h2></div>
+                <div><h2 id="step-measure">En ve boyu gir</h2></div>
               </div>
               <details className={styles.measureGuide}>
                 <summary>
@@ -213,14 +212,14 @@ export function SineklikPricePage() {
               {((width && !parsedWidth) || (height && !parsedHeight)) && <p className={styles.validation}>Ölçüyü 1 ile 600 cm arasında gir.</p>}
               {finish === "custom" && !paintCode.trim() && <p className={styles.validation}>Devam etmek için boya kodunu yaz.</p>}
               {dimensionsReady && <div className={styles.inlinePreview}>
-                <p><i /> ÖLÇÜNE GÖRE CANLI MODEL</p>
+                <p>ÖLÇÜ ÖNİZLEMESİ</p>
                 <FlyscreenDrawing area={area} system={system} finish={finish} paintCode={paintCode} width={parsedWidth} height={parsedHeight} />
                 <span>{width} × {height} cm · {system === "hinged" ? "Menteşeli" : system === "double" ? "Duble, iki yana açılır" : "Sürgülü plise"}</span>
               </div>}
             </section>
 
             {items.length > 0 && <section className={styles.itemsPanel} aria-live="polite" aria-labelledby="items-title">
-              <div className={styles.itemsHeading}><div><p>ÖLÇÜLERİNİ TEK TEKLİFTE TOPLA</p><h2 id="items-title">Ürün listen</h2></div><span>{items.length} ürün</span></div>
+              <div className={styles.itemsHeading}><div><h2 id="items-title">Ürün listen</h2></div><span>{items.length} ürün</span></div>
               <div className={styles.itemList}>{items.map((item, index) => <div className={styles.itemRow} key={item.id}>
                 <span className={styles.itemIndex}>{String(index + 1).padStart(2, "0")}</span>
                 <div className={styles.itemDetails}><strong>{item.area === "window" ? "Pencere" : "Kapı"} · {item.system === "hinged" ? "Menteşeli" : item.system === "double" ? "Duble sürgülü" : "Sürgülü"}</strong><small>{item.width} × {item.height} cm · {item.finish === "custom" ? `Özel · ${item.paintCode}` : finishOptions.find((option) => option.value === item.finish)?.label}</small></div>
@@ -234,7 +233,7 @@ export function SineklikPricePage() {
           </div>
 
           <aside className={styles.preview} aria-live="polite">
-            <div className={styles.previewTop}><span className={styles.previewLabel}><i /> CANLI ÖNİZLEME</span><span className={styles.previewIndex}>01 / 01</span></div>
+            <div className={styles.previewTop}><span className={styles.previewLabel}>ÖNİZLEME</span></div>
             <div className={styles.drawing}>
               <FlyscreenDrawing area={area} system={system} finish={finish} paintCode={paintCode} width={parsedWidth} height={parsedHeight} />
             </div>
@@ -243,9 +242,8 @@ export function SineklikPricePage() {
               {dimensionsReady && <span className={styles.dimensionTag}>{width} × {height} cm</span>}
             </div>
             <div className={styles.pricePanel}>
-              <div className={styles.priceTop}><span>{quoteReady ? "BU ÜRÜNÜN FİYATI" : items.length > 0 ? "ÜRÜN LİSTENİN TOPLAMI" : "FİYATIN BURADA GÖRÜNECEK"}<small>{quoteReady ? "Ölçünle birlikte listene ekle" : items.length > 0 ? `${items.length} ürün · Teklif toplamı` : "3 kısa adım · Ücretsiz"}</small></span><span className={styles.priceIcon}><Check size={17} /></span></div>
+              <div className={styles.priceTop}><span>{quoteReady ? "TEK ÜRÜN FİYATI" : items.length > 0 ? "TEKLİF TOPLAMI" : "TAHMİNİ FİYAT"}</span></div>
               {quoteReady && quotePrice ? <strong className={styles.price}>{money.format(quotePrice)} <i>₺</i></strong> : items.length > 0 ? <strong className={styles.price}>{money.format(quoteTotal)} <i>₺</i></strong> : <div className={styles.pricePlaceholder}>— — — <i>₺</i></div>}
-              {quoteReady && quotePrice ? <p className={styles.priceNote}>{items.length > 0 ? `Listedeki ${items.length} ürün: ${money.format(quoteTotal)} ₺. Yeni ölçüyü de ekleyebilirsin.` : "Tek ürün fiyatı · Farklı ölçülerle ürün ekleyebilirsin."}</p> : items.length > 0 ? <p className={styles.priceNote}>Ürünlerin ve ölçüleri teklif mesajına eklenir.</p> : <p className={styles.priceNote}>Önce alanını, sonra sistem ve ölçünü seç.</p>}
               {!quoteReady && items.length > 0 && <a className={styles.whatsappButton} href={whatsappUrl} target="_blank" rel="noreferrer" data-cta-id="sineklik-calculator-whatsapp">Teklifi ilet, detayları konuş <ArrowRight size={17} /></a>}
             </div>
           </aside>
@@ -263,7 +261,6 @@ export function SineklikPricePage() {
               <figure><Image src="/products/lifestyle-pencere-plise.jpg" alt="Pencerede plise sineklik uygulaması" width={900} height={600} /><figcaption>Pencere uygulaması</figcaption></figure>
             </div>
           </div>
-          <p className={styles.serviceNote}>Ölçünü ve rengini seç, uygulama öncesi ekibimizle netleştir.</p>
         </section>
         <footer className={styles.footer}><span>Çalışan Yapı · İstanbul</span><a href={`tel:${site.phone}`}>{site.phoneLabel}</a></footer>
       </div>
