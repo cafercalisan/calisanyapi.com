@@ -9,12 +9,12 @@ import styles from "./SineklikPricePage.module.css";
 
 export type Area = "window" | "door";
 export type System = "hinged" | "sliding" | "double";
-export type Finish = "anthracite" | "white" | "golden-oak" | "gray" | "custom";
+export type Finish = "anthracite" | "white" | "golden-oak" | "custom";
 type EstimateItem = { id: string; area: Area; system: System; width: string; height: string; price: number; finish: Finish; paintCode: string };
 
 const finishOptions: { value: Exclude<Finish, "custom">; label: string; swatch: string; edge?: string }[] = [
-  { value: "anthracite", label: "Antrasit gri", swatch: "#414748" },
-  { value: "white", label: "Beyaz", swatch: "#fbfcf9", edge: "#d8dfd9" },
+  { value: "anthracite", label: "Antrasit Gri · RAL 7016", swatch: "#383E42" },
+  { value: "white", label: "Beyaz · RAL 9016", swatch: "#F1F0EA", edge: "#d8dfd9" },
   { value: "golden-oak", label: "Altın meşe", swatch: "linear-gradient(140deg, #f0d7a4 0%, #bc8950 48%, #e5c48c 100%)" },
 ];
 
@@ -294,15 +294,14 @@ export function MeasurementGuideIllustration() {
   </svg>;
 }
 
-export function FlyscreenDrawing({ area, system, finish, paintCode, width, height }: { area: Area | null; system: System | null; finish: Finish; paintCode: string; width: number | null; height: number | null }) {
+export function FlyscreenDrawing({ area, system, finish, paintCode, width, height, className }: { area: Area | null; system: System | null; finish: Finish; paintCode: string; width: number | null; height: number | null; className?: string }) {
   const meshId = `screenMesh-${useId().replace(/:/g, "")}`;
   const frameId = `frameLight-${useId().replace(/:/g, "")}`;
   const customHex = paintCode.trim().match(/^#([\da-f]{3}|[\da-f]{6})$/i)?.[0];
   const frameTones: Record<Finish, { light: string; shade: string; edge: string }> = {
-    anthracite: { light: "#777e7e", shade: "#343a3b", edge: "#252b2c" },
+    anthracite: { light: "#687176", shade: "#383E42", edge: "#292f33" },
     white: { light: "#ffffff", shade: "#e0e6e1", edge: "#aab5ae" },
     "golden-oak": { light: "#f2d9a4", shade: "#a7763e", edge: "#926331" },
-    gray: { light: "#cbd0d0", shade: "#929999", edge: "#737b7b" },
     custom: { light: customHex || "#edf4ef", shade: customHex || "#b9c9bf", edge: customHex || "#8a9b90" },
   };
   const tones = frameTones[finish];
@@ -325,7 +324,7 @@ export function FlyscreenDrawing({ area, system, finish, paintCode, width, heigh
   const animationTiming = { dur: "6s", repeatCount: "indefinite", calcMode: "spline", keyTimes: "0;.4;.55;.95;1", keySplines: ".45 0 .55 1;0 0 1 1;.45 0 .55 1;0 0 1 1" };
 
   return (
-    <svg className={styles.svg} viewBox="0 0 400 330" role="img" aria-label={`${area === "door" ? "Kapı" : "Pencere"} sinekliği, ${system === "double" ? "iki yana açılan hareketli duble plise" : system === "sliding" ? "hareketli plise sürgü" : "menteşeli"} sistem${width && height ? `, ${width} çarpı ${height} santimetre` : ""}`}>
+    <svg className={`${styles.svg} ${className ?? ""}`} viewBox="0 0 400 330" role="img" aria-label={`${area === "door" ? "Kapı" : "Pencere"} sinekliği, ${system === "double" ? "iki yana açılan hareketli duble plise" : system === "sliding" ? "hareketli plise sürgü" : "menteşeli"} sistem${width && height ? `, ${width} çarpı ${height} santimetre` : ""}`}>
       <defs>
         <pattern id={meshId} width="5" height="5" patternUnits="userSpaceOnUse"><path d="M 5 0 L 0 0 0 5" fill="none" stroke="#9da7a2" strokeWidth=".55" opacity=".75" /></pattern>
         <linearGradient id={frameId} x1="0" x2="1" y1="0" y2="1"><stop offset="0" stopColor={tones.light}/><stop offset="1" stopColor={tones.shade}/></linearGradient>

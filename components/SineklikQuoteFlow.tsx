@@ -4,19 +4,17 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, DoorOpen, PanelsTopLeft, Phone, Plus, Ruler, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { districts, site } from "@/lib/site";
+import { site } from "@/lib/site";
 import { track } from "@/lib/analytics";
 import { FlyscreenDrawing, MeasurementGuideIllustration, type Area, type Finish, type System } from "@/components/SineklikPricePage";
 import styles from "./SineklikQuoteFlow.module.css";
 
 type Item = { id: string; area: Area; system: System; width: number; height: number; finish: Finish; paint: string };
-type LeadState = "idle" | "sending" | "sent" | "error";
 const steps = ["Nereye?", "Model", "Ölçü", "Renk", "Sonuç"];
 const colors: { value: Finish; label: string; swatch: string; edge?: string }[] = [
-  { value: "white", label: "Beyaz", swatch: "#fff", edge: "#d6dcda" },
-  { value: "anthracite", label: "Antrasit", swatch: "#414748" },
-  { value: "gray", label: "Gri", swatch: "#aeb5b5" },
-  { value: "golden-oak", label: "Altın meşe", swatch: "linear-gradient(135deg,#f0d7a4,#bc8950 55%,#e5c48c)" },
+  { value: "white", label: "Beyaz · RAL 9016", swatch: "#F1F0EA", edge: "#D9DEDC" },
+  { value: "anthracite", label: "Antrasit Gri · RAL 7016", swatch: "#383E42" },
+  { value: "golden-oak", label: "Altın meşe", swatch: "linear-gradient(135deg,#F0D7A4,#BC8950 55%,#E5C48C)" },
 ];
 const money = new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 0 });
 const lower = (item: Item) => item.area === "window" ? 1300 : 2200;
@@ -32,12 +30,6 @@ export function SineklikQuoteFlow() {
   const [finish, setFinish] = useState<Finish>("white");
   const [paint, setPaint] = useState("");
   const [items, setItems] = useState<Item[]>([]);
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [district, setDistrict] = useState("");
-  const [consent, setConsent] = useState(false);
-  const [leadState, setLeadState] = useState<LeadState>("idle");
-  const [leadMessage, setLeadMessage] = useState("");
   const parsedWidth = Number(width.replace(",", "."));
   const parsedHeight = Number(height.replace(",", "."));
   const validSize = Number.isFinite(parsedWidth) && Number.isFinite(parsedHeight) && parsedWidth > 0 && parsedHeight > 0 && parsedWidth <= 600 && parsedHeight <= 600;
@@ -79,7 +71,6 @@ export function SineklikQuoteFlow() {
     const item: Item = { id: crypto.randomUUID(), area, system: doubleSuggested ? "double" : system, width: parsedWidth, height: parsedHeight, finish, paint: finish === "custom" ? paint.trim() : "" };
     setItems((current) => [...current, item]);
     setStep(5);
-    setLeadState("idle");
     track("quote_step_complete", { step: 4, color: finish });
   }
   function addAnother() {
@@ -87,24 +78,9 @@ export function SineklikQuoteFlow() {
     setStep(1);
     document.querySelector("main")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
-  function removeItem(id: string) { setItems((current) => current.filter((item) => item.id !== id)); }
-
-  async function submitLead(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!consent || items.length === 0) return;
-    setLeadState("sending"); setLeadMessage("");
-    track("quote_lead_submit", { item_count: items.length });
-    try {
-      const first = items[0];
-      const productDetails = items.map((item, index) => `${index + 1}. ${item.area === "window" ? "Pencere" : "Kapı"}, ${systemName(item.system)}, ${item.width} × ${item.height} cm, ${item.finish === "custom" ? `Özel boya ${item.paint}` : colors.find((color) => color.value === item.finish)?.label}`).join(" | ");
-      const response = await fetch("/api/service-requests", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ serviceSlug: "sineklik", district, width: first.width, height: first.height, unit: "cm", description: `Sineklik teklif geri arama talebi. Ürünler: ${productDetails}. Tahmini fiyat aralığını forma eklemeden, ölçü ve uygulama detaylarını konuşmak istiyor.`, photoPaths: [], customer: { name: name.trim(), phone: phone.trim() }, kvkkAccepted: true, website: "", attribution: { source: new URLSearchParams(location.search).get("utm_source") ?? "", medium: new URLSearchParams(location.search).get("utm_medium") ?? "", campaign: new URLSearchParams(location.search).get("utm_campaign") ?? "", landingPage: location.pathname, referrer: document.referrer } }) });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Talep iletilemedi. Lütfen telefonla arayın.");
-      setLeadState("sent"); setLeadMessage("Talebiniz alındı. Ekibimiz sizinle iletişime geçecek.");
-      track("lead_success", { form_id: "sineklik-quote-callback", item_count: items.length });
-    } catch (error) {
-      setLeadState("error"); setLeadMessage(error instanceof Error ? error.message : "Bir sorun oluştu. Lütfen tekrar deneyin.");
-    }
+  function removeItem(id: string) {
+    setItems((current) => current.filter((item) => item.id !== id));
+    if (items.length === 1) { setStep(1); setArea(null); setSystem(null); setWidth(""); setHeight(""); }
   }
 
   return <main className={styles.page}>
@@ -123,8 +99,8 @@ export function SineklikQuoteFlow() {
         </div></div>}
 
         {step === 2 && <div className={styles.stepContent}><p className={styles.kicker}>02 · MODEL</p><h2>Hangi açılım?</h2><p className={styles.subheading}>Kısa bir dokunuşla seçimini yap.</p><div className={styles.modelGrid}>
-          <button className={styles.modelCard} onClick={() => chooseSystem("hinged")}><Image src={area === "door" ? "/products/kapi-antrasit.webp" : "/products/antrasit-menteseli-percere-1.webp"} alt="Menteşeli sineklik örneği" width={420} height={280}/><span><strong>Menteşeli</strong><small>Kapı gibi açılır</small><ArrowRight/></span></button>
-          <button className={styles.modelCard} onClick={() => chooseSystem("sliding")}><Image src={area === "door" ? "/products/kapi-plise-1.webp" : "/products/pencere-plise-ref.webp"} alt="Plise sineklik örneği" width={420} height={280}/><span><strong>Plise</strong><small>Yana doğru katlanır</small><ArrowRight/></span></button>
+          <button type="button" className={`${styles.modelCard} ${styles.hingedCard}`} onClick={() => chooseSystem("hinged")}><span className={styles.modelImage}><Image src={area === "door" ? "/products/kapi-antrasit.webp" : "/products/antrasit-menteseli-percere-1.webp"} alt="Menteşeli sineklik örneği" width={420} height={280}/><span className={styles.motionDemo} aria-hidden="true"><i/><b/></span><small className={styles.motionCaption}>DIŞA AÇILIR</small></span><span className={styles.modelCaption}><strong>Menteşeli</strong><small>Kapı gibi açılır</small><ArrowRight/></span></button>
+          <button type="button" className={`${styles.modelCard} ${styles.pleatedCard}`} onClick={() => chooseSystem("sliding")}><span className={styles.modelImage}><Image src={area === "door" ? "/products/kapi-plise-1.webp" : "/products/pencere-plise-ref.webp"} alt="Plise sineklik örneği" width={420} height={280}/><span className={styles.pleatDemo} aria-hidden="true"><i/><i/><i/><i/><i/><i/><b/></span><small className={styles.motionCaption}>YANA KATLANIR</small></span><span className={styles.modelCaption}><strong>Plise</strong><small>Yana doğru katlanır</small><ArrowRight/></span></button>
         </div><button type="button" className={styles.backButton} onClick={() => setStep(1)}><ArrowLeft/> Geri</button></div>}
 
         {step === 3 && <div className={styles.stepContent}><p className={styles.kicker}>03 · ÖLÇÜ</p><h2>En ve boy kaç cm?</h2><p className={styles.subheading}>Yaklaşık ölçüyle ön teklif oluşturabilirsin.</p>
@@ -132,16 +108,14 @@ export function SineklikQuoteFlow() {
           <div className={styles.measureGrid}><label>Genişlik<input value={width} onChange={(event) => setWidth(event.target.value.replace(/[^\d.,]/g, ""))} inputMode="decimal" placeholder="Örn. 120"/><small>cm</small></label><label>Yükseklik<input value={height} onChange={(event) => setHeight(event.target.value.replace(/[^\d.,]/g, ""))} inputMode="decimal" placeholder="Örn. 140"/><small>cm</small></label></div>
           {parsedWidth > 200 && system === "sliding" && <button type="button" className={styles.doubleSuggestion} onClick={() => setSystem("double")}><span><strong>Geniş ölçü için duble plise</strong><small>Ortadan iki yana açılan model.</small></span><span>Seç</span></button>}
           {((width && !(parsedWidth > 0 && parsedWidth <= 600)) || (height && !(parsedHeight > 0 && parsedHeight <= 600))) && <p className={styles.errorText}>Ölçüleri 1–600 cm aralığında gir.</p>}
-          <FlyscreenDrawing area={area} system={system} finish={finish} paintCode={paint} width={validSize ? parsedWidth : null} height={validSize ? parsedHeight : null}/>
+          <FlyscreenDrawing area={area} system={system} finish={finish} paintCode={paint} width={validSize ? parsedWidth : null} height={validSize ? parsedHeight : null} className={styles.measureDrawing}/>
           <div className={styles.actionRow}><button type="button" className={styles.backButton} onClick={() => setStep(2)}><ArrowLeft/> Geri</button><button type="button" className={styles.primaryButton} disabled={!validSize} onClick={continueToColor}>Renk seç <ArrowRight/></button></div>
         </div>}
 
         {step === 4 && <div className={styles.stepContent}><p className={styles.kicker}>04 · RENK</p><h2>Profil rengini seç.</h2><p className={styles.subheading}>Sineklik çerçevesinin rengini belirle.</p><div className={styles.colorGrid}>{colors.map((color) => <button type="button" key={color.value} className={`${styles.colorCard} ${finish === color.value ? styles.colorSelected : ""}`} onClick={() => setFinish(color.value)}><span style={{ background: color.swatch, borderColor: color.edge || "transparent" }}>{finish === color.value && <Check size={18}/>}</span><strong>{color.label}</strong></button>)}</div><button type="button" className={`${styles.ralChoice} ${finish === "custom" ? styles.ralSelected : ""}`} onClick={() => setFinish("custom")}>Özel RAL boya kodu</button>{finish === "custom" && <label className={styles.ralField}>RAL / boya kodu<input value={paint} onChange={(event) => setPaint(event.target.value.slice(0, 32))} placeholder="Örn. RAL 7016"/></label>}<p className={styles.priceDisclaimer}>Renk ve ölçü uygulama öncesinde teyit edilir.</p><div className={styles.actionRow}><button type="button" className={styles.backButton} onClick={() => setStep(3)}><ArrowLeft/> Geri</button><button type="button" className={styles.primaryButton} disabled={finish === "custom" && !paint.trim()} onClick={addMeasuredItem}>Ön teklifi gör <ArrowRight/></button></div></div>}
 
-        {step === 5 && <div className={styles.stepContent}><p className={styles.kicker}>05 · ÖN TEKLİF</p><h2>Listen hazır.</h2><p className={styles.subheading}>Tutar, ölçü ve uygulama detayları doğrulanınca netleşir.</p><div className={styles.itemList}>{items.map((item, index) => <article className={styles.itemRow} key={item.id}><span className={styles.itemIndex}>{String(index + 1).padStart(2, "0")}</span><div><strong>{item.area === "window" ? "Pencere" : "Kapı / balkon"} · {systemName(item.system)}</strong><small>{item.width} × {item.height} cm · {item.finish === "custom" ? `Özel ${item.paint}` : colors.find((color) => color.value === item.finish)?.label}</small></div><button type="button" onClick={() => removeItem(item.id)} aria-label="Ürünü sil"><Trash2 size={16}/></button></article>)}</div><button className={styles.addAnother} type="button" onClick={addAnother}><Plus size={18}/> Listeme ekle, başka bir ölçü gir</button><div className={styles.totalBox}><span>Yaklaşık toplam fiyat aralığı</span><strong>{money.format(totalLow)}–{money.format(totalHigh)} TL</strong><small>Kesin fiyat ölçü kontrolünden sonra netleşir.</small></div>
-          <ul className={styles.trustList}><li><Check/> Kesin ölçü uygulama öncesinde doğrulanır</li><li><Check/> İstanbul’un 39 ilçesine hizmet</li><li><Check/> Uygulama kapsamı teklif sırasında netleşir</li></ul>
-          <div className={styles.orderActions}><a className={styles.whatsappButton} href={whatsappUrl} target="_blank" rel="noreferrer" onClick={() => track("whatsapp_click", { location: location.pathname, cta_id: "sineklik-quote-whatsapp" })} data-cta-id="sineklik-quote-whatsapp">WhatsApp’tan Sipariş Ver <ArrowRight/></a><Link className={styles.appointmentButton} href="/teklif-al">Keşif randevusu al <ArrowRight/></Link><a className={styles.callButton} href={`tel:${site.phone}`} onClick={() => track("phone_click", { location: location.pathname, cta_id: "sineklik-quote-call" })}>Hemen ara · {site.phoneLabel}</a></div>
-          <form className={styles.leadForm} onSubmit={submitLead}><h3>Telefonunuza teklif isteyin</h3><p>Ön fiyat kaydedilmez; ekibimiz ayrıntıları sizinle netleştirir.</p><div className={styles.leadFields}><label>Ad soyad<input required minLength={2} autoComplete="name" value={name} onChange={(event) => setName(event.target.value)}/></label><label>Telefon<input required type="tel" inputMode="tel" autoComplete="tel" pattern="(\+90|0)?\s?5\d{2}\s?\d{3}\s?\d{2}\s?\d{2}" placeholder="05xx xxx xx xx" value={phone} onChange={(event) => setPhone(event.target.value)}/></label><label>İlçe<select required value={district} onChange={(event) => setDistrict(event.target.value)}><option value="">İlçeni seç</option>{districts.map((item) => <option key={item.slug} value={item.name}>{item.name}</option>)}</select></label></div><label className={styles.consent}><input type="checkbox" required checked={consent} onChange={(event) => setConsent(event.target.checked)}/><span><Link href="/kvkk-aydinlatma-metni" target="_blank">KVKK aydınlatma metnini</Link> okudum; bilgilerimin talebim için işlenmesini kabul ediyorum.</span></label><button type="submit" className={styles.submitButton} disabled={leadState === "sending" || leadState === "sent"}>{leadState === "sending" ? "Gönderiliyor…" : leadState === "sent" ? "Talebiniz alındı" : "Beni arayın"}</button>{leadMessage && <p className={leadState === "error" ? styles.errorText : styles.successText} role="status">{leadMessage}</p>}</form>
+        {step === 5 && <div className={styles.stepContent}><p className={styles.kicker}>05 · SEPETİN</p><h2>Ürün ön izlemen.</h2><p className={styles.subheading}>Ölçülerini kontrol et, ardından detayları WhatsApp’tan ilet.</p><div className={styles.itemList}>{items.map((item, index) => <article className={styles.itemRow} key={item.id}><span className={styles.itemIndex}>{String(index + 1).padStart(2, "0")}</span><div className={styles.itemPreview}><FlyscreenDrawing area={item.area} system={item.system} finish={item.finish} paintCode={item.paint} width={item.width} height={item.height} className={styles.cartDrawing}/></div><div className={styles.itemInfo}><strong>{item.area === "window" ? "Pencere" : "Kapı / balkon"} · {systemName(item.system)}</strong><small>{item.width} × {item.height} cm · {item.finish === "custom" ? `Özel ${item.paint}` : colors.find((color) => color.value === item.finish)?.label}</small><b>{money.format(lower(item))}–{money.format(upper(item))} TL</b></div><button type="button" onClick={() => removeItem(item.id)} aria-label="Ürünü sil"><Trash2 size={16}/></button></article>)}</div><button className={styles.addAnother} type="button" onClick={addAnother}><Plus size={18}/> Başka bir ölçü ekle</button><div className={styles.totalBox}><span>{items.length} ürün için yaklaşık toplam</span><strong>{money.format(totalLow)}–{money.format(totalHigh)} TL</strong><small>Nihai fiyat ölçü ve uygulama kontrolünden sonra netleşir.</small></div>
+          <div className={styles.orderActions}><a className={styles.whatsappButton} href={whatsappUrl} target="_blank" rel="noreferrer" onClick={() => track("whatsapp_click", { location: location.pathname, cta_id: "sineklik-quote-whatsapp" })} data-cta-id="sineklik-quote-whatsapp">Ürünleri WhatsApp’tan gönder <ArrowRight/></a><p className={styles.whatsappNote}>Sepetindeki ölçüler ve renk seçimi mesajına eklenir.</p></div>
         </div>}
       </section>
 
