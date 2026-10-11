@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowDownRight, ArrowRight, DoorOpen, PanelsTopLeft, Rotate3D, Ruler } from "lucide-react";
 import styles from "./Sineklik3DConfigurator.module.css";
@@ -32,6 +33,7 @@ export function Sineklik3DConfigurator() {
   const [widthText, setWidthText] = useState("120");
   const [heightText, setHeightText] = useState("140");
   const [open, setOpen] = useState(false);
+  const [installed, setInstalled] = useState(false);
   const [attribution, setAttribution] = useState("");
   const width = safeDimension(widthText, area === "door" ? 90 : 120);
   const height = safeDimension(heightText, area === "door" ? 205 : 140);
@@ -56,9 +58,17 @@ export function Sineklik3DConfigurator() {
   return <section className={styles.configurator} aria-label="3D sineklik modelini özelleştir">
     <div className={styles.viewerPanel}>
       <div className={styles.viewerTop}><span>ETKİLEŞİMLİ 3D ÖN İZLEME</span><span><Rotate3D size={15}/> Sürükleyerek döndür</span></div>
-      <div className={styles.viewer}><Scene area={area} system={system} finish={finish} width={width} height={height} open={open}/></div>
-      <div className={styles.viewerCaption}><span>{area === "window" ? "Pencere" : "Kapı / balkon"} · {system === "hinged" ? "Menteşeli" : "Plise"} · {selectedFinish.name}</span><span>{width} × {height} cm</span></div>
-      <p className={styles.disclaimer}>{system === "hinged" ? "Menteşeli model: 17 × 25 mm alüminyum profil ve kontrast tonda, ikişer delikli köşe bağlantıları." : "Profil rengi değişir; file alanı açık ve şeffaf kalır. Model temsili 3D ön izlemedir."}</p>
+      <div className={styles.sceneModes} role="group" aria-label="Model görünümü">
+        <button type="button" className={!installed ? styles.activeSceneMode : ""} onClick={() => setInstalled(false)} aria-pressed={!installed}>Ürün</button>
+        <button type="button" className={installed ? styles.activeSceneMode : ""} onClick={() => setInstalled(true)} aria-pressed={installed}>Montaj örneği</button>
+      </div>
+      <div className={styles.viewer}><Scene area={area} system={system} finish={finish} width={width} height={height} open={open} installed={installed}/></div>
+      <div className={styles.viewerCaption}><span>{area === "window" ? "Pencere" : "Kapı / balkon"} · {system === "hinged" ? "Menteşeli plise" : "Plise"} · {selectedFinish.name}</span><span>{width} × {height} cm</span></div>
+      <p className={styles.disclaimer}>{system === "hinged" ? "28 mm seri alüminyum çerçeve; pileli tül profilin içinde kalır. İki menteşe ve tek tutacak." : "28 mm seri profil içinde pileli tül; iki teker ve pim detayı gösterilir. Model temsili 3D ön izlemedir."}</p>
+      <div className={styles.profileReference}>
+        <div className={styles.profileReferenceImage}><Image src="/products/profil-28mm-referans.webp" alt="Beyaz, antrasit ve ahşap desenli sineklik alüminyum profillerinin kesit fotoğrafı" fill sizes="(max-width: 900px) 100vw, 40vw"/></div>
+        <div><strong>28 mm profil kesiti</strong><span>Ürün modelinin referans aldığı alüminyum ekstrüzyon.</span></div>
+      </div>
     </div>
 
     <div className={styles.controls}>
