@@ -42,6 +42,21 @@ export function SineklikQuoteFlow() {
     track("quote_started", { page: "sineklik-fiyat-hesapla" });
   }, []);
   useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const initialArea = params.get("area");
+    const initialSystem = params.get("system");
+    const initialFinish = params.get("finish");
+    if ((initialArea !== "window" && initialArea !== "door") || (initialSystem !== "hinged" && initialSystem !== "sliding")) return;
+    setArea(initialArea);
+    setSystem(initialSystem);
+    if (initialFinish && ["white", "anthracite", "golden-oak"].includes(initialFinish)) setFinish(initialFinish as Finish);
+    const initialWidth = Number(params.get("width"));
+    const initialHeight = Number(params.get("height"));
+    if (initialWidth > 0 && initialWidth <= 600) setWidth(String(initialWidth));
+    if (initialHeight > 0 && initialHeight <= 600) setHeight(String(initialHeight));
+    setStep(3);
+  }, []);
+  useEffect(() => {
     track("quote_step_view", { step, step_name: steps[step - 1] });
   }, [step]);
 

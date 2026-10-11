@@ -1,0 +1,60 @@
+.configurator{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(340px,.85fr);max-width:1500px;min-height:680px;margin:0 auto;padding:0 7vw 8rem;gap:clamp(28px,5vw,76px);align-items:stretch}
+.viewerPanel{position:sticky;top:20px;align-self:start;overflow:hidden;border:1px solid rgba(23,35,38,.13);background:#f1f2ef}
+.viewerTop,.viewerCaption{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 18px;color:#526160;font-size:9px;font-weight:800;letter-spacing:.1em}
+.viewerTop{border-bottom:1px solid rgba(23,35,38,.1);background:#f8f8f5}
+.viewerTop span:last-child{display:flex;align-items:center;gap:7px;color:#75827e;font-weight:600;letter-spacing:0;text-transform:none}
+.viewer{height:min(60vw,610px);min-height:450px;touch-action:pan-y}
+.viewer canvas{display:block;width:100%;height:100%}
+.viewerLoading{display:grid;height:100%;min-height:450px;place-content:center;justify-items:center;gap:12px;color:#697571;background:radial-gradient(ellipse,#fff,#f1f2ef);font-size:12px}
+.viewerLoading span{width:34px;height:34px;border:2px solid #dbe4e0;border-top-color:#18827a;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.viewerCaption{border-top:1px solid rgba(23,35,38,.1);background:#f8f8f5;color:#24322f;font-size:11px;letter-spacing:0}
+.disclaimer{margin:0;padding:0 18px 15px;color:#85908d;background:#f8f8f5;font-size:9px;line-height:1.5}
+.controls{display:grid;align-content:start;gap:21px;padding:8px 0}
+.controlHeading .eyebrow{margin:0 0 12px;color:#18827a;font-size:9px;font-weight:900;letter-spacing:.16em}
+.controlHeading h2{margin:0;font-size:clamp(2.7rem,4.6vw,4.8rem);font-weight:500;letter-spacing:-.055em;line-height:.91}
+.controlHeading h2 em{color:#18827a;font-weight:400}
+.controlHeading>p:last-child{margin:13px 0 0;color:#667572;font-size:12px;line-height:1.7}
+.controls fieldset{min-width:0;margin:0;padding:0;border:0;border-top:1px solid rgba(23,35,38,.13)}
+.controls legend{display:flex;align-items:center;gap:10px;padding:12px 0 10px;color:#3c4b47;font-size:10px;font-weight:850;letter-spacing:.04em}
+.controls legend span{color:#18827a;font-size:9px}
+.choiceRow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choiceRow button{display:flex;min-height:49px;align-items:center;justify-content:flex-start;gap:10px;padding:0 12px;border:1px solid #dce2dd;background:#fff;color:#263431;font-size:11px;font-weight:750;cursor:pointer;transition:border-color .2s,background .2s}
+.choiceRow button svg{width:17px;height:17px;color:#788681}
+.choiceRow button.selectedChoice{border-color:#18827a;background:#edf7f4;box-shadow:inset 3px 0 #18827a}
+.modelChoices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.modelChoice{display:flex;min-height:73px;align-items:center;gap:11px;padding:10px;border:1px solid #dce2dd;background:#fff;color:#24322f;text-align:left;cursor:pointer;transition:transform .2s,border-color .2s,background .2s}
+.modelChoice:hover{transform:translateY(-2px);border-color:#92b8ae}
+.selectedModel{border-color:#18827a;background:#edf7f4;box-shadow:inset 0 0 0 1px #18827a}
+.modelChoice span strong,.modelChoice span small{display:block}
+.modelChoice span strong{font-size:11px}
+.modelChoice span small{margin-top:4px;color:#73807b;font-size:9px}
+.hingeIcon,.pleatIcon{position:relative;display:flex;width:40px;height:46px;flex:none;align-items:center;justify-content:center;border:2px solid #778681;background:#ffffff95;perspective:80px}
+.hingeIcon b{position:absolute;inset:2px 2px 2px 50%;border:1.5px solid #18827a;background:#a9d7ca66;transform-origin:left center;animation:hinge-swing 2.4s ease-in-out infinite alternate}
+.pleatIcon{height:39px;align-items:stretch;justify-content:space-evenly;padding:3px}
+.pleatIcon b{width:2px;background:#18827a;animation:pleat-breathe 1.8s ease-in-out infinite alternate}
+.pleatIcon b:nth-child(2){animation-delay:.12s}.pleatIcon b:nth-child(3){animation-delay:.24s}.pleatIcon b:nth-child(4){animation-delay:.36s}.pleatIcon b:nth-child(5){animation-delay:.48s}
+@keyframes hinge-swing{from{transform:rotateY(0)}to{transform:rotateY(-55deg)}}
+@keyframes pleat-breathe{from{transform:translateX(0)}to{transform:translateX(4px)}}
+.finishChoices{display:grid;gap:7px}
+.finishChoice{display:flex;min-height:51px;align-items:center;gap:11px;padding:7px 9px;border:1px solid #dce2dd;background:white;color:#263431;text-align:left;cursor:pointer}
+.finishChoice>i{width:33px;height:33px;flex:none;border:1px solid #cbd2cf}
+.finishChoice span strong,.finishChoice span small{display:block}
+.finishChoice span strong{font-size:10px}
+.finishChoice span small{margin-top:3px;color:#74817d;font-size:8px}
+.selectedFinish{border-color:#18827a;background:#f2f8f6;box-shadow:inset 3px 0 #18827a}
+.dimensions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dimensions label>span{display:block;margin-bottom:5px;color:#75817d;font-size:9px}
+.dimensions label>div{display:flex;align-items:center;border:1px solid #dce2dd;background:#fff}
+.dimensions input{width:100%;min-width:0;height:43px;padding:0 10px;border:0;outline:0;color:#24322f;font-size:14px}
+.dimensions input:focus{box-shadow:inset 0 0 0 1px #18827a}
+.dimensions b{padding:0 10px;color:#8a9691;font-size:9px}
+.openButton{display:flex;min-height:44px;align-items:center;justify-content:center;gap:8px;border:1px solid #cfd8d4;background:transparent;color:#43534e;font-size:10px;font-weight:800;cursor:pointer}
+.openButton svg{width:15px;height:15px;color:#18827a}
+.quoteButton{display:flex;min-height:56px;align-items:center;justify-content:space-between;padding:0 17px;background:#172326;color:white;text-decoration:none;font-size:11px;font-weight:850;letter-spacing:.03em;transition:background .2s}
+.quoteButton:hover{background:#08756f}
+.quoteButton span{display:flex;align-items:center;gap:10px}
+.quoteButton svg{color:#74d1c7}
+@media(max-width:900px){.configurator{grid-template-columns:1fr;padding:0 1.25rem 6rem;gap:26px}.viewerPanel{position:relative;top:auto}.viewer{height:68vw;min-height:380px}.controls{gap:18px}.controlHeading h2{font-size:clamp(3rem,8vw,4.4rem)}}
+@media(max-width:560px){.configurator{padding:0 1rem 4rem;gap:21px}.viewerTop,.viewerCaption{padding:12px;font-size:8px}.viewerTop span:last-child{font-size:8px}.viewer{height:78vw;min-height:300px}.viewerLoading{min-height:300px}.disclaimer{padding:0 12px 12px;font-size:8px}.controlHeading h2{font-size:3.2rem}.modelChoices{gap:6px}.modelChoice{min-height:66px;gap:8px;padding:7px}.hingeIcon{width:34px;height:40px}.pleatIcon{width:34px;height:34px}}
+@media(prefers-reduced-motion:reduce){.viewerLoading span,.hingeIcon b,.pleatIcon b{animation:none}.modelChoice,.choiceRow button,.quoteButton{transition:none}}
