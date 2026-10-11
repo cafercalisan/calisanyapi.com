@@ -2,10 +2,10 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
-type SceneProps = { area: "window" | "door"; system: "hinged" | "sliding"; finish: string; width: number; height: number; open: boolean; installed: boolean };
+type SceneProps = { area: "window" | "door"; system: "hinged" | "sliding"; finish: string; width: number; height: number; open: boolean; installed: boolean; mountAnimationKey: number };
 
 function makeMeshTexture() {
   const canvas = document.createElement("canvas");
@@ -75,18 +75,18 @@ function Rail({ position, size, finish, color }: { position: [number, number, nu
 }
 
 function CornerJoint({ x, y, rail, depth, finish }: { x: number; y: number; rail: number; depth: number; finish: string }) {
-  const plate = finish === "anthracite" ? "#b9c2c2" : "#596365";
-  const hole = "#303637";
-  const leg = .035;
+  const plate = finish === "white" ? "#e6e3d9" : finish === "anthracite" ? "#17191b" : "#463528";
+  const hole = finish === "white" ? "#777971" : "#080909";
+  const leg = .032;
   const faceZ = depth / 2 + .0015;
   const holeDisc = (px: number, py: number, key: string) => <mesh key={key} position={[px, py, faceZ + .002]} rotation={[Math.PI / 2, 0, 0]}>
     <cylinderGeometry args={[.0042, .0042, .003, 20]}/><meshStandardMaterial color={hole} roughness={.62}/>
   </mesh>;
   return <group position={[x, y, 0]}>
-    {/* Contrasting moulded corner block; two recessed bores echo the fixing detail in the brief. */}
-    <mesh position={[Math.sign(x) * leg / 2, -Math.sign(y) * rail * .08, faceZ]} castShadow><boxGeometry args={[leg, Math.min(.018, rail * .68), .006]}/><meshStandardMaterial color={plate} roughness={.58}/></mesh>
-    <mesh position={[-Math.sign(x) * rail * .08, -Math.sign(y) * leg / 2, faceZ]} castShadow><boxGeometry args={[Math.min(.018, rail * .68), leg, .006]}/><meshStandardMaterial color={plate} roughness={.58}/></mesh>
-    {holeDisc(Math.sign(x) * leg * .68, -Math.sign(y) * rail * .16, "h1")}
+    {/* Moulded L corner from the supplied accessory photo; the two bores remain visible. */}
+    <mesh position={[-Math.sign(x) * leg / 2, -Math.sign(y) * rail * .08, faceZ]} castShadow><boxGeometry args={[leg, Math.min(.019, rail * .7), .006]}/><meshStandardMaterial color={plate} roughness={.74}/></mesh>
+    <mesh position={[-Math.sign(x) * rail * .08, -Math.sign(y) * leg / 2, faceZ]} castShadow><boxGeometry args={[Math.min(.019, rail * .7), leg, .006]}/><meshStandardMaterial color={plate} roughness={.74}/></mesh>
+    {holeDisc(-Math.sign(x) * leg * .68, -Math.sign(y) * rail * .16, "h1")}
     {holeDisc(-Math.sign(x) * rail * .16, -Math.sign(y) * leg * .68, "h2")}
   </group>;
 }
@@ -134,6 +134,53 @@ function MagneticCatch({ position, color }: { position: [number, number, number]
   </group>;
 }
 
+function OpenWindowSash({ width, height }: { width: number; height: number }) {
+  const sashWidth = width - .14;
+  const sashHeight = height - .14;
+  const profile = "#f5f4ee";
+  return <group position={[-width / 2, 0, .025]} rotation={[0, .62, 0]}>
+    {/* Casement leaf is hinged on the left and shown swung open behind the screen. */}
+    <group position={[sashWidth / 2, 0, 0]}>
+      <mesh position={[0, 0, -.004]}><planeGeometry args={[sashWidth - .085, sashHeight - .085]}/><meshPhysicalMaterial color="#bed2d1" transparent opacity={.24} roughness={.12} metalness={.04} side={THREE.DoubleSide} depthWrite={false}/></mesh>
+      <mesh position={[-sashWidth / 2 + .023, 0, 0]} castShadow><boxGeometry args={[.046, sashHeight, .055]}/><meshStandardMaterial color={profile} roughness={.38}/></mesh>
+      <mesh position={[sashWidth / 2 - .023, 0, 0]} castShadow><boxGeometry args={[.046, sashHeight, .055]}/><meshStandardMaterial color={profile} roughness={.38}/></mesh>
+      <mesh position={[0, sashHeight / 2 - .023, 0]} castShadow><boxGeometry args={[sashWidth - .046, .046, .055]}/><meshStandardMaterial color={profile} roughness={.38}/></mesh>
+      <mesh position={[0, -sashHeight / 2 + .023, 0]} castShadow><boxGeometry args={[sashWidth - .046, .046, .055]}/><meshStandardMaterial color={profile} roughness={.38}/></mesh>
+      <mesh position={[sashWidth / 2 - .052, 0, .034]} castShadow><boxGeometry args={[.012, .105, .012]}/><meshStandardMaterial color="#59605e" roughness={.45}/></mesh>
+    </group>
+    {[height * .29, -height * .29].map((y) => <mesh key={y} position={[.006, y, 0]}><cylinderGeometry args={[.007, .007, .05, 16]}/><meshStandardMaterial color="#aeb4b1" metalness={.4} roughness={.42}/></mesh>)}
+  </group>;
+}
+
+function MountingScrews({ width, height, rail, surfaceZ, trigger }: { width: number; height: number; rail: number; surfaceZ: number; trigger: number }) {
+  const screws = useRef<(THREE.Group | null)[]>([]);
+  const animationStart = useRef<number | null>(null);
+  useEffect(() => { animationStart.current = null; }, [trigger]);
+  useFrame(({ clock }) => {
+    if (trigger < 1) return;
+    if (animationStart.current === null) animationStart.current = clock.elapsedTime;
+    const elapsed = clock.elapsedTime - animationStart.current;
+    screws.current.forEach((screw, index) => {
+      if (!screw) return;
+      const amount = THREE.MathUtils.clamp((elapsed - index * .3) / .65, 0, 1);
+      screw.visible = true;
+      screw.position.z = surfaceZ + .13 - amount * .122;
+    });
+  });
+  const corners: [number, number][] = [
+    [-width / 2 + rail / 2, height / 2 - rail / 2],
+    [width / 2 - rail / 2, height / 2 - rail / 2],
+    [-width / 2 + rail / 2, -height / 2 + rail / 2],
+    [width / 2 - rail / 2, -height / 2 + rail / 2],
+  ].map(([x, y]) => [x - Math.sign(x) * .032 * .68, y - Math.sign(y) * rail * .16]);
+  return <group>{corners.map(([x, y], index) => <group key={index} ref={(node) => { screws.current[index] = node; }} position={[x, y, surfaceZ + .13]} visible={false}>
+    <mesh position={[0, 0, -.005]} rotation={[-Math.PI / 2, 0, 0]} castShadow><cylinderGeometry args={[.0026, .0026, .026, 14]}/><meshStandardMaterial color="#aeb4b2" metalness={.72} roughness={.3}/></mesh>
+    <mesh position={[0, 0, .008]} rotation={[-Math.PI / 2, 0, 0]} castShadow><cylinderGeometry args={[.006, .006, .004, 18]}/><meshStandardMaterial color="#c6cbc8" metalness={.7} roughness={.28}/></mesh>
+    <mesh position={[0, 0, .0102]}><boxGeometry args={[.0065, .0011, .001]}/><meshStandardMaterial color="#515756" roughness={.55}/></mesh>
+    <mesh position={[0, 0, .0103]} rotation={[0, 0, Math.PI / 2]}><boxGeometry args={[.0065, .0011, .001]}/><meshStandardMaterial color="#515756" roughness={.55}/></mesh>
+  </group>)}</group>;
+}
+
 function HingedPanel({ width, height, rail, depth, finish, color, open, texture }: SceneProps & { width: number; height: number; rail: number; depth: number; color: string; texture: THREE.Texture }) {
   const panel = useRef<THREE.Group>(null);
   const panelWidth = width;
@@ -170,22 +217,40 @@ function PleatedMesh({ width, height, z, color, texture }: { width: number; heig
   return <mesh geometry={geometry} position={[0, 0, z]}><meshStandardMaterial map={texture} color={color} side={THREE.DoubleSide} transparent opacity={.76} roughness={.92} metalness={.01} depthWrite={false}/></mesh>;
 }
 
-function Wheel({ position }: { position: [number, number, number] }) {
-  return <group position={position}>
-    <mesh rotation={[Math.PI / 2, 0, 0]} castShadow><cylinderGeometry args={[.011, .011, .008, 24]}/><meshStandardMaterial color="#434a49" roughness={.42}/></mesh>
-    <mesh rotation={[Math.PI / 2, 0, 0]}><cylinderGeometry args={[.0032, .0032, .012, 16]}/><meshStandardMaterial color="#b2b8b5" metalness={.72} roughness={.26}/></mesh>
-  </group>;
-}
-
 function SlidingPanel({ width, height, rail, color, finish, open, texture }: SceneProps & { width: number; height: number; rail: number; color: string; texture: THREE.Texture }) {
-  const panel = useRef<THREE.Group>(null); const panelWidth = width - rail * 1.5; const panelHeight = height - rail * 1.5;
-  useFrame((_, delta) => { if (panel.current) panel.current.scale.x = THREE.MathUtils.damp(panel.current.scale.x, open ? .16 : 1, 4, delta); });
-  return <group ref={panel}>
-    <PleatedMesh width={panelWidth - rail} height={panelHeight - rail} z={0} color="#86918e" texture={texture}/>
-    <Rail position={[panelWidth / 2 - rail / 2, 0, .004]} size={[rail, panelHeight, rail * .72]} finish={finish} color={color}/>
-    {/* Two running rollers with stainless pins on the moving wing. */}
-    <Wheel position={[panelWidth / 2 - rail / 2, panelHeight / 2 - rail / 2, .018]}/>
-    <Wheel position={[panelWidth / 2 - rail / 2, -panelHeight / 2 + rail / 2, .018]}/>
+  const pleats = useRef<THREE.Group>(null);
+  const grip = useRef<THREE.Group>(null);
+  const panelWidth = width - rail * 1.5;
+  const panelHeight = height - rail * 1.5;
+  const fabricWidth = panelWidth - rail;
+  const gripClosedX = panelWidth / 2 - rail / 2;
+  const foldedLeft = -fabricWidth / 2;
+  const foldedWidth = fabricWidth * .16;
+  const gripOpenX = foldedLeft + foldedWidth + rail / 2;
+  const profileDepth = rail * .72;
+  const grooveColor = finish === "white" ? "#494d4b" : finish === "anthracite" ? "#090a0b" : "#30251e";
+  useFrame((_, delta) => {
+    if (pleats.current) {
+      pleats.current.scale.x = THREE.MathUtils.damp(pleats.current.scale.x, open ? .16 : 1, 4, delta);
+      pleats.current.position.x = THREE.MathUtils.damp(pleats.current.position.x, open ? foldedLeft + foldedWidth / 2 : 0, 4, delta);
+    }
+    if (grip.current) grip.current.position.x = THREE.MathUtils.damp(grip.current.position.x, open ? gripOpenX : gripClosedX, 4, delta);
+  });
+  return <group>
+    <group ref={pleats}>
+      <PleatedMesh width={fabricWidth} height={panelHeight - rail} z={0} color="#86918e" texture={texture}/>
+    </group>
+    <group ref={grip} position={[gripClosedX, 0, .004]}>
+      <Rail position={[0, 0, 0]} size={[rail, panelHeight, profileDepth]} finish={finish} color={color}/>
+      {/* Full-height pull profile with a narrow recessed finger channel. */}
+      <mesh position={[0, 0, profileDepth / 2 + .0008]}>
+        <boxGeometry args={[.008, panelHeight - .09, .0016]}/><meshStandardMaterial color={grooveColor} roughness={.82}/>
+      </mesh>
+      {[-1, 1].map((side) => <mesh key={side} position={[side * .006, 0, profileDepth / 2 + .0012]}>
+        <boxGeometry args={[.0018, panelHeight - .09, .0012]}/><meshStandardMaterial color={finish === "white" ? "#faf9f3" : color} roughness={.42}/>
+      </mesh>)}
+      <mesh position={[0, 0, profileDepth / 2 + .0011]}><boxGeometry args={[.004, .012, .0012]}/><meshStandardMaterial color={grooveColor} roughness={.82}/></mesh>
+    </group>
   </group>;
 }
 
@@ -206,6 +271,7 @@ function InstalledOpening({ area, width, height }: { area: "window" | "door"; wi
   }, [apertureHeight, apertureWidth, outerHeight, outerWidth]);
   return <group position={[0, -.05, -.16]}>
     <mesh geometry={wallGeometry} position={[0, 0, -.015]}><meshStandardMaterial color="#deded8" side={THREE.DoubleSide} roughness={.9}/></mesh>
+    <OpenWindowSash width={apertureWidth} height={apertureHeight}/>
     <group position={[0, 0, .012]}>
       <mesh position={[-apertureWidth / 2 - .032, 0, 0]}><boxGeometry args={[.064, apertureHeight + .064, .055]}/><meshStandardMaterial color="#f3f2ec" roughness={.38}/></mesh>
       <mesh position={[apertureWidth / 2 + .032, 0, 0]}><boxGeometry args={[.064, apertureHeight + .064, .055]}/><meshStandardMaterial color="#f3f2ec" roughness={.38}/></mesh>
@@ -216,7 +282,7 @@ function InstalledOpening({ area, width, height }: { area: "window" | "door"; wi
 }
 
 function ProductModel(props: SceneProps) {
-  const { area, system, finish, width: widthCm, height: heightCm, installed } = props;
+  const { area, system, finish, width: widthCm, height: heightCm, installed, mountAnimationKey } = props;
   const height = area === "door" ? 2.18 : 1.72;
   const ratio = widthCm / Math.max(heightCm, 1);
   const width = THREE.MathUtils.clamp(height * ratio, .82, 2.48);
@@ -225,15 +291,21 @@ function ProductModel(props: SceneProps) {
   const colors: Record<string, string> = { white: "#f4f3ed", anthracite: "#383e42", "golden-oak": "#b77a45" };
   const frameColor = colors[finish] ?? colors.anthracite;
   const meshTexture = useMemo(() => makeMeshTexture(), []);
+  const mountingWidth = system === "hinged" ? width + .08 : width;
+  const mountingHeight = system === "hinged" ? height + .08 : height;
+  const mountingDepth = system === "hinged" ? -.002 : 0;
+  const mountSurfaceZ = mountingDepth + depth / 2;
   return <group position={[0, -.05, 0]}>
     {installed && <InstalledOpening area={area} width={width} height={height}/>}
     {system === "hinged" ? <>
+      {installed && <group position={[0, 0, mountingDepth]}><Frame width={mountingWidth} height={mountingHeight} rail={rail} depth={depth} finish={finish} color={frameColor}/></group>}
       <HingedPanel {...props} width={width} height={height} rail={rail} depth={depth} color={frameColor} texture={meshTexture}/>
       {installed && <MagneticCatch position={[width / 2 + .018, 0, depth * .7]} color={finish === "white" ? "#f4f3ed" : "#363c3e"}/>}
     </> : <>
       <Frame width={width} height={height} rail={rail} depth={depth} finish={finish} color={frameColor}/>
       <SlidingPanel {...props} width={width} height={height} rail={rail} color={frameColor} finish={finish} texture={meshTexture}/>
     </>}
+    {installed && <MountingScrews width={mountingWidth} height={mountingHeight} rail={rail} surfaceZ={mountSurfaceZ} trigger={mountAnimationKey}/>}
   </group>;
 }
 

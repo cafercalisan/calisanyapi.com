@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowDownRight, ArrowRight, DoorOpen, PanelsTopLeft, Rotate3D, Ruler } from "lucide-react";
+import { ArrowDownRight, ArrowRight, DoorOpen, PanelsTopLeft, Rotate3D, Ruler, Wrench } from "lucide-react";
 import styles from "./Sineklik3DConfigurator.module.css";
 
 const Scene = dynamic(() => import("@/components/Flyscreen3DScene").then((module) => module.Flyscreen3DScene), {
@@ -34,10 +34,13 @@ export function Sineklik3DConfigurator() {
   const [heightText, setHeightText] = useState("140");
   const [open, setOpen] = useState(false);
   const [installed, setInstalled] = useState(false);
+  const [mountAnimationKey, setMountAnimationKey] = useState(0);
   const [attribution, setAttribution] = useState("");
   const width = safeDimension(widthText, area === "door" ? 90 : 120);
   const height = safeDimension(heightText, area === "door" ? 205 : 140);
   const selectedFinish = finishes.find((item) => item.id === finish)!;
+
+  useEffect(() => { setMountAnimationKey(0); }, [area, finish, height, system, width]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -59,15 +62,21 @@ export function Sineklik3DConfigurator() {
     <div className={styles.viewerPanel}>
       <div className={styles.viewerTop}><span>ETKİLEŞİMLİ 3D ÖN İZLEME</span><span><Rotate3D size={15}/> Sürükleyerek döndür</span></div>
       <div className={styles.sceneModes} role="group" aria-label="Model görünümü">
-        <button type="button" className={!installed ? styles.activeSceneMode : ""} onClick={() => setInstalled(false)} aria-pressed={!installed}>Ürün</button>
-        <button type="button" className={installed ? styles.activeSceneMode : ""} onClick={() => setInstalled(true)} aria-pressed={installed}>Montaj örneği</button>
+        <button type="button" className={!installed ? styles.activeSceneMode : ""} onClick={() => { setInstalled(false); setMountAnimationKey(0); }} aria-pressed={!installed}>Ürün</button>
+        <button type="button" className={installed ? styles.activeSceneMode : ""} onClick={() => { setInstalled(true); setMountAnimationKey(0); }} aria-pressed={installed}>Montaj örneği</button>
       </div>
-      <div className={styles.viewer}><Scene area={area} system={system} finish={finish} width={width} height={height} open={open} installed={installed}/></div>
+      <div className={styles.viewer}><Scene area={area} system={system} finish={finish} width={width} height={height} open={open} installed={installed} mountAnimationKey={mountAnimationKey}/></div>
       <div className={styles.viewerCaption}><span>{area === "window" ? "Pencere" : "Kapı / balkon"} · {system === "hinged" ? "Menteşeli plise" : "Plise"} · {selectedFinish.name}</span><span>{width} × {height} cm</span></div>
-      <p className={styles.disclaimer}>{system === "hinged" ? "28 mm seri alüminyum çerçeve; pileli tül profilin içinde kalır. İki menteşe ve tek tutacak." : "28 mm seri profil içinde pileli tül; iki teker ve pim detayı gösterilir. Model temsili 3D ön izlemedir."}</p>
+      <p className={styles.disclaimer}>{system === "hinged" ? "28 mm seri alüminyum çerçeve; pileli tül profilin içinde kalır. İki menteşe ve tek tutacak." : "28 mm seri profil içinde pileli tül ve boydan boya ince tutma oluğu gösterilir."}</p>
       <div className={styles.profileReference}>
-        <div className={styles.profileReferenceImage}><Image src="/products/profil-28mm-referans.webp" alt="Beyaz, antrasit ve ahşap desenli sineklik alüminyum profillerinin kesit fotoğrafı" fill sizes="(max-width: 900px) 100vw, 40vw"/></div>
-        <div><strong>28 mm profil kesiti</strong><span>Ürün modelinin referans aldığı alüminyum ekstrüzyon.</span></div>
+        <div className={styles.profileReferenceItem}>
+          <div className={styles.profileReferenceImage}><Image src="/products/profil-28mm-referans.webp" alt="Beyaz, antrasit ve ahşap desenli sineklik alüminyum profillerinin kesit fotoğrafı" fill sizes="(max-width: 900px) 25vw, 12vw"/></div>
+          <div><strong>28 mm profil</strong><span>İçi boş ekstrüzyon kesiti.</span></div>
+        </div>
+        <div className={styles.profileReferenceItem}>
+          <div className={styles.profileReferenceImage}><Image src="/products/takoz-28mm-referans.webp" alt="28 mm sineklik için L biçimli köşe takozları" fill sizes="(max-width: 900px) 25vw, 12vw"/></div>
+          <div><strong>L takozu · makara hariç</strong><span>Köşelerde görünen aksesuar biçimi.</span></div>
+        </div>
       </div>
     </div>
 
@@ -88,6 +97,7 @@ export function Sineklik3DConfigurator() {
       <fieldset><legend><span>04</span> Yaklaşık ölçü</legend><div className={styles.dimensions}><label><span>En</span><div><input inputMode="decimal" value={widthText} onChange={(event) => setWidthText(event.target.value.replace(/[^\d.,]/g, ""))} aria-label="Genişlik santimetre"/><b>cm</b></div></label><label><span>Boy</span><div><input inputMode="decimal" value={heightText} onChange={(event) => setHeightText(event.target.value.replace(/[^\d.,]/g, ""))} aria-label="Yükseklik santimetre"/><b>cm</b></div></label></div></fieldset>
 
       <button type="button" className={styles.openButton} onClick={() => setOpen((value) => !value)}><ArrowDownRight/> {open ? "Modeli kapat" : system === "hinged" ? "Menteşeyi hareket ettir" : "Plise açılımını göster"}</button>
+      {installed && <button type="button" className={styles.mountButton} onClick={() => setMountAnimationKey((key) => key + 1)}><Wrench size={15}/> Dört köşe vidasını tak</button>}
       <a className={styles.quoteButton} href={quoteHref}><span><Ruler size={16}/> Ölçülerimi teklife taşı</span><ArrowRight size={18}/></a>
     </div>
   </section>;
