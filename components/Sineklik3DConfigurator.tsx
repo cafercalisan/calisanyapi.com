@@ -58,7 +58,7 @@ export function Sineklik3DConfigurator() {
       <div className={styles.viewerTop}><span>ETKİLEŞİMLİ 3D ÖN İZLEME</span><span><Rotate3D size={15}/> Sürükleyerek döndür</span></div>
       <div className={styles.viewer}><Scene area={area} system={system} finish={finish} width={width} height={height} open={open}/></div>
       <div className={styles.viewerCaption}><span>{area === "window" ? "Pencere" : "Kapı / balkon"} · {system === "hinged" ? "Menteşeli" : "Plise"} · {selectedFinish.name}</span><span>{width} × {height} cm</span></div>
-      <p className={styles.disclaimer}>Model, ölçü ve renk değiştikçe güncellenen temsili bir ön izlemedir.</p>
+      <p className={styles.disclaimer}>{system === "hinged" ? "Menteşeli model: 17 × 25 mm alüminyum profil ve kontrast tonda, ikişer delikli köşe bağlantıları." : "Profil rengi değişir; file alanı açık ve şeffaf kalır. Model temsili 3D ön izlemedir."}</p>
     </div>
 
     <div className={styles.controls}>

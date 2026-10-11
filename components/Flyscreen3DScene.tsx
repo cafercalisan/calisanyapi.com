@@ -52,12 +52,35 @@ function Rail({ position, size, finish, color }: { position: [number, number, nu
   return <mesh position={position} castShadow receiveShadow><boxGeometry args={size}/><ProfileMaterial finish={finish} color={color}/></mesh>;
 }
 
-function Frame({ width, height, rail, depth, finish, color }: { width: number; height: number; rail: number; depth: number; finish: string; color: string }) {
+function CornerJoint({ x, y, rail, depth }: { x: number; y: number; rail: number; depth: number }) {
+  const plate = "#b8c0c1";
+  const hole = "#42494a";
+  const leg = .039;
+  const faceZ = depth / 2 + .0015;
+  const holeDisc = (px: number, py: number, key: string) => <mesh key={key} position={[px, py, faceZ + .002]} rotation={[Math.PI / 2, 0, 0]}>
+    <cylinderGeometry args={[.0042, .0042, .003, 20]}/><meshStandardMaterial color={hole} roughness={.62}/>
+  </mesh>;
+  return <group position={[x, y, 0]}>
+    {/* Contrasting L-shaped corner joiner; its two visible bores indicate the fastener holes. */}
+    <mesh position={[Math.sign(x) * leg / 2, -Math.sign(y) * rail * .16, faceZ]}><boxGeometry args={[leg, Math.max(.009, rail * .62), .003]}/><meshStandardMaterial color={plate} metalness={.34} roughness={.5}/></mesh>
+    <mesh position={[-Math.sign(x) * rail * .16, -Math.sign(y) * leg / 2, faceZ]}><boxGeometry args={[Math.max(.009, rail * .62), leg, .003]}/><meshStandardMaterial color={plate} metalness={.34} roughness={.5}/></mesh>
+    {holeDisc(Math.sign(x) * leg * .68, -Math.sign(y) * rail * .16, "h1")}
+    {holeDisc(-Math.sign(x) * rail * .16, -Math.sign(y) * leg * .68, "h2")}
+  </group>;
+}
+
+function Frame({ width, height, rail, depth, finish, color, showJoints = true }: { width: number; height: number; rail: number; depth: number; finish: string; color: string; showJoints?: boolean }) {
   return <group>
     <Rail position={[-width / 2 + rail / 2, 0, 0]} size={[rail, height, depth]} finish={finish} color={color}/>
     <Rail position={[width / 2 - rail / 2, 0, 0]} size={[rail, height, depth]} finish={finish} color={color}/>
     <Rail position={[0, height / 2 - rail / 2, 0]} size={[width - rail, rail, depth]} finish={finish} color={color}/>
     <Rail position={[0, -height / 2 + rail / 2, 0]} size={[width - rail, rail, depth]} finish={finish} color={color}/>
+    {showJoints && [
+      [-width / 2 + rail / 2, height / 2 - rail / 2],
+      [width / 2 - rail / 2, height / 2 - rail / 2],
+      [-width / 2 + rail / 2, -height / 2 + rail / 2],
+      [width / 2 - rail / 2, -height / 2 + rail / 2],
+    ].map(([x, y], index) => <CornerJoint key={index} x={x} y={y} rail={rail} depth={depth}/>) }
   </group>;
 }
 
@@ -109,8 +132,8 @@ function HingedPanel({ width, height, rail, depth, finish, color, open, texture 
       <MeshField width={panelWidth - rail} height={panelHeight - rail} z={-.028} texture={texture}/>
       <Frame width={panelWidth} height={panelHeight} rail={rail * .82} depth={depth * .68} finish={finish} color={color}/>
       {/* Two full, articulated hinge assemblies, positioned near the ends of the hinge stile. */}
-      <Hinge x={-panelWidth / 2 + rail * .2} y={panelHeight * .31} z={depth * .5} color={hardware} leafWidth={rail * .62} pinLength={rail * .82}/>
-      <Hinge x={-panelWidth / 2 + rail * .2} y={-panelHeight * .31} z={depth * .5} color={hardware} leafWidth={rail * .62} pinLength={rail * .82}/>
+      <Hinge x={-panelWidth / 2 + rail * .2} y={panelHeight * .31} z={depth * .5} color={hardware} leafWidth={rail * .62} pinLength={.055}/>
+      <Hinge x={-panelWidth / 2 + rail * .2} y={-panelHeight * .31} z={depth * .5} color={hardware} leafWidth={rail * .62} pinLength={.055}/>
       {/* One hand-sized pull on the stile opposite the hinges. */}
       <PullHandle x={panelWidth / 2 - rail * .5} y={0} z={depth * .48} color={hardware}/>
     </group>
@@ -144,7 +167,8 @@ function ProductModel(props: SceneProps) {
   const height = area === "door" ? 2.18 : 1.72;
   const ratio = widthCm / Math.max(heightCm, 1);
   const width = THREE.MathUtils.clamp(height * ratio, .82, 2.48);
-  const rail = .074; const depth = .12;
+  // Realistic 17 x 25 mm extrusion, with the 25 mm dimension through the frame depth.
+  const rail = .017; const depth = .025;
   const colors: Record<string, string> = { white: "#f4f3ed", anthracite: "#383e42", "golden-oak": "#b77a45" };
   const frameColor = colors[finish] ?? colors.anthracite;
   const meshTexture = useMemo(() => makeMeshTexture(), []);
@@ -152,7 +176,7 @@ function ProductModel(props: SceneProps) {
   return <group position={[0, -.05, 0]}>
     {/* Installed surround, shown as a neutral jamb so the product hardware reads clearly. */}
     {system === "hinged" && <group position={[0, 0, -.095]}>
-      <Frame width={width + .07} height={height + .07} rail={.045} depth={.07} finish="white" color={jambColor}/>
+      <Frame width={width + .07} height={height + .07} rail={.045} depth={.07} finish="white" color={jambColor} showJoints={false}/>
     </group>}
     <Frame width={width} height={height} rail={rail} depth={depth} finish={finish} color={frameColor}/>
     {system === "hinged" ? <>
