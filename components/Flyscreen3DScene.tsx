@@ -5,7 +5,7 @@ import { OrbitControls } from "@react-three/drei";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
-type SceneProps = { area: "window" | "door"; system: "hinged" | "sliding"; finish: string; width: number; height: number; open: boolean; progress: number; onProgressChange: (value: number) => void; installed: boolean; mountAnimationKey: number };
+type SceneProps = { area: "window" | "door"; system: "hinged" | "sliding"; finish: string; width: number; height: number; open: boolean; progress: number; onProgressChange: (value: number) => void; dragEnabled: boolean; installed: boolean; mountAnimationKey: number };
 
 function makeMeshTexture() {
   const canvas = document.createElement("canvas");
@@ -77,13 +77,15 @@ function Rail({ position, size, finish, color }: { position: [number, number, nu
 function CornerJoint({ x, y, rail, depth, finish }: { x: number; y: number; rail: number; depth: number; finish: string }) {
   const plate = finish === "white" ? "#e6e3d9" : finish === "anthracite" ? "#17191b" : "#463528";
   const hole = finish === "white" ? "#777971" : "#080909";
+  const cap = finish === "white" ? "#d2d0c7" : finish === "anthracite" ? "#17191b" : "#654326";
   const leg = .032;
   const faceZ = depth / 2 + .0015;
   const holeDisc = (px: number, py: number, key: string) => <mesh key={key} position={[px, py, faceZ + .002]} rotation={[Math.PI / 2, 0, 0]}>
     <cylinderGeometry args={[.0042, .0042, .003, 20]}/><meshStandardMaterial color={hole} roughness={.62}/>
   </mesh>;
   return <group position={[x, y, 0]}>
-    {/* Moulded L corner from the supplied accessory photo; the two bores remain visible. */}
+    {/* Full corner cap hides the intersecting profile ends; the L plates and bores sit over it. */}
+    <mesh position={[0, 0, 0]} castShadow><boxGeometry args={[rail * 1.04, rail * 1.04, depth + .004]}/><meshStandardMaterial color={cap} roughness={.72}/></mesh>
     <mesh position={[-Math.sign(x) * leg / 2, -Math.sign(y) * rail * .08, faceZ]} castShadow><boxGeometry args={[leg, Math.min(.019, rail * .7), .006]}/><meshStandardMaterial color={plate} roughness={.74}/></mesh>
     <mesh position={[-Math.sign(x) * rail * .08, -Math.sign(y) * leg / 2, faceZ]} castShadow><boxGeometry args={[Math.min(.019, rail * .7), leg, .006]}/><meshStandardMaterial color={plate} roughness={.74}/></mesh>
     {holeDisc(-Math.sign(x) * leg * .68, -Math.sign(y) * rail * .16, "h1")}
@@ -217,7 +219,7 @@ function PleatedMesh({ width, height, z, color, texture }: { width: number; heig
   return <mesh geometry={geometry} position={[0, 0, z]}><meshStandardMaterial map={texture} color={color} side={THREE.DoubleSide} transparent opacity={.76} roughness={.92} metalness={.01} depthWrite={false}/></mesh>;
 }
 
-function SlidingLeaf({ side, halfWidth, height, rail, color, finish, progress, onProgressChange, texture }: { side: -1 | 1; halfWidth: number; height: number; rail: number; color: string; finish: string; progress: number; onProgressChange: (value: number) => void; texture: THREE.Texture }) {
+function SlidingLeaf({ side, halfWidth, height, rail, color, finish, progress, onProgressChange, dragEnabled, texture }: { side: -1 | 1; halfWidth: number; height: number; rail: number; color: string; finish: string; progress: number; onProgressChange: (value: number) => void; dragEnabled: boolean; texture: THREE.Texture }) {
   const pleats = useRef<THREE.Group>(null);
   const grip = useRef<THREE.Group>(null);
   const dragging = useRef(false);
@@ -238,10 +240,11 @@ function SlidingLeaf({ side, halfWidth, height, rail, color, finish, progress, o
     if (grip.current) grip.current.position.x = THREE.MathUtils.damp(grip.current.position.x, THREE.MathUtils.lerp(closedX, openX, progress), 7, delta);
   });
   const dragStart = (event: ThreeEvent<PointerEvent>) => {
+    if (!dragEnabled) return;
     event.stopPropagation(); dragging.current = true; (event.nativeEvent.currentTarget as HTMLCanvasElement).setPointerCapture(event.pointerId); if (controls) controls.enabled = false;
   };
   const dragMove = (event: ThreeEvent<PointerEvent>) => {
-    if (!dragging.current) return;
+    if (!dragging.current || !dragEnabled) return;
     event.stopPropagation();
     const localX = event.point.x - side * halfWidth / 2;
     const t = THREE.MathUtils.clamp((localX - closedX) / (openX - closedX), 0, 1);
@@ -265,13 +268,13 @@ function SlidingLeaf({ side, halfWidth, height, rail, color, finish, progress, o
   </group>;
 }
 
-function SlidingPanel({ width, height, rail, color, finish, progress, onProgressChange, texture, double }: SceneProps & { width: number; height: number; rail: number; color: string; texture: THREE.Texture; double: boolean }) {
+function SlidingPanel({ width, height, rail, color, finish, progress, onProgressChange, texture, double, dragEnabled }: SceneProps & { width: number; height: number; rail: number; color: string; texture: THREE.Texture; double: boolean }) {
   const panelWidth = width - rail * 1.5;
   const panelHeight = height - rail * 1.5;
   if (double) {
     const halfWidth = panelWidth / 2;
     return <group>
-      {([-1, 1] as const).map((side) => <SlidingLeaf key={side} side={side} halfWidth={halfWidth} height={height} rail={rail} color={color} finish={finish} progress={progress} onProgressChange={onProgressChange} texture={texture}/>)}
+      {([-1, 1] as const).map((side) => <SlidingLeaf key={side} side={side} halfWidth={halfWidth} height={height} rail={rail} color={color} finish={finish} progress={progress} onProgressChange={onProgressChange} dragEnabled={dragEnabled} texture={texture}/>)}
     </group>;
   }
   const fabricWidth = panelWidth - rail;
@@ -287,8 +290,8 @@ function SlidingPanel({ width, height, rail, color, finish, progress, onProgress
     if (pleats.current) { pleats.current.scale.x = THREE.MathUtils.damp(pleats.current.scale.x, 1 - progress * .84, 7, delta); pleats.current.position.x = THREE.MathUtils.damp(pleats.current.position.x, -fabricWidth * .42 * progress, 7, delta); }
     if (grip.current) grip.current.position.x = THREE.MathUtils.damp(grip.current.position.x, THREE.MathUtils.lerp(closedX, openX, progress), 7, delta);
   });
-  const move = (event: ThreeEvent<PointerEvent>) => { if (dragging.current) { event.stopPropagation(); onProgressChange(THREE.MathUtils.clamp((event.point.x - closedX) / (openX - closedX), 0, 1)); } };
-  const down = (event: ThreeEvent<PointerEvent>) => { event.stopPropagation(); dragging.current = true; (event.nativeEvent.currentTarget as HTMLCanvasElement).setPointerCapture(event.pointerId); if (controls) controls.enabled = false; };
+  const move = (event: ThreeEvent<PointerEvent>) => { if (dragging.current && dragEnabled) { event.stopPropagation(); onProgressChange(THREE.MathUtils.clamp((event.point.x - closedX) / (openX - closedX), 0, 1)); } };
+  const down = (event: ThreeEvent<PointerEvent>) => { if (!dragEnabled) return; event.stopPropagation(); dragging.current = true; (event.nativeEvent.currentTarget as HTMLCanvasElement).setPointerCapture(event.pointerId); if (controls) controls.enabled = false; };
   const up = (event: ThreeEvent<PointerEvent>) => { dragging.current = false; const canvas = event.nativeEvent.currentTarget as HTMLCanvasElement; if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId); if (controls) controls.enabled = true; };
   return <group>
     <group ref={pleats}><PleatedMesh width={fabricWidth} height={panelHeight - rail} z={0} color="#86918e" texture={texture}/></group>

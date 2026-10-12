@@ -6,8 +6,12 @@
 .sceneModes{display:flex;gap:5px;padding:10px 14px;background:#f8f8f5}
 .sceneModes button{min-height:32px;padding:0 13px;border:1px solid transparent;background:transparent;color:#78847f;font-size:9px;font-weight:750;cursor:pointer}
 .sceneModes button.activeSceneMode{border-color:#d5dfda;background:#fff;color:#24322f;box-shadow:0 1px 3px #1723260d}
-.viewer{height:min(60vw,610px);min-height:450px;touch-action:pan-y}
+.viewer{position:relative;height:min(60vw,610px);min-height:450px;touch-action:pan-y}
 .viewer canvas{display:block;width:100%;height:100%}
+.dragIndicator{position:absolute;top:50%;left:50%;display:flex;align-items:center;gap:12px;padding:9px 13px;border:1px solid rgba(255,255,255,.62);border-radius:999px;background:rgba(248,248,245,.78);box-shadow:0 5px 22px rgba(24,38,37,.12);color:#52615c;font-size:8px;font-weight:850;letter-spacing:.1em;white-space:nowrap;pointer-events:none;transform:translate(-50%,-50%);backdrop-filter:blur(8px)}
+.dragIndicator svg{width:15px;height:15px;color:#18827a;animation:arrow-drift 1.5s ease-in-out infinite alternate}
+.dragIndicator svg:last-child{animation-direction:alternate-reverse}
+@keyframes arrow-drift{from{transform:translateX(-2px);opacity:.55}to{transform:translateX(2px);opacity:1}}
 .viewerLoading{display:grid;height:100%;min-height:450px;place-content:center;justify-items:center;gap:12px;color:#697571;background:radial-gradient(ellipse,#fff,#f1f2ef);font-size:12px}
 .viewerLoading span{width:34px;height:34px;border:2px solid #dbe4e0;border-top-color:#18827a;border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -63,4 +67,4 @@
 .quoteButton svg{color:#74d1c7}
 @media(max-width:900px){.configurator{grid-template-columns:1fr;padding:0 1.25rem 6rem;gap:26px}.viewerPanel{position:relative;top:auto}.viewer{height:68vw;min-height:380px}.controls{gap:18px}.controlHeading h2{font-size:clamp(3rem,8vw,4.4rem)}}
 @media(max-width:560px){.configurator{padding:0 1rem 4rem;gap:21px}.viewerTop,.viewerCaption{padding:12px;font-size:8px}.viewerTop span:last-child{font-size:8px}.sceneModes{padding:8px 10px}.viewer{height:78vw;min-height:300px;max-height:440px}.viewerLoading{min-height:300px}.disclaimer{padding:0 12px 10px;font-size:8px}.controlHeading h2{font-size:3.2rem}.modelChoices{gap:6px}.modelChoice{min-height:66px;gap:8px;padding:7px}.hingeIcon{width:34px;height:40px}.pleatIcon{width:34px;height:34px}.dragHint{font-size:9px}}
-@media(prefers-reduced-motion:reduce){.viewerLoading span,.hingeIcon b,.pleatIcon b{animation:none}.modelChoice,.choiceRow button,.quoteButton{transition:none}}
+@media(prefers-reduced-motion:reduce){.viewerLoading span,.hingeIcon b,.pleatIcon b,.dragIndicator svg{animation:none}.modelChoice,.choiceRow button,.quoteButton{transition:none}}

@@ -14,18 +14,25 @@ export const metadata: Metadata = {
 export default function SineklikModelleriPage() {
   return <>
     <SiteHeader/>
-    <main className="bg-[var(--paper)]">
-      <section className="technical-paper px-5 pt-16 pb-12 sm:px-8 sm:pt-24 sm:pb-16 lg:px-[7vw]">
-        <div className="mx-auto max-w-[1500px]">
+    <main className="bg-[var(--paper)] flyscreen-model-page">
+      <section className="technical-paper px-5 pt-16 pb-12 sm:px-8 sm:pt-24 sm:pb-16 lg:px-[7vw] flyscreen-model-intro">
+        <div className="mx-auto grid max-w-[1500px] gap-8 lg:grid-cols-[1.15fr_.85fr] lg:items-end lg:gap-16">
+          <div>
           <p className="kicker">SİNEKLİK MODELLERİ · 3D İNCELEME</p>
           <h1 className="font-display max-w-5xl text-5xl leading-[.9] font-medium tracking-[-.05em] sm:text-7xl lg:text-8xl">Modeli çevirin,<br/><em className="font-normal text-[var(--teal)]">size uyanı seçin.</em></h1>
-          <div className="mt-8 flex flex-col justify-between gap-6 md:flex-row md:items-end">
-            <p className="max-w-xl text-sm leading-7 text-[var(--ink-soft)]">Menteşeli ve plise sinekliği üç boyutlu görünümde inceleyin. Uygulama alanını, profil rengini ve yaklaşık ölçüyü değiştirerek modelin nasıl görüneceğini keşfedin.</p>
-            <a href="#model" className="inline-flex min-h-12 items-center gap-5 border-b border-[var(--line)] text-xs font-bold text-[var(--ink)]">3D modeli incele <ArrowDown size={16}/></a>
+          </div>
+          <div className="border-t border-[var(--line)] pt-5 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+            <p className="max-w-xl text-sm leading-7 text-[var(--ink-soft)]">Menteşeli ve plise modellerini 3D olarak inceleyin; rengi ve ölçüyü belirleyip hareketli açılımı deneyin.</p>
+            <ol className="mt-5 grid grid-cols-3 gap-2 text-[10px] font-bold text-[var(--ink)] sm:gap-4">
+              <li className="border-t border-[var(--line)] pt-3"><span className="mb-2 block text-[var(--teal)]">01</span>Modelini seç</li>
+              <li className="border-t border-[var(--line)] pt-3"><span className="mb-2 block text-[var(--teal)]">02</span>Ölçünü gir</li>
+              <li className="border-t border-[var(--line)] pt-3"><span className="mb-2 block text-[var(--teal)]">03</span>Açılımı dene</li>
+            </ol>
+            <a href="#model" className="mt-6 inline-flex min-h-12 items-center gap-5 bg-[var(--ink)] px-5 text-xs font-bold text-white">3D modeli incele <ArrowDown size={16}/></a>
           </div>
         </div>
       </section>
-      <div id="model"><Sineklik3DConfigurator/></div>
+      <div id="model" className="flyscreen-model-config"><Sineklik3DConfigurator/></div>
       <section className="bg-[var(--ink)] px-5 py-16 text-white sm:px-8 lg:px-[7vw] lg:py-20">
         <div className="mx-auto flex max-w-[1500px] flex-col justify-between gap-8 md:flex-row md:items-end">
           <div><p className="kicker light">3D ÖN İZLEME · KULLANIM ALANLARI</p><h2 className="font-display max-w-3xl text-4xl leading-[.93] font-medium tracking-[-.045em] sm:text-6xl">3 boyutlu ön izlemeyle<br/><em className="font-normal text-[#9cebe6]">ürünü ve kullanımını inceleyin.</em></h2></div>
