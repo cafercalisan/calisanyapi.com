@@ -28,10 +28,15 @@ export default function SineklikModelleriPage() {
       <div id="model"><Sineklik3DConfigurator/></div>
       <section className="bg-[var(--ink)] px-5 py-16 text-white sm:px-8 lg:px-[7vw] lg:py-20">
         <div className="mx-auto flex max-w-[1500px] flex-col justify-between gap-8 md:flex-row md:items-end">
-          <div><p className="kicker light">3D ÖN İZLEME</p><h2 className="font-display max-w-3xl text-4xl leading-[.93] font-medium tracking-[-.045em] sm:text-6xl">Ekranda seçin,<br/><em className="font-normal text-[#9cebe6]">ölçünüzle teklife geçin.</em></h2></div>
-          <p className="flex max-w-sm items-start gap-3 text-xs leading-6 text-white/60"><Rotate3D className="mt-1 shrink-0 text-[var(--teal)]" size={17}/> Modeli fareyle veya parmağınızla döndürebilir, yakınlaştırabilirsiniz. Hareketli açılım için model panelindeki düğmeyi kullanın.</p>
+          <div><p className="kicker light">3D ÖN İZLEME · KULLANIM ALANLARI</p><h2 className="font-display max-w-3xl text-4xl leading-[.93] font-medium tracking-[-.045em] sm:text-6xl">3 boyutlu ön izlemeyle<br/><em className="font-normal text-[#9cebe6]">ürünü ve kullanımını inceleyin.</em></h2></div>
+          <p className="flex max-w-sm items-start gap-3 text-xs leading-6 text-white/60"><Rotate3D className="mt-1 shrink-0 text-[var(--teal)]" size={17}/> Modeli fareyle veya parmağınızla döndürün. Plise tutma profilini doğrudan sürükleyerek açıp kapatabilirsiniz.</p>
         </div>
-        <div className="mx-auto mt-9 max-w-[1500px] border-t border-white/15 pt-5 text-[10px] leading-5 text-white/45"><Check className="mr-2 inline-block text-[var(--teal)]" size={14}/>3D görünüm ölçüye ve seçime göre şekillenen temsili bir modeldir. Kesin profil ve uygulama detayları ölçü kontrolünde netleştirilir.</div>
+        <div className="mx-auto mt-10 grid max-w-[1500px] gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <article className="border border-white/15 bg-white/[.04] p-5 sm:p-6"><p className="mb-3 text-[10px] font-bold tracking-[.16em] text-[#9cebe6]">SABİT SİNEKLİK</p><h3 className="font-display text-2xl">Sürekli açık kalan alanlar</h3><p className="mt-3 text-xs leading-6 text-white/60">Zor erişilen veya havalandırma için sürekli açık tutulan pencere boşluklarında, yerinden oynamayan pratik koruma.</p></article>
+          <article className="border border-white/15 bg-white/[.04] p-5 sm:p-6"><p className="mb-3 text-[10px] font-bold tracking-[.16em] text-[#9cebe6]">PLİSE SİSTEM</p><h3 className="font-display text-2xl">Yerden tasarruf, modern görünüm</h3><p className="mt-3 text-xs leading-6 text-white/60">Kullanılmadığında yana katlanan tül, pencere ve kapı geçişlerinde alanı boş bırakır.</p></article>
+          <article className="border border-white/15 bg-white/[.04] p-5 sm:col-span-2 sm:p-6 lg:col-span-1"><p className="mb-3 text-[10px] font-bold tracking-[.16em] text-[#9cebe6]">GENİŞ AÇIKLIKLAR</p><h3 className="font-display text-2xl">Ortada buluşan çift sürme</h3><p className="mt-3 text-xs leading-6 text-white/60">Geniş alanlarda çerçeve içindeki iki plise kanat, sağ ve soldaki boydan boya tutma profillerinden çekilerek ortada birleşir.</p></article>
+        </div>
+        <div className="mx-auto mt-8 max-w-[1500px] border-t border-white/15 pt-5 text-[10px] leading-5 text-white/45"><Check className="mr-2 inline-block text-[var(--teal)]" size={14}/>3D görünüm ölçüye ve seçime göre şekillenen temsili bir modeldir. Kesin profil ve uygulama detayları ölçü kontrolünde netleştirilir.</div>
       </section>
     </main>
     <SiteFooter/>

@@ -13,13 +13,6 @@
 @keyframes spin{to{transform:rotate(360deg)}}
 .viewerCaption{border-top:1px solid rgba(23,35,38,.1);background:#f8f8f5;color:#24322f;font-size:11px;letter-spacing:0}
 .disclaimer{margin:0;padding:0 18px 12px;color:#85908d;background:#f8f8f5;font-size:9px;line-height:1.5}
-.profileReference{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:10px 14px;border-top:1px solid rgba(23,35,38,.09);background:#f8f8f5}
-.profileReferenceItem{display:flex;min-width:0;align-items:center;gap:9px}
-.profileReferenceImage{position:relative;width:68px;height:52px;flex:none;overflow:hidden;background:#e9eae6}
-.profileReferenceImage img{object-fit:cover;object-position:center 51%}
-.profileReference strong,.profileReference span{display:block}
-.profileReference strong{color:#35423e;font-size:9px;font-weight:800}
-.profileReference span{margin-top:4px;color:#85908d;font-size:8px;line-height:1.45}
 .controls{display:grid;align-content:start;gap:21px;padding:8px 0}
 .controlHeading .eyebrow{margin:0 0 12px;color:#18827a;font-size:9px;font-weight:900;letter-spacing:.16em}
 .controlHeading h2{margin:0;font-size:clamp(2.7rem,4.6vw,4.8rem);font-weight:500;letter-spacing:-.055em;line-height:.91}
@@ -61,6 +54,7 @@
 .dimensions b{padding:0 10px;color:#8a9691;font-size:9px}
 .openButton{display:flex;min-height:44px;align-items:center;justify-content:center;gap:8px;border:1px solid #cfd8d4;background:transparent;color:#43534e;font-size:10px;font-weight:800;cursor:pointer}
 .openButton svg{width:15px;height:15px;color:#18827a}
+.dragHint{margin:-13px 0 0;color:#71807a;font-size:10px;line-height:1.5;text-align:center}
 .mountButton{display:flex;min-height:44px;align-items:center;justify-content:center;gap:8px;border:1px solid #b8cbc4;background:#edf7f4;color:#31534a;font-size:10px;font-weight:800;cursor:pointer}
 .mountButton svg{color:#18827a}
 .quoteButton{display:flex;min-height:56px;align-items:center;justify-content:space-between;padding:0 17px;background:#172326;color:white;text-decoration:none;font-size:11px;font-weight:850;letter-spacing:.03em;transition:background .2s}
@@ -68,5 +62,5 @@
 .quoteButton span{display:flex;align-items:center;gap:10px}
 .quoteButton svg{color:#74d1c7}
 @media(max-width:900px){.configurator{grid-template-columns:1fr;padding:0 1.25rem 6rem;gap:26px}.viewerPanel{position:relative;top:auto}.viewer{height:68vw;min-height:380px}.controls{gap:18px}.controlHeading h2{font-size:clamp(3rem,8vw,4.4rem)}}
-@media(max-width:560px){.configurator{padding:0 1rem 4rem;gap:21px}.viewerTop,.viewerCaption{padding:12px;font-size:8px}.viewerTop span:last-child{font-size:8px}.sceneModes{padding:8px 10px}.viewer{height:78vw;min-height:300px}.viewerLoading{min-height:300px}.disclaimer{padding:0 12px 10px;font-size:8px}.profileReference{gap:7px;padding:8px 10px}.profileReferenceItem{gap:6px}.profileReferenceImage{width:50px;height:44px}.profileReference span{font-size:7px}.controlHeading h2{font-size:3.2rem}.modelChoices{gap:6px}.modelChoice{min-height:66px;gap:8px;padding:7px}.hingeIcon{width:34px;height:40px}.pleatIcon{width:34px;height:34px}}
+@media(max-width:560px){.configurator{padding:0 1rem 4rem;gap:21px}.viewerTop,.viewerCaption{padding:12px;font-size:8px}.viewerTop span:last-child{font-size:8px}.sceneModes{padding:8px 10px}.viewer{height:78vw;min-height:300px;max-height:440px}.viewerLoading{min-height:300px}.disclaimer{padding:0 12px 10px;font-size:8px}.controlHeading h2{font-size:3.2rem}.modelChoices{gap:6px}.modelChoice{min-height:66px;gap:8px;padding:7px}.hingeIcon{width:34px;height:40px}.pleatIcon{width:34px;height:34px}.dragHint{font-size:9px}}
 @media(prefers-reduced-motion:reduce){.viewerLoading span,.hingeIcon b,.pleatIcon b{animation:none}.modelChoice,.choiceRow button,.quoteButton{transition:none}}

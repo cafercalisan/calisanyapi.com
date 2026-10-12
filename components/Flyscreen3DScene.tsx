@@ -1,11 +1,11 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
-type SceneProps = { area: "window" | "door"; system: "hinged" | "sliding"; finish: string; width: number; height: number; open: boolean; installed: boolean; mountAnimationKey: number };
+type SceneProps = { area: "window" | "door"; system: "hinged" | "sliding"; finish: string; width: number; height: number; open: boolean; progress: number; onProgressChange: (value: number) => void; installed: boolean; mountAnimationKey: number };
 
 function makeMeshTexture() {
   const canvas = document.createElement("canvas");
@@ -31,11 +31,11 @@ function makeOakTexture() {
   canvas.width = 128; canvas.height = 512;
   const ctx = canvas.getContext("2d")!;
   const base = ctx.createLinearGradient(0, 0, 128, 0);
-  base.addColorStop(0, "#9b6539"); base.addColorStop(.25, "#d1a16b"); base.addColorStop(.52, "#b77c48"); base.addColorStop(.78, "#d9ae78"); base.addColorStop(1, "#a66d3c");
+  base.addColorStop(0, "#a9632f"); base.addColorStop(.25, "#e0ad68"); base.addColorStop(.52, "#bc7838"); base.addColorStop(.78, "#edc487"); base.addColorStop(1, "#a9612e");
   ctx.fillStyle = base; ctx.fillRect(0, 0, 128, 512);
   for (let i = 0; i < 70; i += 1) {
     const x = Math.random() * 128;
-    ctx.strokeStyle = i % 3 ? "rgba(83,47,25,.12)" : "rgba(250,218,166,.18)";
+    ctx.strokeStyle = i % 3 ? "rgba(83,47,25,.23)" : "rgba(255,226,174,.3)";
     ctx.lineWidth = Math.random() * 1.5 + .3;
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.bezierCurveTo(x - 12, 150, x + 15, 330, x + (Math.random() - .5) * 10, 512); ctx.stroke();
   }
@@ -51,7 +51,7 @@ function ProfileMaterial({ finish, color }: { finish: string; color: string }) {
     sharedOakTexture ??= makeOakTexture();
     return sharedOakTexture;
   }, [finish]);
-  return <meshStandardMaterial color={finish === "golden-oak" ? "#ffffff" : color} map={finish === "golden-oak" ? oak : null} roughness={finish === "white" ? .35 : .3} metalness={finish === "white" ? .18 : .27} />;
+  return <meshStandardMaterial color={finish === "golden-oak" ? "#f4bf78" : color} map={finish === "golden-oak" ? oak : null} roughness={finish === "white" ? .35 : finish === "golden-oak" ? .58 : .3} metalness={finish === "white" ? .18 : finish === "golden-oak" ? .02 : .27} />;
 }
 
 function Rail({ position, size, finish, color }: { position: [number, number, number]; size: [number, number, number]; finish: string; color: string }) {
@@ -217,39 +217,86 @@ function PleatedMesh({ width, height, z, color, texture }: { width: number; heig
   return <mesh geometry={geometry} position={[0, 0, z]}><meshStandardMaterial map={texture} color={color} side={THREE.DoubleSide} transparent opacity={.76} roughness={.92} metalness={.01} depthWrite={false}/></mesh>;
 }
 
-function SlidingPanel({ width, height, rail, color, finish, open, texture }: SceneProps & { width: number; height: number; rail: number; color: string; texture: THREE.Texture }) {
+function SlidingLeaf({ side, halfWidth, height, rail, color, finish, progress, onProgressChange, texture }: { side: -1 | 1; halfWidth: number; height: number; rail: number; color: string; finish: string; progress: number; onProgressChange: (value: number) => void; texture: THREE.Texture }) {
   const pleats = useRef<THREE.Group>(null);
   const grip = useRef<THREE.Group>(null);
-  const panelWidth = width - rail * 1.5;
+  const dragging = useRef(false);
+  const controls = useThree((state) => state.controls) as { enabled: boolean } | null;
+  const leafWidth = halfWidth - rail;
   const panelHeight = height - rail * 1.5;
-  const fabricWidth = panelWidth - rail;
-  const gripClosedX = panelWidth / 2 - rail / 2;
-  const foldedLeft = -fabricWidth / 2;
-  const foldedWidth = fabricWidth * .16;
-  const gripOpenX = foldedLeft + foldedWidth + rail / 2;
+  const fabricWidth = leafWidth - rail;
+  const closedX = -side * (halfWidth / 2 - rail / 2);
+  const openX = side * (halfWidth / 2 - rail / 2);
+  const foldedX = side * (fabricWidth * .42);
   const profileDepth = rail * .72;
   const grooveColor = finish === "white" ? "#494d4b" : finish === "anthracite" ? "#090a0b" : "#30251e";
   useFrame((_, delta) => {
     if (pleats.current) {
-      pleats.current.scale.x = THREE.MathUtils.damp(pleats.current.scale.x, open ? .16 : 1, 4, delta);
-      pleats.current.position.x = THREE.MathUtils.damp(pleats.current.position.x, open ? foldedLeft + foldedWidth / 2 : 0, 4, delta);
+      pleats.current.scale.x = THREE.MathUtils.damp(pleats.current.scale.x, 1 - progress * .84, 7, delta);
+      pleats.current.position.x = THREE.MathUtils.damp(pleats.current.position.x, foldedX * progress, 7, delta);
     }
-    if (grip.current) grip.current.position.x = THREE.MathUtils.damp(grip.current.position.x, open ? gripOpenX : gripClosedX, 4, delta);
+    if (grip.current) grip.current.position.x = THREE.MathUtils.damp(grip.current.position.x, THREE.MathUtils.lerp(closedX, openX, progress), 7, delta);
   });
-  return <group>
+  const dragStart = (event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation(); dragging.current = true; (event.nativeEvent.currentTarget as HTMLCanvasElement).setPointerCapture(event.pointerId); if (controls) controls.enabled = false;
+  };
+  const dragMove = (event: ThreeEvent<PointerEvent>) => {
+    if (!dragging.current) return;
+    event.stopPropagation();
+    const localX = event.point.x - side * halfWidth / 2;
+    const t = THREE.MathUtils.clamp((localX - closedX) / (openX - closedX), 0, 1);
+    onProgressChange(t);
+  };
+  const dragEnd = (event: ThreeEvent<PointerEvent>) => {
+    if (!dragging.current) return;
+    dragging.current = false; const canvas = event.nativeEvent.currentTarget as HTMLCanvasElement; if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId); if (controls) controls.enabled = true;
+  };
+  return <group position={[side * halfWidth / 2, 0, 0]}>
     <group ref={pleats}>
       <PleatedMesh width={fabricWidth} height={panelHeight - rail} z={0} color="#86918e" texture={texture}/>
     </group>
-    <group ref={grip} position={[gripClosedX, 0, .004]}>
+    <group ref={grip} position={[closedX, 0, .004]} onPointerDown={dragStart} onPointerMove={dragMove} onPointerUp={dragEnd} onPointerCancel={dragEnd} onLostPointerCapture={() => { dragging.current = false; if (controls) controls.enabled = true; }}>
+      <mesh position={[0, 0, .008]}><boxGeometry args={[rail * 1.5, panelHeight, profileDepth * 1.5]}/><meshBasicMaterial transparent opacity={0} depthWrite={false}/></mesh>
       <Rail position={[0, 0, 0]} size={[rail, panelHeight, profileDepth]} finish={finish} color={color}/>
-      {/* Full-height pull profile with a narrow recessed finger channel. */}
-      <mesh position={[0, 0, profileDepth / 2 + .0008]}>
-        <boxGeometry args={[.008, panelHeight - .09, .0016]}/><meshStandardMaterial color={grooveColor} roughness={.82}/>
-      </mesh>
-      {[-1, 1].map((side) => <mesh key={side} position={[side * .006, 0, profileDepth / 2 + .0012]}>
-        <boxGeometry args={[.0018, panelHeight - .09, .0012]}/><meshStandardMaterial color={finish === "white" ? "#faf9f3" : color} roughness={.42}/>
-      </mesh>)}
+      <mesh position={[0, 0, profileDepth / 2 + .0008]}><boxGeometry args={[.008, panelHeight - .09, .0016]}/><meshStandardMaterial color={grooveColor} roughness={.82}/></mesh>
+      {[-1, 1].map((lip) => <mesh key={lip} position={[lip * .006, 0, profileDepth / 2 + .0012]}><boxGeometry args={[.0018, panelHeight - .09, .0012]}/><meshStandardMaterial color={finish === "white" ? "#faf9f3" : color} roughness={.42}/></mesh>)}
       <mesh position={[0, 0, profileDepth / 2 + .0011]}><boxGeometry args={[.004, .012, .0012]}/><meshStandardMaterial color={grooveColor} roughness={.82}/></mesh>
+    </group>
+  </group>;
+}
+
+function SlidingPanel({ width, height, rail, color, finish, progress, onProgressChange, texture, double }: SceneProps & { width: number; height: number; rail: number; color: string; texture: THREE.Texture; double: boolean }) {
+  const panelWidth = width - rail * 1.5;
+  const panelHeight = height - rail * 1.5;
+  if (double) {
+    const halfWidth = panelWidth / 2;
+    return <group>
+      {([-1, 1] as const).map((side) => <SlidingLeaf key={side} side={side} halfWidth={halfWidth} height={height} rail={rail} color={color} finish={finish} progress={progress} onProgressChange={onProgressChange} texture={texture}/>)}
+    </group>;
+  }
+  const fabricWidth = panelWidth - rail;
+  const closedX = panelWidth / 2 - rail / 2;
+  const openX = -fabricWidth * .42;
+  const pleats = useRef<THREE.Group>(null);
+  const grip = useRef<THREE.Group>(null);
+  const dragging = useRef(false);
+  const controls = useThree((state) => state.controls) as { enabled: boolean } | null;
+  const profileDepth = rail * .72;
+  const grooveColor = finish === "white" ? "#494d4b" : finish === "anthracite" ? "#090a0b" : "#30251e";
+  useFrame((_, delta) => {
+    if (pleats.current) { pleats.current.scale.x = THREE.MathUtils.damp(pleats.current.scale.x, 1 - progress * .84, 7, delta); pleats.current.position.x = THREE.MathUtils.damp(pleats.current.position.x, -fabricWidth * .42 * progress, 7, delta); }
+    if (grip.current) grip.current.position.x = THREE.MathUtils.damp(grip.current.position.x, THREE.MathUtils.lerp(closedX, openX, progress), 7, delta);
+  });
+  const move = (event: ThreeEvent<PointerEvent>) => { if (dragging.current) { event.stopPropagation(); onProgressChange(THREE.MathUtils.clamp((event.point.x - closedX) / (openX - closedX), 0, 1)); } };
+  const down = (event: ThreeEvent<PointerEvent>) => { event.stopPropagation(); dragging.current = true; (event.nativeEvent.currentTarget as HTMLCanvasElement).setPointerCapture(event.pointerId); if (controls) controls.enabled = false; };
+  const up = (event: ThreeEvent<PointerEvent>) => { dragging.current = false; const canvas = event.nativeEvent.currentTarget as HTMLCanvasElement; if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId); if (controls) controls.enabled = true; };
+  return <group>
+    <group ref={pleats}><PleatedMesh width={fabricWidth} height={panelHeight - rail} z={0} color="#86918e" texture={texture}/></group>
+    <group ref={grip} position={[closedX, 0, .004]} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
+      <mesh position={[0, 0, .008]}><boxGeometry args={[rail * 1.5, panelHeight, profileDepth * 1.5]}/><meshBasicMaterial transparent opacity={0} depthWrite={false}/></mesh>
+      <Rail position={[0, 0, 0]} size={[rail, panelHeight, profileDepth]} finish={finish} color={color}/>
+      <mesh position={[0, 0, profileDepth / 2 + .0008]}><boxGeometry args={[.008, panelHeight - .09, .0016]}/><meshStandardMaterial color={grooveColor} roughness={.82}/></mesh>
+      {[-1, 1].map((lip) => <mesh key={lip} position={[lip * .006, 0, profileDepth / 2 + .0012]}><boxGeometry args={[.0018, panelHeight - .09, .0012]}/><meshStandardMaterial color={finish === "white" ? "#faf9f3" : color} roughness={.42}/></mesh>)}
     </group>
   </group>;
 }
@@ -303,7 +350,7 @@ function ProductModel(props: SceneProps) {
       {installed && <MagneticCatch position={[width / 2 + .018, 0, depth * .7]} color={finish === "white" ? "#f4f3ed" : "#363c3e"}/>}
     </> : <>
       <Frame width={width} height={height} rail={rail} depth={depth} finish={finish} color={frameColor}/>
-      <SlidingPanel {...props} width={width} height={height} rail={rail} color={frameColor} finish={finish} texture={meshTexture}/>
+      <SlidingPanel {...props} width={width} height={height} rail={rail} color={frameColor} finish={finish} texture={meshTexture} double={widthCm > 200}/>
     </>}
     {installed && <MountingScrews width={mountingWidth} height={mountingHeight} rail={rail} surfaceZ={mountSurfaceZ} trigger={mountAnimationKey}/>}
   </group>;
